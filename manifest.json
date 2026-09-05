@@ -1,3 +1,1 @@
 {"name":"CARE233 - Professional Homecare Ghana","short_name":"CARE233","start_url":"./","display":"standalone","background_color":"#020617","theme_color":"#ce1126","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/2966/2966327.png","sizes":"512x512","type":"image/png"}]}
-self.addEventListener('install',e=>{self.skipWaiting()});
-self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)))});
