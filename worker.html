@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CARE233 Worker Platform</title>
+<style>
+body{margin:0;font-family:sans-serif;background:#f0fdf4;padding:10px}
+.card{background:#fff;padding:18px;border-radius:16px;max-width:500px;margin:12px auto;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+input{width:100%;padding:12px;margin:8px 0;border:2px solid #065f46;border-radius:10px;box-sizing:border-box}
+button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;margin:8px 0}
+.job{border:2px solid #065f46;border-radius:12px;padding:12px;margin:10px 0;background:#ecfdf5}
+.hidden{display:none}
+.badge{background:#facc15;color:#065f46;padding:4px 8px;border-radius:20px;font-size:12px;font-weight:bold}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SECTION -->
+<div id="loginPage" class="card">
+<h2 style="color:#065f46;text-align:center">👩‍⚕️ WORKER LOGIN</h2>
+<p style="text-align:center">One Platform for All Workers</p>
+<input id="wName" placeholder="Your Full Name">
+<input id="wPhone" placeholder="Phone / WhatsApp">
+<input id="wMoMo" placeholder="MoMo Number to Receive Pay">
+<button onclick="loginWorker()">🔓 LOGIN / REGISTER</button>
+<p style="font-size:12px;text-align:center">No password needed - Phone is your ID</p>
+</div>
+
+<!-- DASHBOARD SECTION -->
+<div id="dashPage" class="hidden">
+<div class="card" style="background:#065f46;color:#fff">
+<h3 style="margin:0">Welcome, <span id="showName"></span> 👋</h3>
+<p style="margin:4px 0">MoMo: <span id="showMoMo"></span> | <span class="badge" id="showPhone"></span></p>
+<p>Total Earned: <b>GHS <span id="totalEarn">0</span></b></p>
+<button onclick="logout()" style="background:#fff;color:#065f46;padding:8px">Logout</button>
+</div>
+
+<div class="card">
+<h3>📋 Available Jobs</h3>
+<div id="jobList"></div>
+<button onclick="loadJobs()" style="background:#e5e7eb;color:#065f46">🔄 Refresh Jobs</button>
+</div>
+
+<div class="card">
+<h3>✅ My Accepted Jobs</h3>
+<div id="myJobs"></div>
+</div>
+
+<div class="card">
+<button onclick="window.location.href='index.html'" style="background:#ca8a04">Go to Client Booking App</button>
+</div>
+</div>
+
+<script>
+let worker=null;
+function loginWorker(){
+let n=document.getElementById('wName').value.trim();
+let p=document.getElementById('wPhone').value.trim();
+let m=document.getElementById('wMoMo').value.trim();
+if(!n||!p||!m){alert('Fill all');return;}
+worker={name:n,phone:p,momo:m};
+localStorage.setItem('care233_worker',JSON.stringify(worker));
+showDash();
+}
+function showDash(){
+let w=JSON.parse(localStorage.getItem('care233_worker')||'null');
+if(!w){return;}
+worker=w;
+document.getElementById('loginPage').classList.add('hidden');
+document.getElementById('dashPage').classList.remove('hidden');
+document.getElementById('showName').innerText=w.name;
+document.getElementById('showPhone').innerText=w.phone;
+document.getElementById('showMoMo').innerText=w.momo;
+loadJobs();
+loadMyJobs();
+calcEarn();
+}
+function logout(){
+localStorage.removeItem('care233_worker');
+location.reload();
+}
+function loadJobs(){
+// Jobs from admin bookings or owner-create-job
+let bookings=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+let ownerJobs=JSON.parse(localStorage.getItem('care233_owner_jobs')||'[]');
+let all=[...bookings,...ownerJobs];
+let html='';
+if(all.length==0){html='<p>No jobs yet. Wait for owner to create.</p>';}
+else{
+all.forEach((j,i)=>{
+let title=j.careType||j.service||'Home Care';
+let total=j.total||'1400';
+let loc=j.location||'Accra';
+html+=`<div class="job">
+<b>${title}</b><br>Loc: ${loc}<br>Total: GHS ${total}<br>
+<button onclick="acceptJob(${i})">✅ Accept Job GHS ${total}</button>
+</div>`;
+});
+}
+document.getElementById('jobList').innerHTML=html;
+}
+function acceptJob(idx){
+let bookings=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+let job=bookings[idx]||JSON.parse(localStorage.getItem('care233_owner_jobs')||'[]')[idx];
+if(!job){alert('Job not found');return;}
+let my=JSON.parse(localStorage.getItem('care233_my_jobs_'+worker.phone)||'[]');
+my.push({...job,acceptedAt:new Date().toLocaleString(),worker:worker.name});
+localStorage.setItem('care233_my_jobs_'+worker.phone,JSON.stringify(my));
+alert('Job Accepted! Check My Jobs');
+loadMyJobs();
+calcEarn();
+}
+function loadMyJobs(){
+let my=JSON.parse(localStorage.getItem('care233_my_jobs_'+worker.phone)||'[]');
+let html='';
+if(my.length==0)html='<p>No jobs accepted yet.</p>';
+else my.forEach(j=>{
+html+=`<div class="job" style="background:#fef9c3"><b>${j.careType||j.service}</b><br>Client: ${j.phone}<br>Loc: ${j.location}<br>Accepted: ${j.acceptedAt}<br>
+<button style="background:#25D366" onclick="window.open('https://wa.me/${j.phone}?text=Hello I am ${worker.name} from CARE233, I am coming for your care service','_blank')">📲 WhatsApp Client</button>
+</div>`;
+});
+document.getElementById('myJobs').innerHTML=html;
+}
+function calcEarn(){
+let my=JSON.parse(localStorage.getItem('care233_my_jobs_'+worker.phone)||'[]');
+let total=0;
+my.forEach(j=>{total+=parseInt(j.total||0)*0.8;}); // worker gets 80%
+document.getElementById('totalEarn').innerText=total;
+}
+// Auto show if logged
+showDash();
+</script>
+</body>
+</html>
