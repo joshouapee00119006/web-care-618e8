@@ -5,3 +5,4 @@ Disallow: /staff-
 Allow: /
 
 Sitemap: https://joshouapee00119006.github.io/web-care-618e8/
+Disallow: /vault.html
