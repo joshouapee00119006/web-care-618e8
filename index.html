@@ -140,7 +140,18 @@ document.getElementById('refEarnDisplay').innerText=`GHS ${refEarn}`;
 document.getElementById('finalPayDisplay').innerText=`GHS ${total}`;
 return {careCost,transport,total,refEarn,careType,qty,distKm,hasGPS};
 }
-calcPrice();
+calcPrice();// AUTO-FILL REFERRAL FROM LINK ?ref=NUMBER
+(function(){
+  let p=new URLSearchParams(window.location.search);
+  let r=p.get('ref')||p.get('referral');
+  if(r){
+    document.getElementById('refCode').value=r;
+    document.getElementById('refCode').style.background="#fef9c3";
+    document.getElementById('refCode').style.border="2px solid #ca8a04";
+    calcPrice();
+  }
+})();
+function bookNow(){
 function bookNow(){
 let name=document.getElementById('clientName').value.trim();
 let phone=document.getElementById('clientPhone').value.trim();
