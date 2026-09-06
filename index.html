@@ -22,4 +22,145 @@ button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;bord
 <div class="card">
 <h3>Book a Nurse Now</h3>
 <input id="clientName" placeholder="Your Name e.g Ama">
-<input id="
+<input id="clientPhone" placeholder="WhatsApp Number">
+<label>Region</label>
+<select id="region" onchange="calcPrice()">
+<option value="">Select Region</option>
+<option>Greater Accra</option>
+<option>Central Region</option>
+<option>Ashanti Region</option>
+<option>Eastern Region</option>
+<option>Western Region</option>
+<option>Volta Region</option>
+<option>Northern Region</option>
+</select>
+<button class="gpsBtn" onclick="getGPS()">📍 Use My GPS Location (Cheaper if worker close!)</button>
+<p id="gpsStatus" class="small">GPS not used - Using Region static fee. Click for smart fee.</p>
+<input type="hidden" id="clientLat"><input type="hidden" id="clientLng"><input type="hidden" id="distanceKm">
+<label>Service</label>
+<select id="service">
+<option value="">Select Service</option>
+<option>Elderly Care</option>
+<option>Nanny / Child Care</option>
+<option>House Help</option>
+<option>Hospital Sitting</option>
+<option>Homecare</option>
+</select>
+<label>Care Type</label>
+<select id="careType" onchange="calcPrice()">
+<option value="1 Hour">1 Hour - GHS 50/hr</option>
+<option value="Half Day (4 Hours)">Half Day (4 Hours) - GHS 120</option>
+<option value="Full Day (8 Hours)" selected>Full Day (8 Hours) - GHS 100/day</option>
+<option value="Live-in (24 Hours)">Live-in (24 Hours) - GHS 150/day</option>
+<option value="1 Week">1 Week (7 days) - GHS 700/week</option>
+<option value="2 Weeks">2 Weeks - GHS 1400</option>
+<option value="1 Month">1 Month - GHS 3000/month</option>
+</select>
+<label id="qtyLabel" style="font-weight:bold;color:#065f46">How many Full Day (8 Hours)? - Enter days (max 31)</label>
+<input id="durationQty" type="number" value="2" min="1" max="31" oninput="calcPrice()">
+<p class="small">💰 1 Day=GHS 100 | 2 Days=GHS 200 | Hours max 24 | Days max 31 | Months max 12</p>
+<div class="priceBox">
+Care Cost: <span id="estTotal">GHS 200</span><br>
+Transport (<span id="regionLabel">Region static</span>): <span id="transportDisplay">GHS 20</span> <small id="distanceLabel"></small><br>
+Referrer 3%: <span id="refEarnDisplay" style="color:#ca8a04;font-weight:bold">GHS 0</span><br>
+<b>Total Pays: <span id="finalPayDisplay" style="color:#065f46;font-size:20px">GHS 220</span></b>
+</div>
+<input id="refCode" placeholder="Referral Code e.g 0244... or Direct" oninput="calcPrice()">
+<textarea id="notes" placeholder="Patient notes - e.g has stroke"></textarea>
+<button onclick="bookNow()">📨 Book a Nurse Now</button>
+<p id="msg"></p>
+</div>
+<script>
+let all=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+const TRANSPORT_STATIC={"Greater Accra":20,"Central Region":40,"Ashanti Region":50,"Eastern Region":40,"Western Region":50,"Volta Region":60,"Northern Region":80};
+const ACCRA_HUB={lat:5.6037,lng:-0.1870};
+function haversine(lat1,lon1,lat2,lon2){
+const R=6371;const dLat=(lat2-lat1)*Math.PI/180;const dLon=(lon2-lon1)*Math.PI/180;
+const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function getGPS(){
+document.getElementById('gpsStatus').innerText="📡 Getting location...";
+if(!navigator.geolocation){document.getElementById('gpsStatus').innerText="GPS not supported";calcPrice();return;}
+navigator.geolocation.getCurrentPosition(pos=>{
+let lat=pos.coords.latitude,lng=pos.coords.longitude;
+document.getElementById('clientLat').value=lat;document.getElementById('clientLng').value=lng;
+let dist=haversine(ACCRA_HUB.lat,ACCRA_HUB.lng,lat,lng);
+document.getElementById('distanceKm').value=dist.toFixed(1);
+document.getElementById('gpsStatus').innerText=`✅ GPS Locked! ${dist.toFixed(1)}km from Accra hub. Transport now dynamic!`;
+calcPrice();
+},err=>{document.getElementById('gpsStatus').innerText="❌ GPS denied - Using Region static";calcPrice();});
+}
+function calcPrice(){
+let careType=document.getElementById('careType').value;
+let qtyInput=document.getElementById('durationQty');
+let qty=parseInt(qtyInput.value)||1;
+let region=document.getElementById('region').value;
+let refCode=document.getElementById('refCode').value.trim();
+let distKm=parseFloat(document.getElementById('distanceKm').value)||0;
+let hasGPS=distKm>0;
+let maxQty=31,unitDesc="";
+if(careType.includes("1 Hour")){maxQty=24;unitDesc="hours (max 24)";}
+else if(careType.includes("Half Day")||careType.includes("Full Day")||careType.includes("Live-in")){maxQty=31;unitDesc="days (max 31)";}
+else if(careType.includes("Week")){maxQty=12;unitDesc="weeks (max 12)";}
+else if(careType.includes("Month")){maxQty=12;unitDesc="months (max 12=1 year)";}
+qtyInput.max=maxQty;
+if(qty>maxQty){qty=maxQty;qtyInput.value=maxQty;}
+if(qty<1){qty=1;qtyInput.value=1;}
+let lbl=document.getElementById('qtyLabel');
+if(lbl) lbl.innerText=`How many ${careType}? - Enter ${unitDesc}. Eg: 2 = 2 x ${careType}`;
+let careCost=0;
+if(careType.includes("1 Hour")) careCost=50*qty;
+else if(careType.includes("Half Day")) careCost=120*qty;
+else if(careType.includes("Full Day")) careCost=100*qty;
+else if(careType.includes("Live-in")) careCost=150*qty;
+else if(careType.includes("1 Week")&&!careType.includes("2 Weeks")) careCost=700*qty;
+else if(careType.includes("2 Weeks")) careCost=1400*qty;
+else if(careType.includes("1 Month")) careCost=3000*qty;
+else careCost=100*qty;
+let transport=0,label="";
+if(hasGPS){
+transport=Math.round(distKm*2);
+if(transport<10) transport=10;
+if(transport>100) transport=100;
+if(distKm<=5){transport=10;label=`GPS Smart (Worker close! ${distKm.toFixed(1)}km)`;}
+else label=`GPS Dynamic (${distKm.toFixed(1)}km x GHS 2)`;
+document.getElementById('distanceLabel').innerText=`- ${distKm.toFixed(1)}km`;
+}else{
+transport=TRANSPORT_STATIC[region]||20;
+label=region?`Static - ${region}`:"Region static";
+document.getElementById('distanceLabel').innerText="";
+}
+let total=careCost+transport;
+let refEarn=(refCode&&refCode.toLowerCase()!='direct'&&refCode.length>=10)?Math.round(total*0.03):0;
+document.getElementById('estTotal').innerText=`GHS ${careCost}`;
+document.getElementById('transportDisplay').innerText=`GHS ${transport}`;
+document.getElementById('regionLabel').innerText=label;
+document.getElementById('refEarnDisplay').innerText=`GHS ${refEarn}`;
+document.getElementById('finalPayDisplay').innerText=`GHS ${total}`;
+return {careCost,transport,total,refEarn,careType,qty,distKm,hasGPS};
+}
+calcPrice();
+function bookNow(){
+let name=document.getElementById('clientName').value.trim();
+let phone=document.getElementById('clientPhone').value.trim();
+let region=document.getElementById('region').value;
+let service=document.getElementById('service').value;
+let careType=document.getElementById('careType').value;
+let qty=document.getElementById('durationQty').value;
+let refCode=document.getElementById('refCode').value.trim()||'Direct';
+let notes=document.getElementById('notes').value.trim();
+let lat=document.getElementById('clientLat').value||"No GPS";
+let lng=document.getElementById('clientLng').value||"No GPS";
+let dist=document.getElementById('distanceKm').value||"Static";
+if(!name||!phone||!region||!service){alert("Fill Name, Phone, Region, Service");return;}
+let calc=calcPrice();
+let bookingData={id:'C233'+Date.now(),name,phone,region,service,careType,qty,duration:`${qty} x ${careType}`,careCost:calc.careCost,transport:calc.transport,total:calc.total,refCode,refEarn:calc.refEarn,lat,lng,dist,notes,time:new Date().toLocaleString()};
+all.push(bookingData);localStorage.setItem('care233_bookings',JSON.stringify(all));
+let waMsg=`NEW BOOKING - CARE233%0AName: ${name}%0APhone: ${phone}%0ARegion: ${region}%0AService: ${service}%0ACare Type: ${careType}%0ADuration: ${qty} x ${careType}%0ACare: GHS ${calc.careCost}%0ATransport: GHS ${calc.transport} (${calc.hasGPS? dist+'km GPS' : 'Static'})%0ATotal: GHS ${calc.total}%0ARef: ${refCode} Earns GHS ${calc.refEarn}%0AGPS: ${lat},${lng}%0ANotes: ${notes}%0AID: ${bookingData.id}`;
+window.open(`https://wa.me/233544121814?text=${waMsg}`, '_blank');
+alert(`✅ Booked! ${qty} x ${careType} = GHS ${calc.total}`);
+}
+</script>
+</body>
+</html>
