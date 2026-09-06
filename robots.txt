@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /staff.html
+Disallow: /staff-
+Allow: /
+
+Sitemap: https://joshouapee00119006.github.io/web-care-618e8/
