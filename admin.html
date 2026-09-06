@@ -165,4 +165,32 @@ function createJob(){
  let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');jobs.push(j);localStorage.setItem('care233_jobs',JSON.stringify(jobs));
  ['jService','jLoc','jPrice','jPhone','jGPS'].forEach(id=>document.getElementById(id).value='');loadJobs();loadBookings();
 }
-function loadJobs(){let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');document.getElementById('jobList').innerHTML=jobs.slice().reverse().map(j=>`<div class="box"><b>${j.service}</b> - ${j.phone}<br><small>${j.date}</small></div>`).join('')||'<p class="small">No jobs</p
+function loadJobs(){let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');document.getElementById('jobList').innerHTML=jobs.slice().reverse().map(j=>`<div class="box"><b>${j.service}</b> - ${j.phone}<br><small>${j.date}</small></div>`).join('')||'<p class="small">No jobs</p>'}
+function addStaff(){
+ let name=document.getElementById('stName').value.trim();let phone=document.getElementById('stPhone').value.trim();
+ if(!name||!phone){alert('Fill name and phone');return}
+ let pass='STAFF'+Math.floor(1000+Math.random()*9000);
+ let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
+ staffs.push({id:Date.now(),name,phone,password:pass,active:true,created:new Date().toLocaleString()});
+ localStorage.setItem('care233_staffs',JSON.stringify(staffs));
+ document.getElementById('stMsg').innerHTML=`✅ Added!<br><b>${name}</b><br>Password: <b style="color:#ffcc00;font-size:20px">${pass}</b>`;
+ document.getElementById('stName').value='';document.getElementById('stPhone').value='';loadStaff();
+}
+function loadStaff(){
+ let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
+ document.getElementById('staffList').innerHTML=staffs.map((s,i)=>`<div class="box"><b>${s.name}</b> - ${s.phone}<br>🔑 <b style="color:#ffcc00">${s.password}</b> - ${s.active?'✅ Active':'❌ Disabled'}<br><small>${s.created}</small><br>
+ <button class="btn blue" onclick="changePass(${i})">🔑 Change</button>
+ <button class="btn ${s.active?'red':'green'}" onclick="toggleStaff(${i})">${s.active?'Disable':'Enable'}</button>
+ <button class="btn red" onclick="delStaff(${i})">Delete</button></div>`).join('')||'<p class="small">No staff yet</p>';
+}
+function changePass(i){let np='STAFF'+Math.floor(1000+Math.random()*9000);let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s[i].password=np;localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff();alert('New: '+np)}
+function toggleStaff(i){let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s[i].active=!s[i].active;localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff()}
+function delStaff(i){if(!confirm('Delete?'))return;let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s.splice(i,1);localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff()}
+function sendEdu(){let t=document.getElementById('eTitle').value;let m=document.getElementById('eMsg').value;if(!t||!m){alert('Fill');return}let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');edus.push({title:t,msg:m,date:new Date().toLocaleString(),by:isSuper?'CEO':'Staff'});localStorage.setItem('care233_edu',JSON.stringify(edus));document.getElementById('eTitle').value='';document.getElementById('eMsg').value='';loadEdu()}
+function loadEdu(){let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');document.getElementById('eduList').innerHTML=edus.slice().reverse().map(e=>`<div class="box"><b>${e.title}</b> <small>by ${e.by}</small><br>${e.msg}<br><small>${e.date}</small></div>`).join('')}
+function logout(){localStorage.removeItem('care233_current_role');location.reload()}
+let cur=JSON.parse(localStorage.getItem('care233_current_role')||'null');
+if(cur){isSuper=cur.isSuper;openDash(cur.isSuper?cur.name:cur.staff.name,cur.isSuper);}
+</script>
+</body>
+</html>
