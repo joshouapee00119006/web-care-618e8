@@ -2,134 +2,134 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CARE233 Worker</title>
+<title>Nurses Group - Worker App</title>
 <style>
-body{background:#e8f5e9;font-family:Arial;padding:15px;margin:0}
-.card{max-width:480px;margin:auto;background:white;padding:25px;border-radius:18px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
-h1{color:#0a4d2e;text-align:center;font-size:22px}
-.tabs{display:flex;gap:10px;margin:20px 0}
-.tab{flex:1;padding:12px;border-radius:10px;border:2px solid #0a4d2e;background:white;color:#0a4d2e;font-weight:bold;cursor:pointer}
-.tab.active{background:#0a4d2e;color:white}
-input,select,textarea{width:100%;padding:13px;margin:8px 0;border:2px solid #ddd;border-radius:10px;box-sizing:border-box;font-size:15px}
-.btn{width:100%;padding:15px;background:#0a4d2e;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;margin-top:10px;cursor:pointer}
-.msg{padding:12px;border-radius:8px;margin:10px 0;text-align:center;display:none}
-.msg.ok{background:#d4edda;color:#155724;display:block}
-.msg.bad{background:#f8d7da;color:#721c24;display:block}
-.msg.wait{background:#fff3cd;color:#856404;display:block}
+body{background:#0a2e1f;color:white;font-family:Arial;padding:12px;margin:0}
+.card{background:#111;padding:22px;border-radius:20px;max-width:450px;margin:auto}
+h2{color:#ffcc00;text-align:center;margin:0 0 5px}
+.sub{text-align:center;color:#8fbc8f;font-size:13px;margin-bottom:15px}
+.tabs{display:flex;gap:10px;margin-bottom:15px}
+.tab{flex:1;padding:12px;border-radius:12px;border:none;font-weight:bold;cursor:pointer}
+.tabActive{background:#0a4d2e;color:#ffcc00} .tabOff{background:#2a2a2a;color:white}
+input,select{width:100%;padding:14px;margin:7px 0;border-radius:12px;border:2px solid #2a8a6a;background:#222;color:white;box-sizing:border-box}
+.btn{width:100%;padding:15px;background:#0a4d2e;color:#ffcc00;border:none;border-radius:12px;font-weight:bold;font-size:17px;margin-top:10px}
+.small{font-size:12px;color:#8fbc8f;text-align:center;margin-top:10px}
+.link{color:#25D366}
+.job{background:#132a20;padding:12px;border-radius:12px;margin:8px 0;border-left:4px solid #ffcc00}
 .hidden{display:none}
-.job{border:1px solid #ddd;padding:12px;border-radius:10px;margin:10px 0}
 </style>
 </head>
 <body>
-<div class="card" id="authCard">
-<h1>👷 CARE233 WORKER</h1>
+<div class="card">
+<h2>👩‍⚕️ NURSES GROUP</h2>
+<p class="sub">Official Worker Platform - Ghana</p>
+
 <div class="tabs">
-<button class="tab active" id="tabLogin" onclick="showTab('login')">Login</button>
-<button class="tab" id="tabReg" onclick="showTab('reg')">Register</button>
+<button id="tLogin" class="tab tabActive" onclick="show('login')">Login</button>
+<button id="tReg" class="tab tabOff" onclick="show('reg')">Register</button>
 </div>
 
+<!-- LOGIN -->
 <div id="loginBox">
-<input id="loginPhone" placeholder="Phone Number *">
-<input id="loginPass" type="password" placeholder="Password *">
-<button class="btn" onclick="doLogin()">LOGIN</button>
-<div id="loginMsg" class="msg"></div>
-<p style="font-size:12px;text-align:center;color:gray">Only admin-approved workers can login</p>
+<input id="lPhone" placeholder="Phone Number (0244...)">
+<input id="lPass" type="password" placeholder="Password">
+<button class="btn" onclick="login()">🔓 LOGIN</button>
+<p id="lMsg" class="small"></p>
 </div>
 
+<!-- REGISTER -->
 <div id="regBox" class="hidden">
 <input id="rName" placeholder="Full Name *">
-<input id="rPhone" placeholder="Phone Number *">
-<input id="rPass" type="password" placeholder="Create Password * (min 4)">
-<input id="rPass2" type="password" placeholder="Confirm Password *">
-<input id="rMomo" placeholder="MoMo Number for Payment *">
-<select id="rService">
-<option value="">Select Your Service *</option>
-<option>House Cleaning</option><option>Cooking / Chef</option>
-<option>Laundry</option><option>Plumbing</option>
-<option>Electrical</option><option>Carpentry</option>
-<option>Painting</option><option>Babysitting / Nanny</option>
-<option>Elderly Care</option><option>Security Guard</option>
-<option>Driver</option><option>Gardening</option><option>Other Artisan</option>
+<input id="rPhone" placeholder="Phone Number * (0244...)">
+<input id="rPass" type="password" placeholder="Create Password * (min 4 chars)">
+<input id="rMoMo" placeholder="MoMo Number * (for payment)">
+<input id="rLoc" placeholder="Your Location * (East Legon)">
+<select id="rSkill">
+<option>General Nurse</option>
+<option>Midwife</option>
+<option>Care Assistant</option>
+<option>Physiotherapy</option>
 </select>
-<input id="rLocation" placeholder="Location (eg Accra, East Legon) *">
-<input id="rExp" placeholder="Years Experience">
-<textarea id="rBio" placeholder="Short bio..."></textarea>
-<button class="btn" onclick="doRegister()">SUBMIT FOR APPROVAL</button>
-<div id="regMsg" class="msg"></div>
-</div>
+<button class="btn" onclick="register()">📝 REGISTER</button>
+<p id="rMsg" class="small"></p>
 </div>
 
-<div class="card hidden" id="dash">
-<h1>Welcome <span id="wName"></span> ✅</h1>
-<p style="text-align:center"><span id="wService"></span> | Approved</p>
-<button class="btn" style="background:#6c757d" onclick="logout()">Logout</button>
-<h3>Available Jobs</h3>
+<!-- DASHBOARD -->
+<div id="dashBox" class="hidden">
+<h3 style="color:#7fdbc0">Welcome, <span id="wName"></span> 👋</h3>
+<p class="small">Phone: <span id="wPhone"></span> | Status: <span id="wStatus"></span></p>
+<h4>📋 Available Jobs</h4>
 <div id="jobsList"></div>
+<button class="btn" style="background:#2a2a2a;color:white" onclick="logout()">Logout</button>
+</div>
+
 </div>
 
 <script>
-function showTab(t){
- document.getElementById('loginBox').classList.toggle('hidden', t!=='login');
- document.getElementById('regBox').classList.toggle('hidden', t!=='reg');
- document.getElementById('tabLogin').classList.toggle('active', t==='login');
- document.getElementById('tabReg').classList.toggle('active', t==='reg');
+function show(t){
+ document.getElementById('loginBox').className = t==='login'?'':'hidden';
+ document.getElementById('regBox').className = t==='reg'?'':'hidden';
+ document.getElementById('tLogin').className = t==='login'?'tab tabActive':'tab tabOff';
+ document.getElementById('tReg').className = t==='reg'?'tab tabActive':'tab tabOff';
 }
-function getPending(){return JSON.parse(localStorage.getItem('care233_pending')||'[]')}
-function getApproved(){return JSON.parse(localStorage.getItem('care233_workers')||'[]')}
-function savePending(a){localStorage.setItem('care233_pending',JSON.stringify(a))}
-function saveApproved(a){localStorage.setItem('care233_workers',JSON.stringify(a))}
 
-function doRegister(){
+function register(){
  let name=document.getElementById('rName').value.trim();
  let phone=document.getElementById('rPhone').value.trim();
  let pass=document.getElementById('rPass').value.trim();
- let pass2=document.getElementById('rPass2').value.trim();
- let momo=document.getElementById('rMomo').value.trim();
- let service=document.getElementById('rService').value;
- let loc=document.getElementById('rLocation').value.trim();
- let exp=document.getElementById('rExp').value.trim();
- let bio=document.getElementById('rBio').value.trim();
- let msg=document.getElementById('regMsg');
- if(!name||!phone||!pass||!momo||!service||!loc){msg.className='msg bad';msg.innerText='Fill all * fields';return}
- if(pass.length<4){msg.className='msg bad';msg.innerText='Password min 4 characters';return}
- if(pass!==pass2){msg.className='msg bad';msg.innerText='Passwords do not match';return}
- let pending=getPending(); let approved=getApproved();
- if(pending.find(w=>w.phone===phone)||approved.find(w=>w.phone===phone)){msg.className='msg bad';msg.innerText='Phone already registered';return}
- pending.push({name,phone,password:pass,momo,service,location:loc,exp,bio,date:new Date().toLocaleString(),status:'pending'});
- savePending(pending);
- msg.className='msg wait';msg.innerText='✅ Submitted! Wait for admin approval, then login with your password.';
+ let momo=document.getElementById('rMoMo').value.trim();
+ let loc=document.getElementById('rLoc').value.trim();
+ let skill=document.getElementById('rSkill').value;
+ if(!name||!phone||!pass||!momo||!loc){document.getElementById('rMsg').innerText='Fill all * fields';return}
+ if(pass.length<4){document.getElementById('rMsg').innerText='Password too short';return}
+ let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
+ if(workers.find(w=>w.phone===phone)){document.getElementById('rMsg').innerText='Phone already registered. Login.';return}
+ workers.push({name:name, phone:phone, pass:pass, momo:momo, loc:loc, skill:skill, approved:false, date:new Date().toLocaleString()});
+ localStorage.setItem('care233_workers',JSON.stringify(workers));
+ document.getElementById('rMsg').innerText='✅ Registered! Wait for Admin Approval. Then Login.';
+ setTimeout(()=>show('login'),1500);
 }
 
-function doLogin(){
- let phone=document.getElementById('loginPhone').value.trim();
- let pass=document.getElementById('loginPass').value.trim();
- let msg=document.getElementById('loginMsg');
- if(!phone||!pass){msg.className='msg bad';msg.innerText='Enter phone & password';return}
- let approved=getApproved();
- let worker=approved.find(w=>w.phone===phone && w.password===pass);
- if(!worker){
-   let pending=getPending();
-   if(pending.find(w=>w.phone===phone && w.password===pass)){msg.className='msg wait';msg.innerText='⏳ Still pending approval. Contact Admin.';}
-   else if(pending.find(w=>w.phone===phone)||approved.find(w=>w.phone===phone)){msg.className='msg bad';msg.innerText='❌ Wrong password!';}
-   else{msg.className='msg bad';msg.innerText='❌ Not found. Please Register.'; showTab('reg');}
-   return;
- }
- localStorage.setItem('care233_currentWorker',JSON.stringify(worker));
- openDash(worker);
+function login(){
+ let phone=document.getElementById('lPhone').value.trim();
+ let pass=document.getElementById('lPass').value.trim();
+ let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
+ let w=workers.find(x=>x.phone===phone && x.pass===pass);
+ if(!w){document.getElementById('lMsg').innerText='❌ Wrong phone or password';return}
+ if(!w.approved){document.getElementById('lMsg').innerText='⏳ Not yet approved by Admin. Call CEO.';return}
+ localStorage.setItem('care233_current',JSON.stringify(w));
+ openDash(w);
 }
-function openDash(worker){
- document.getElementById('authCard').classList.add('hidden');
- document.getElementById('dash').classList.remove('hidden');
- document.getElementById('wName').innerText=worker.name;
- document.getElementById('wService').innerText=worker.service;
+
+function openDash(w){
+ document.getElementById('loginBox').className='hidden';
+ document.getElementById('regBox').className='hidden';
+ document.getElementById('dashBox').className='';
+ document.getElementById('wName').innerText=w.name;
+ document.getElementById('wPhone').innerText=w.phone;
+ document.getElementById('wStatus').innerText=w.approved?'✅ Approved':'Pending';
+ loadJobs();
+}
+
+function loadJobs(){
  let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');
- let list=document.getElementById('jobsList');
- if(jobs.length===0){list.innerHTML='<p>No jobs yet</p>';return;}
- list.innerHTML=jobs.map((j,i)=>`<div class="job"><b>${j.service}</b> - ${j.location}<br>${j.desc||''}<br><small>${j.date||''}</small><br><button class="btn" onclick="alert('Accepted Job #${i}')">Accept</button></div>`).join('');
+ let html='';
+ if(jobs.length===0) html='<p class="small">No jobs yet. Wait for bookings.</p>';
+ jobs.reverse().forEach(j=>{
+   let gpsBtn=j.gps?`<a class="link" target="_blank" href="https://www.google.com/maps?q=${j.gps}">🗺️ GPS Directions</a>`:'No GPS';
+   html+=`<div class="job"><b>${j.service}</b><br>📍 ${j.location}<br>💰 ${j.price}<br>📞 ${j.phone}<br>${gpsBtn}<br><small>${j.date}</small></div>`;
+ });
+ document.getElementById('jobsList').innerHTML=html;
 }
-function logout(){localStorage.removeItem('care233_currentWorker');location.reload();}
-let cur=localStorage.getItem('care233_currentWorker');
-if(cur){try{openDash(JSON.parse(cur));}catch(e){}}
+
+function logout(){
+ localStorage.removeItem('care233_current');
+ location.reload();
+}
+
+// Auto login if already
+let cur=JSON.parse(localStorage.getItem('care233_current')||'null');
+if(cur && cur.approved) openDash(cur);
 </script>
 </body>
 </html>
