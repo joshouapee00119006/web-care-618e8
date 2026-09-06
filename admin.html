@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Staffs - Admin & Staffs Portal</title>
+<title>Staffs Portal</title>
 <style>
 body{background:#050a07;color:white;font-family:Arial;padding:8px;margin:0}
 .card{background:#111;padding:12px;border-radius:16px;max-width:720px;margin:auto;border:1px solid #0a4d2e}
@@ -25,25 +25,22 @@ img.doc{width:100%;max-width:280px;border-radius:8px;margin:4px 0}
 <div class="card">
 <div class="top">
 <div class="icon" id="adIcon" onclick="tapAdmin()">AD</div>
-<div><h2>STAFFS</h2><p class="small" style="margin:0;text-align:center">Admin & Staffs Portal</p></div>
+<div><h2>STAFFS</h2><p class="small" style="margin:0;text-align:center">Staffs Portal</p></div>
 </div>
 
 <div id="loginStaff">
 <h3 style="color:#7fdbc0;text-align:center">👥 Staff Login</h3>
 <input id="sPhone" placeholder="Staff Phone Number">
-<input id="sPass" type="password" placeholder="Staff Password (from CEO)">
+<input id="sPass" type="password" placeholder="Password">
 <button class="btn green" style="width:100%;padding:14px;font-size:16px" onclick="loginStaff()">Login as Staff</button>
 <p id="sMsg" class="small" style="text-align:center"></p>
-<p class="small" style="text-align:center;margin-top:15px">CEO? Tap <b>AD</b> icon 5 times quickly to unlock Super Admin</p>
-<p class="small" style="text-align:center">Taps: <span id="tapCount">0</span>/5</p>
 </div>
 
 <div id="loginSuper" class="hidden">
-<h3 style="color:#ffcc00;text-align:center">🔐 SUPER ADMIN - CEO ONLY</h3>
-<input id="superPass" type="password" placeholder="Super Admin Password (ceo123)">
-<button class="btn green" style="width:100%;padding:14px" onclick="loginSuper()">🔓 UNLOCK SUPER ADMIN</button>
-<button class="btn grey" style="width:100%;margin-top:8px" onclick="showStaffLogin()">← Back to Staff Login</button>
-<p class="small" style="text-align:center">Default: ceo123</p>
+<h3 style="color:#ffcc00;text-align:center">🔐 SUPER ADMIN</h3>
+<input id="superPass" type="password" placeholder="Super Admin Password">
+<button class="btn green" style="width:100%;padding:14px" onclick="loginSuper()">UNLOCK</button>
+<button class="btn grey" style="width:100%;margin-top:8px" onclick="showStaffLogin()">← Back</button>
 </div>
 
 <div id="dash" class="hidden">
@@ -61,14 +58,14 @@ img.doc{width:100%;max-width:280px;border-radius:8px;margin:4px 0}
 <div id="vJobs" class="hidden">
 <h3>💼 Create Job</h3>
 <input id="jService" placeholder="Service e.g. Home Nursing"><input id="jLoc" placeholder="Location"><input id="jPrice" placeholder="Price GH₵"><input id="jPhone" placeholder="Client Phone"><input id="jGPS" placeholder="GPS e.g. 5.60,-0.18">
-<button class="btn green" style="width:100%" onclick="createJob()">+ CREATE JOB & CALL</button>
+<button class="btn green" style="width:100%" onclick="createJob()">+ CREATE JOB</button>
 <div id="jobList" style="margin-top:10px"></div>
 </div>
-<div id="vEdu" class="hidden"><h3>🎓 Educational Talks to Nurses</h3><input id="eTitle" placeholder="Title e.g. Hand Washing"><textarea id="eMsg" placeholder="Message to all Nurses" rows="3"></textarea><button class="btn blue" style="width:100%" onclick="sendEdu()">📢 Send Talk</button><div id="eduList"></div></div>
+<div id="vEdu" class="hidden"><h3>🎓 Educational Talks</h3><input id="eTitle" placeholder="Title"><textarea id="eMsg" placeholder="Message" rows="3"></textarea><button class="btn blue" style="width:100%" onclick="sendEdu()">📢 Send Talk</button><div id="eduList"></div></div>
 <div id="vStaff" class="hidden">
-<div id="staffLock" class="lockMsg hidden">🔒 <b>LOCKED FOR STAFF</b><br>Only Super Admin (CEO) can manage staffs.<br>Contact CEO for access.</div>
+<div id="staffLock" class="lockMsg hidden">🔒 <b>LOCKED</b><br>Access Restricted.</div>
 <div id="staffContent">
-<h3>👥 Staff Management - CEO ONLY</h3>
+<h3>👥 Staff Management</h3>
 <div style="background:#0f1f15;padding:10px;border-radius:10px;border:1px dashed #ffcc00">
 <input id="stName" placeholder="Staff Full Name"><input id="stPhone" placeholder="Staff Phone">
 <button class="btn green" onclick="addStaff()" style="width:100%">🔑 GENERATE PASSWORD & ADD STAFF</button>
@@ -84,13 +81,11 @@ img.doc{width:100%;max-width:280px;border-radius:8px;margin:4px 0}
 const SUPER_PASS="ceo123";
 let taps=0, tapTimer=null, isSuper=false;
 function tapAdmin(){
- taps++; document.getElementById('tapCount').innerText=taps;
- clearTimeout(tapTimer); tapTimer=setTimeout(()=>{taps=0;document.getElementById('tapCount').innerText=0},3000);
+ taps++; clearTimeout(tapTimer); tapTimer=setTimeout(()=>{taps=0},3000);
  if(taps>=5){
   document.getElementById('loginStaff').className='hidden';
   document.getElementById('loginSuper').className='';
-  taps=0; document.getElementById('tapCount').innerText=0;
-  if(navigator.vibrate) navigator.vibrate(200);
+  taps=0; if(navigator.vibrate) navigator.vibrate(200);
  }
 }
 function showStaffLogin(){document.getElementById('loginSuper').className='hidden';document.getElementById('loginStaff').className='';}
@@ -98,15 +93,15 @@ function loginStaff(){
  let phone=document.getElementById('sPhone').value.trim(); let pass=document.getElementById('sPass').value.trim();
  let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
  let s=staffs.find(x=>x.phone===phone && x.password===pass);
- if(!s){document.getElementById('sMsg').innerText='❌ Wrong phone/password. Ask CEO to generate password in Staff Management.';return}
- if(!s.active){document.getElementById('sMsg').innerText='❌ Disabled by CEO';return}
+ if(!s){document.getElementById('sMsg').innerText='❌ Wrong phone or password';return}
+ if(!s.active){document.getElementById('sMsg').innerText='❌ Account Disabled';return}
  isSuper=false; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:false,staff:s}));
  openDash(s.name,false);
 }
 function loginSuper(){
- if(document.getElementById('superPass').value!==SUPER_PASS){alert('Wrong Super Admin Password');return}
- isSuper=true; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:true,name:'CEO - Super Admin'}));
- openDash('CEO - Super Admin',true);
+ if(document.getElementById('superPass').value!==SUPER_PASS){alert('Wrong Password');return}
+ isSuper=true; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:true,name:'CEO'}));
+ openDash('CEO',true);
 }
 function openDash(name,superFlag){
  document.getElementById('loginStaff').className='hidden';document.getElementById('loginSuper').className='hidden';document.getElementById('dash').className='';
@@ -129,7 +124,7 @@ function tab(t){
   let btn=document.getElementById('tb'+(['Bookings','Nurses','Jobs','Edu','Staff'].indexOf(x)+1));
   if(btn) btn.className=x.toLowerCase()===t.toLowerCase()?'tab active':'tab off'+(x==='Staff'&&!isSuper?' locked':'');
  });
- if(t==='staff' && !isSuper){
+ if(t==='staff' &&!isSuper){
   document.getElementById('vStaff').className='';
   document.getElementById('staffLock').className='lockMsg';
   document.getElementById('staffContent').className='hidden';
@@ -141,7 +136,7 @@ function loadBookings(){
  let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');
  document.getElementById('bookList').innerHTML=jobs.slice().reverse().map(j=>`<div class="box"><b>${j.service}</b> - ${j.phone}<br>📍 ${j.location} - 💰 ${j.price}<br>
  <a class="btn blue" href="tel:${j.phone}">📞 Call Client</a>
- <a class="btn green" style="text-decoration:none" target="_blank" href="https://wa.me/${j.phone.replace(/[^0-9]/g,'')}?text=Hello%20from%20Nurses%20Group">💬 WhatsApp Client</a>
+ <a class="btn green" style="text-decoration:none" target="_blank" href="https://wa.me/${j.phone.replace(/[^0-9]/g,'')}?text=Hello%20from%20Nurses%20Group">💬 WhatsApp</a>
  <a class="btn blue" style="text-decoration:none" target="_blank" href="https://www.google.com/maps?q=${j.gps}">🗺️ GPS</a>
  <br><small>${j.date}</small></div>`).join('')||'<p class="small">No bookings yet</p>';
 }
@@ -155,11 +150,9 @@ function loadNurses(){
   <a class="btn blue" style="text-decoration:none" href="${w.ghanaCard}" target="_blank">🪪 Ghana Card</a>
   <a class="btn blue" style="text-decoration:none" href="${w.license}" target="_blank">📜 License</a>
   <a class="btn blue" style="text-decoration:none" href="${w.cv}" target="_blank">📄 CV</a><br><br>
-  <button class="btn green" onclick="approveN(${idx})">✅ Approve Nurse</button>
+  <button class="btn green" onclick="approveN(${idx})">✅ Approve</button>
   <button class="btn red" onclick="rejectN(${idx})">❌ Reject</button>
-  <a class="btn blue" href="tel:${w.phone}">📞 Call Nurse</a>
-  <a class="btn green" style="text-decoration:none" target="_blank" href="https://wa.me/${w.phone.replace(/[^0-9]/g,'')}?text=Hello%20from%20Nurses%20Group">💬 WhatsApp</a>
-  </div>`;
+  <a class="btn blue" href="tel:${w.phone}">📞 Call Nurse</a></div>`;
  }).join('')||'<p class="small">No pending nurses</p>';
  document.getElementById('nurseList').innerHTML=html;
  document.getElementById('approvedList').innerHTML=workers.filter(w=>w.approved).map(w=>`<div class="box" style="border-left-color:#0a8a4a"><b>${w.name}</b> - ${w.phone} ✅ <a class="btn blue" href="tel:${w.phone}">📞 Call</a></div>`).join('')||'<p class="small">None</p>';
@@ -168,37 +161,8 @@ function approveN(i){let w=JSON.parse(localStorage.getItem('care233_workers')||'
 function rejectN(i){if(!confirm('Delete?'))return;let w=JSON.parse(localStorage.getItem('care233_workers')||'[]');w.splice(i,1);localStorage.setItem('care233_workers',JSON.stringify(w));loadNurses()}
 function createJob(){
  let j={service:document.getElementById('jService').value,location:document.getElementById('jLoc').value,price:document.getElementById('jPrice').value,phone:document.getElementById('jPhone').value,gps:document.getElementById('jGPS').value,date:new Date().toLocaleString()};
- if(!j.service||!j.phone){alert('Fill service and client phone');return}
+ if(!j.service||!j.phone){alert('Fill service and phone');return}
  let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');jobs.push(j);localStorage.setItem('care233_jobs',JSON.stringify(jobs));
- ['jService','jLoc','jPrice','jPhone','jGPS'].forEach(id=>document.getElementById(id).value='');loadJobs();loadBookings();alert('Job Created!');
+ ['jService','jLoc','jPrice','jPhone','jGPS'].forEach(id=>document.getElementById(id).value='');loadJobs();loadBookings();
 }
-function loadJobs(){let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');document.getElementById('jobList').innerHTML=jobs.slice().reverse().map(j=>`<div class="box"><b>${j.service}</b> - ${j.phone} - ${j.location}<br><small>${j.date}</small> <a class="btn blue" href="tel:${j.phone}">📞 Call</a></div>`).join('')||'<p class="small">No jobs</p>'}
-function addStaff(){
- let name=document.getElementById('stName').value.trim();let phone=document.getElementById('stPhone').value.trim();
- if(!name||!phone){alert('Fill name and phone');return}
- let pass='STAFF'+Math.floor(1000+Math.random()*9000);
- let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
- staffs.push({id:Date.now(),name,phone,password:pass,active:true,created:new Date().toLocaleString()});
- localStorage.setItem('care233_staffs',JSON.stringify(staffs));
- document.getElementById('stMsg').innerHTML=`✅ Added!<br><b>${name}</b><br>Password: <b style="color:#ffcc00;font-size:20px">${pass}</b><br>Staff will login at same admin link with phone+this password`;
- document.getElementById('stName').value='';document.getElementById('stPhone').value='';loadStaff();
-}
-function loadStaff(){
- let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
- document.getElementById('staffList').innerHTML=staffs.map((s,i)=>`<div class="box"><b>${s.name}</b> - ${s.phone}<br>🔑 <b style="color:#ffcc00">${s.password}</b> - ${s.active?'✅ Active':'❌ Disabled'}<br><small>${s.created}</small><br>
- <button class="btn blue" onclick="changePass(${i})">🔑 Change Password</button>
- <button class="btn ${s.active?'red':'green'}" onclick="toggleStaff(${i})">${s.active?'Disable':'Enable'}</button>
- <button class="btn red" onclick="delStaff(${i})">Delete</button>
- <a class="btn blue" href="tel:${s.phone}">📞 Call</a></div>`).join('')||'<p class="small">No staff yet</p>';
-}
-function changePass(i){let np='STAFF'+Math.floor(1000+Math.random()*9000);let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s[i].password=np;localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff();alert('New Password for '+s[i].name+': '+np)}
-function toggleStaff(i){let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s[i].active=!s[i].active;localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff()}
-function delStaff(i){if(!confirm('Delete staff?'))return;let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s.splice(i,1);localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff()}
-function sendEdu(){let t=document.getElementById('eTitle').value;let m=document.getElementById('eMsg').value;if(!t||!m){alert('Fill');return}let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');edus.push({title:t,msg:m,date:new Date().toLocaleString(),by:isSuper?'CEO':'Staff'});localStorage.setItem('care233_edu',JSON.stringify(edus));document.getElementById('eTitle').value='';document.getElementById('eMsg').value='';loadEdu()}
-function loadEdu(){let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');document.getElementById('eduList').innerHTML=edus.slice().reverse().map(e=>`<div class="box"><b>${e.title}</b> <small>by ${e.by}</small><br>${e.msg}<br><small>${e.date}</small></div>`).join('')}
-function logout(){localStorage.removeItem('care233_current_role');location.reload()}
-let cur=JSON.parse(localStorage.getItem('care233_current_role')||'null');
-if(cur){isSuper=cur.isSuper;openDash(cur.isSuper?cur.name:cur.staff.name,cur.isSuper);}
-</script>
-</body>
-</html>
+function loadJobs(){let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');document.getElementById('jobList').innerHTML=jobs.slice().reverse().map(j=>`<div class="box"><b>${j.service}</b> - ${j.phone}<br><small>${j.date}</small></div>`).join('')||'<p class="small">No jobs</p
