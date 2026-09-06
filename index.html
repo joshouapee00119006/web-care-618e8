@@ -10,18 +10,15 @@ body {background:#f5f9f6;color:#222}
 .header {background:#0A4D2E;color:white;padding:15px;text-align:center;position:sticky;top:0;z-index:100}
 .header h1 {font-size:28px}
 .header p {color:#FFD700;font-size:14px}
-.hero {background:linear-gradient(rgba(10,77,46,0.9),rgba(10,77,46,0.9)),url('https://images.unsplash.com/photo-1576765607924-3f7b8410a787?w=1200');background-size:cover;color:white;padding:50px 20px;text-align:center}
-.hero h2 {font-size:32px;margin-bottom:15px}
-.btn {background:#FFD700;color:#0A4D2E;padding:14px 28px;border:none;border-radius:30px;font-weight:bold;font-size:16px;cursor:pointer;margin:10px;display:inline-block;text-decoration:none}
+.hero {background:linear-gradient(rgba(10,77,46,0.92),rgba(10,77,46,0.92)),url('https://images.unsplash.com/photo-1576765607924-3f7b8410a787?w=1200');background-size:cover;color:white;padding:60px 20px;text-align:center}
+.hero h2 {font-size:34px;margin-bottom:12px}
+.btn {background:#FFD700;color:#0A4D2E;padding:14px 28px;border:none;border-radius:30px;font-weight:bold;font-size:16px;cursor:pointer;margin:8px;display:inline-block;text-decoration:none}
 .btn-green {background:#0A4D2E;color:white}
 .section {padding:40px 20px;max-width:1100px;margin:auto}
 .cards {display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}
-.card {background:white;padding:25px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);border-top:4px solid #0A4D2E}
+.card {background:white;padding:25px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.08);border-top:4px solid #0A4D2E}
 .form-box {background:white;padding:30px;border-radius:15px;max-width:600px;margin:30px auto;box-shadow:0 10px 30px rgba(0,0,0,0.15)}
 input,select,textarea {width:100%;padding:14px;margin:8px 0;border:1px solid #ccc;border-radius:8px;font-size:16px}
-.split-box {background:#0A4D2E;color:white;padding:20px;border-radius:12px;margin:20px 0}
-.split-box div {display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.2)}
-.badge {background:#FFD700;color:#0A4D2E;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold}
 .footer {background:#0A4D2E;color:white;text-align:center;padding:30px 20px;margin-top:40px}
 </style>
 </head>
@@ -29,34 +26,35 @@ input,select,textarea {width:100%;padding:14px;margin:8px 0;border:1px solid #cc
 
 <div class="header">
   <h1>🇬🇭 CARE233</h1>
-  <p>Trusted Home Care Platform • All 16 Regions • Founder: Joshua Osei-Baah</p>
+  <p>Trusted Home Care Platform • All 16 Regions • 24/7 Support</p>
 </div>
 
 <div class="hero">
   <h2>Book Verified Home Nurse in 30 Seconds</h2>
-  <p>80% Goes to Nurses • Police Checked • NMC Certified • 24/7 Support</p>
+  <p>Police Checked • NMC Certified • Professional Care at Home</p>
   <br>
-  <a href="#book" class="btn">📅 BOOK NURSE NOW - 20% OFF</a>
-  <p style="margin-top:15px">Use Code: <b>GHANA100</b> | Call: 0544 121 814 / 0502 957 280</p>
+  <a href="#book" class="btn">📅 BOOK A NURSE NOW</a>
+  <p style="margin-top:15px;opacity:0.9">Use Code: <b>GHANA100</b> for Discount | 📞 0544 121 814</p>
 </div>
 
 <div class="section">
-  <h2 style="text-align:center;color:#0A4D2E">Our Money Split - Nurse First!</h2>
+  <h2 style="text-align:center;color:#0A4D2E">Why Families Trust CARE233</h2>
   <div class="cards">
-    <div class="card"><h3>👩‍⚕️ Nurse 80%</h3><p>GHC 320 per GHC 400 booking. Highest in Ghana! Weekly MoMo.</p></div>
-    <div class="card"><h3>📢 Blogger 3%</h3><p>GHC 12 per booking. Passive income for promoters.</p></div>
-    <div class="card"><h3>👨‍💼 Staff 5%</h3><p>For our 2 support staff. Customer care team.</p></div>
-    <div class="card"><h3>💼 CARE233 10%</h3><p>Company profit + growth. Sustainable business.</p></div>
+    <div class="card"><h3>👩‍⚕️ Verified Nurses</h3><p>NMC certified, police cleared, experienced. Every nurse is verified.</p></div>
+    <div class="card"><h3>🌍 All 16 Regions</h3><p>Accra, Kumasi, Tamale, Takoradi - Care wherever you are in Ghana.</p></div>
+    <div class="card"><h3>⚡ Fast & Reliable</h3><p>Book in 30 seconds. Nurse assigned within 1 hour. 24/7 support line.</p></div>
+    <div class="card"><h3>💛 Home Care Services</h3><p>Elderly care, post-surgery, baby care, physiotherapy at home.</p></div>
   </div>
 </div>
 
 <div class="section" id="book">
 <div class="form-box">
-  <h2 style="color:#0A4D2E;text-align:center">📋 Book Home Care Service</h2>
-  <p style="text-align:center;color:green;font-weight:bold">✅ Nurses earn 80% - they love working with us!</p>
+  <h2 style="color:#0A4D2E;text-align:center">📋 Book Home Care</h2>
+  <p style="text-align:center;color:#666;font-size:14px;margin-bottom:15px">Fill form - We will call you in 30 mins</p>
 
   <input type="text" id="clientName" placeholder="Your Full Name *" required>
-  <input type="tel" id="clientPhone" placeholder="Your Phone (MoMo) *" required>
+  <input type="tel" id="clientPhone" placeholder="Your Phone Number *" required>
+
   <select id="region" required>
     <option value="">Select Your Region *</option>
     <option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Eastern</option>
@@ -64,148 +62,89 @@ input,select,textarea {width:100%;padding:14px;margin:8px 0;border:1px solid #cc
     <option>Upper West</option><option>Bono</option><option>Bono East</option><option>Ahafo</option>
     <option>Oti</option><option>North East</option><option>Savannah</option><option>Western North</option>
   </select>
+
   <select id="service">
     <option>Home Nursing</option><option>Elderly Care</option><option>Post-Surgery Care</option>
     <option>Baby Care</option><option>Physiotherapy</option>
   </select>
-  <select id="amount">
-    <option value="500">Basic Care - GHC 500/day</option>
-    <option value="800">Professional Care - GHC 800/day</option>
-    <option value="1000">Premium 24hr Care - GHC 1000/day</option>
+
+  <select id="careType">
+    <option>Basic Care</option><option>Professional Care</option><option>Premium 24hr Care</option>
   </select>
-  <textarea id="notes" placeholder="Describe patient condition..."></textarea>
 
-  <!-- REFERRAL CODE BOX -->
-  <div style="background:#FFF3CD;border:2px dashed #FFC107;padding:15px;border-radius:10px;margin:15px 0;">
-    <label><b>🎁 Promo Code (From Blogger / Friend?)</b></label>
-    <input type="text" id="refCode" placeholder="e.g. GHANA100, KOBBY100" oninput="checkReferral()">
-    <div id="refMsg" style="font-weight:bold;margin-top:8px"></div>
+  <textarea id="notes" placeholder="Describe patient condition / care needed..."></textarea>
+
+  <div style="background:#FFF8E1;border:2px dashed #FFC107;padding:15px;border-radius:10px;margin:15px 0;">
+    <label style="font-weight:bold;font-size:14px">🎁 Have a Promo Code?</label>
+    <input type="text" id="refCode" placeholder="e.g. GHANA100" oninput="checkReferral()" style="margin-top:8px">
+    <div id="refMsg" style="font-weight:bold;margin-top:10px;font-size:15px"></div>
   </div>
 
-  <!-- LIVE SPLIT CALCULATION -->
-  <div class="split-box" id="splitBox" style="display:none">
-    <h4>💰 Payment Breakdown (Live)</h4>
-    <div><span>Client Pays (After Discount):</span><span id="s_total">GHC 0</span></div>
-    <div><span>👩‍⚕️ Nurse Gets 80%:</span><span id="s_nurse">GHC 0</span></div>
-    <div><span>📢 Blogger 3%:</span><span id="s_blogger">GHC 0</span></div>
-    <div><span>👨‍💼 Staff 5%:</span><span id="s_staff">GHC 0</span></div>
-    <div><span>📱 Data 2%:</span><span id="s_data">GHC 0</span></div>
-    <div><span>💼 Profit 10%:</span><span id="s_profit">GHC 0</span></div>
-  </div>
-
-  <button class="btn btn-green" style="width:100%" onclick="submitBooking()">✅ CONFIRM BOOKING - Pay with MoMo</button>
-  <p style="text-align:center;margin-top:10px;font-size:13px">By booking, you agree nurses get 80% to serve you better!</p>
+  <button class="btn btn-green" style="width:100%;font-size:18px" onclick="submitBooking()">✅ CONFIRM BOOKING</button>
+  <p style="text-align:center;margin-top:12px;font-size:12px;color:#888">We will call to confirm details and price. No payment online.</p>
 </div>
 </div>
 
 <div class="section" style="background:#0A4D2E;color:white;text-align:center;border-radius:20px">
-  <h2>Join CARE233 as a Nurse - Earn 80%!</h2>
-  <p>GHC 320-400 per day | All 16 Regions | Weekly MoMo</p>
+  <h2>Work With CARE233</h2>
+  <p>Hiring nurses & partners across Ghana</p>
   <br>
-  <a href="https://wa.me/233544121814?text=Hello%20CARE233%20I%20want%20to%20join%20as%20nurse%2080%25" class="btn">👩‍⚕️ APPLY AS NURSE - WhatsApp</a>
-  <a href="https://wa.me/233544121814?text=Hello%20CARE233%20I%20want%20to%20be%20blogger%20partner%203%25" class="btn">📢 BECOME BLOGGER PARTNER</a>
+  <a href="https://wa.me/233544121814?text=Hello%20CARE233%20I%20want%20to%20join%20as%20nurse" class="btn">👩‍⚕️ JOIN AS NURSE</a>
+  <a href="https://wa.me/233544121814?text=Hello%20CARE233%20I%20want%20to%20be%20a%20partner" class="btn">📢 BECOME PARTNER</a>
 </div>
 
 <div class="footer">
   <h3>CARE233 - Ghana's Trusted Home Care</h3>
-  <p>Founder: Joshua Osei-Baah | 0544 121 814 / 0502 957 280</p>
-  <p>All 16 Regions | NMC Certified | Police Checked</p>
-  <p style="margin-top:15px;color:#FFD700">Nurse 80% | Blogger 3% | Staff 5% | Data 2% | Profit 10%</p>
+  <p>📞 0544 121 814 / 0502 957 280</p>
+  <p>All 16 Regions | NMC Certified | Police Checked | 24/7 Care</p>
+  <p style="margin-top:15px;font-size:11px;opacity:0.7">© 2026 CARE233 - Caring for Ghana</p>
 </div>
 
 <script>
-// BLOGGER CODES
-const bloggers = {
-  "GHANA100": {name:"CARE233 Official", disc:20},
-  "KOBBY100": {name:"Kobby Kyei", disc:20},
-  "ZION100": {name:"ZionFelix", disc:20},
-  "AMEYAW100": {name:"Ameyaw Debrah", disc:20},
-  "NURSE100": {name:"Nurse Referral", disc:20}
-};
-
-let currentSplit = null;
+const bloggers = {"GHANA100":{disc:20},"KOBBY100":{disc:20},"ZION100":{disc:20},"AMEYAW100":{disc:20},"NURSE100":{disc:20},"BLOGGER100":{disc:20}};
 
 function checkReferral() {
-  let code = document.getElementById('refCode').value.toUpperCase();
+  let code = document.getElementById('refCode').value.toUpperCase().trim();
   let msg = document.getElementById('refMsg');
-  let amount = parseInt(document.getElementById('amount').value);
-  let box = document.getElementById('splitBox');
-
-  if(bloggers[code]) {
-    let disc = amount * (bloggers[code].disc/100);
-    let finalPay = amount - disc;
-    msg.innerHTML = `✅ ${bloggers[code].disc}% OFF! Code by ${bloggers[code].name}. You save GHC ${disc}. Pay GHC ${finalPay}`;
-    msg.style.color = "green";
-    calculateSplit(finalPay);
-    box.style.display = "block";
-  } else if(code.length >= 4) {
-    msg.innerHTML = "❌ Invalid code. Try GHANA100 for 20% OFF";
-    msg.style.color = "red";
-    calculateSplit(amount);
-    box.style.display = "block";
-  } else {
-    box.style.display = "none";
-    msg.innerHTML = "";
+  if(code===""){msg.innerHTML="";return;}
+  if(bloggers[code]){
+    msg.innerHTML=`🎉 Awesome! You got ${bloggers[code].disc}% DISCOUNT with code ${code}!`;
+    msg.style.color="#0A4D2E";msg.style.background="#E8F5E9";msg.style.padding="12px";msg.style.borderRadius="8px";
+  } else if(code.length>=3){
+    msg.innerHTML=`❌ Code "${code}" not valid. Try GHANA100`;
+    msg.style.color="#C62828";msg.style.background="#FFEBEE";msg.style.padding="12px";msg.style.borderRadius="8px";
   }
 }
 
-function calculateSplit(paid) {
-  currentSplit = {
-    total: paid,
-    nurse: Math.round(paid*0.80),
-    blogger: Math.round(paid*0.03),
-    staff: Math.round(paid*0.05),
-    data: Math.round(paid*0.02),
-    profit: Math.round(paid*0.10)
-  };
-  document.getElementById('s_total').innerText = `GHC ${currentSplit.total}`;
-  document.getElementById('s_nurse').innerText = `GHC ${currentSplit.nurse}`;
-  document.getElementById('s_blogger').innerText = `GHC ${currentSplit.blogger}`;
-  document.getElementById('s_staff').innerText = `GHC ${currentSplit.staff}`;
-  document.getElementById('s_data').innerText = `GHC ${currentSplit.data}`;
-  document.getElementById('s_profit').innerText = `GHC ${currentSplit.profit}`;
+function submitBooking(){
+  let name=document.getElementById('clientName').value.trim();
+  let phone=document.getElementById('clientPhone').value.trim();
+  let region=document.getElementById('region').value;
+  let ref=document.getElementById('refCode').value.toUpperCase().trim()||"DIRECT";
+  let careType=document.getElementById('careType').value;
+  let service=document.getElementById('service').value;
+
+  if(!name||!phone||!region){alert("Please fill Name, Phone, Region");return;}
+
+  let discount=0; if(bloggers[ref]) discount=bloggers[ref].disc;
+
+  // INTERNAL CALCULATION - NOT SHOWN TO CLIENT - 80-3-5-2-10 model
+  // Amounts are decided on phone call, this is estimate
+  let basePrices={"Basic Care":500,"Professional Care":800,"Premium 24hr Care":1000};
+  let base=basePrices[careType]||500;
+  let finalPaid=Math.round(base-(base*discount/100));
+  let secretSplit={nurse:Math.round(finalPaid*0.80),blogger:Math.round(finalPaid*0.03),staff:Math.round(finalPaid*0.05),data:Math.round(finalPaid*0.02),profit:Math.round(finalPaid*0.10)};
+
+  let bookingData={date:new Date().toLocaleString(),clientName:name,phone:phone,region:region,service:service,careType:careType,base:base,discount:discount+"%",finalPaid:finalPaid,referral:ref,notes:document.getElementById('notes').value,_split:secretSplit};
+
+  let all=JSON.parse(localStorage.getItem('care233_bookings')||'[]');all.push(bookingData);localStorage.setItem('care233_bookings',JSON.stringify(all));
+
+  let waMsg=`NEW BOOKING - CARE233%0AName: ${name}%0APhone: ${phone}%0ARegion: ${region}%0AService: ${service}%0AType: ${careType}%0ADiscount: ${discount}% (${ref})%0AEst. Paid: GHC${finalPaid}%0ASplit N80%:${secretSplit.nurse} B3%:${secretSplit.blogger} P10%:${secretSplit.profit}`;
+  window.open(`https://wa.me/233544121814?text=${waMsg}`,'_blank');
+
+  alert(`✅ Thanks ${name}! ${discount?`Your ${discount}% discount is applied! `:''}We will call you at ${phone} in 30 mins to confirm care in ${region}.`);
+  document.getElementById('clientName').value="";document.getElementById('clientPhone').value="";document.getElementById('refCode').value="";document.getElementById('notes').value="";document.getElementById('refMsg').innerHTML="";
 }
-
-document.getElementById('amount').addEventListener('change', checkReferral);
-
-function submitBooking() {
-  let name = document.getElementById('clientName').value;
-  let phone = document.getElementById('clientPhone').value;
-  let region = document.getElementById('region').value;
-  let ref = document.getElementById('refCode').value.toUpperCase() || "NO CODE";
-
-  if(!name ||!phone ||!region) {alert("Fill Name, Phone, Region"); return;}
-  if(!currentSplit) {checkReferral(); if(!currentSplit) calculateSplit(parseInt(document.getElementById('amount').value));}
-
-  // DATA TO SAVE - Connect to Google Sheet via Apps Script
-  let bookingData = {
-    date: new Date().toLocaleString(),
-    clientName: name,
-    phone: phone,
-    region: region,
-    service: document.getElementById('service').value,
-    originalAmount: document.getElementById('amount').value,
-    paid: currentSplit.total,
-    nurse80: currentSplit.nurse,
-    blogger3: currentSplit.blogger,
-    staff5: currentSplit.staff,
-    data2: currentSplit.data,
-    profit10: currentSplit.profit,
-    referral: ref,
-    notes: document.getElementById('notes').value
-  };
-
-  // 1. Save to Google Sheet (replace with your Apps Script URL)
-  // fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {method:'POST', body:JSON.stringify(bookingData)})
-
-  // 2. Send WhatsApp to you
-  let whatsappMsg = `NEW BOOKING CARE233!%0AName:${name}%0APhone:${phone}%0ARegion:${region}%0APaid:GHC${currentSplit.total}%0ANurse80%:${currentSplit.nurse}%0ABlogger3%:${currentSplit.blogger}%0ARef:${ref}`;
-  window.open(`https://wa.me/233544121814?text=${whatsappMsg}`, '_blank');
-
-  alert(`✅ Booking Received! Nurse gets GHC ${currentSplit.nurse} (80%). We will call ${name} at ${phone} in 5 mins!`);
-  console.log("BOOKING DATA:", bookingData);
-}
-
 </script>
 </body>
 </html>
