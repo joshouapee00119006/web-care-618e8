@@ -2,51 +2,44 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CARE233 - Auto Earn Link</title>
+<title>CARE233 - Generate Code</title>
 <style>
 body{margin:0;font-family:sans-serif;background:#f0fdf4;padding:12px}
-.card{background:#fff;padding:22px;border-radius:18px;max-width:500px;margin:30px auto;box-shadow:0 6px 15px rgba(0,0,0,0.15);text-align:center}
-button{width:100%;padding:16px;background:#065f46;color:#facc15;border:none;border-radius:12px;font-weight:bold;font-size:18px;margin:10px 0}
-.linkBox{background:#fef9c3;padding:16px;border-radius:12px;border:2px dashed #ca8a04;word-break:break-all;margin:15px 0;font-weight:bold}
+.card{background:#fff;padding:20px;border-radius:16px;max-width:400px;margin:20px auto;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+input{width:100%;padding:14px;margin:8px 0;border:2px solid #065f46;border-radius:10px;box-sizing:border-box}
+button{width:100%;padding:14px;margin:8px 0;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;font-size:16px}
+.linkBox{background:#fef9c3;padding:12px;border-radius:10px;border:2px dashed #ca8a04;word-break:break-all;margin:10px 0}
 </style>
 </head>
 <body>
 <div class="card">
-<h1 style="color:#065f46;margin:0">💰 CARE233</h1>
-<h3>Your Auto Earning Link is Ready!</h3>
-<p>Share this link. Anyone who books via it, you earn 3% automatically. System tracks for you.</p>
-<p><b>Your Code:</b><br><span id="code" style="font-size:32px;color:#ca8a04;font-weight:bold">LOADING...</span></p>
-<div class="linkBox" id="link">Generating...</div>
+<h2 style="color:#065f46">💰 Earn 3%</h2>
+<p>Enter your MoMo number, generate link, share!</p>
+<input id="name" placeholder="Your Name">
+<input id="momo" placeholder="Your MoMo Number 0244...">
+<button onclick="gen()">GENERATE MY LINK</button>
+<div id="result" style="display:none">
+<p><b>Your Code: <span id="code"></span></b></p>
+<div class="linkBox" id="link"></div>
 <button onclick="copyL()">📋 COPY LINK</button>
-<button onclick="share()" style="background:#25D366;color:#fff">📲 SHARE LINK NOW</button>
-<p style="background:#ecfdf5;padding:12px;border-radius:8px;font-size:13px;text-align:left">
-✅ No typing needed<br>
-✅ Link is saved on your phone forever<br>
-✅ Admin sees your earnings on dashboard<br>
-✅ We pay your MoMo every Friday<br><br>
-<b>Example:</b><br>
-Client pays GHS 220 → You get GHS 6.60 auto
-</p>
-<a href="index.html" style="color:#065f46;font-weight:bold">← Go to Main Site</a>
+<button onclick="share()" style="background:#25D366;color:#fff">📲 SHARE LINK</button>
+</div>
 </div>
 <script>
-// AUTO SYSTEM - NO TYPING!
-let agentCode = localStorage.getItem('care233_my_code');
-if(!agentCode){
-let rand = Math.random().toString(36).substring(2,6).toUpperCase();
-let num = Math.floor(1000+Math.random()*9000);
-agentCode = "CARE"+rand+num;
-localStorage.setItem('care233_my_code', agentCode);
+let finalLink='';
+function gen(){
+let name=document.getElementById('name').value.trim();
+let momo=document.getElementById('momo').value.trim();
+if(!name||!momo){alert('Put name + momo!');return;}
+let code='CARE'+Math.random().toString(36).substring(2,5).toUpperCase()+Math.floor(100+Math.random()*900);
+document.getElementById('code').innerText=code;
+finalLink=`https://joshouapee00119006.github.io/web-care-618e8/index.html?ref=${code}&agentName=${encodeURIComponent(name)}&agentMoMo=${momo}`;
+document.getElementById('link').innerText=finalLink;
+document.getElementById('result').style.display='block';
+localStorage.setItem('care233_my_code',code);
 }
-document.getElementById('code').innerText = agentCode;
-let fullLink = "https://joshouapee00119006.github.io/web-care-618e8/index.html?ref="+agentCode;
-document.getElementById('link').innerText = fullLink;
-
-function copyL(){ navigator.clipboard.writeText(fullLink); alert("✅ Your earning link copied!\n"+fullLink); }
-function share(){
-let msg = `Need a Nurse at Home? 🏥%0ABook CARE233 Trusted Nurses Ghana 🇬🇭%0A%0ABook here 👇%0A${fullLink}`;
-window.open("https://wa.me/?text="+msg, "_blank");
-}
+function copyL(){navigator.clipboard.writeText(finalLink);alert('Copied!');}
+function share(){window.open(`https://wa.me/?text=Book CARE233 Nurse👇%0A${encodeURIComponent(finalLink)}`,'_blank');}
 </script>
 </body>
 </html>
