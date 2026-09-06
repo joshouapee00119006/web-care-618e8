@@ -3,105 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CARE233 - Ghana's Trusted Home Care</title>
+<title>CARE233 CEO - Payroll Control</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:#f5f9f6;color:#222}
-.header{background:#0A4D2E;color:white;padding:15px;text-align:center;position:sticky;top:0;z-index:100}
-.header h1{font-size:28px}.header p{color:#FFD700;font-size:14px}
-.hero{background:linear-gradient(rgba(10,77,46,0.92),rgba(10,77,46,0.92)),url('https://images.unsplash.com/photo-1576765607924-3f7b8410a787?w=1200');background-size:cover;color:white;padding:60px 20px;text-align:center}
-.hero h2{font-size:34px;margin-bottom:12px}
-.btn{background:#FFD700;color:#0A4D2E;padding:14px 28px;border:none;border-radius:30px;font-weight:bold;font-size:16px;cursor:pointer;margin:8px;display:inline-block;text-decoration:none}
-.btn-green{background:#0A4D2E;color:white}
-.section{padding:40px 20px;max-width:1100px;margin:auto}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}
-.card{background:white;padding:25px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.08);border-top:4px solid #0A4D2E}
-.form-box{background:white;padding:30px;border-radius:15px;max-width:600px;margin:30px auto;box-shadow:0 10px 30px rgba(0,0,0,0.15)}
-input,select,textarea{width:100%;padding:14px;margin:8px 0;border:1px solid #ccc;border-radius:8px;font-size:16px}
-.footer{background:#0A4D2E;color:white;text-align:center;padding:30px 20px;margin-top:40px}
+body{background:#06130C;color:#fff;padding:12px}
+.login{max-width:400px;margin:80px auto;background:#fff;color:#222;padding:30px;border-radius:15px;text-align:center}
+.card{background:#112E20;padding:15px;border-radius:12px;margin:8px 0;border-left:4px solid #FFD700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:15px 0}
+.big{font-size:28px;font-weight:bold;color:#FFD700}
+table{width:100%;background:#fff;color:#222;border-radius:10px;overflow:hidden;margin-top:15px;border-collapse:collapse}
+th,td{padding:10px;text-align:left;border-bottom:1px solid #ddd;font-size:12px}
+th{background:#0A4D2E;color:#fff}
+.btn{background:#FFD700;color:#0A4D2E;padding:8px 14px;border:none;border-radius:20px;font-weight:bold;cursor:pointer;margin:3px;font-size:12px}
+.btn-green{background:#0A4D2E;color:#fff}
+.btn-red{background:#C62828;color:#fff}
+.hidden{display:none}
+.tabs{display:flex;gap:8px;margin:15px 0;overflow-x:auto}
+.tab{padding:10px 15px;background:#1A3D2A;border-radius:20px;cursor:pointer;white-space:nowrap}
+.tab.active{background:#FFD700;color:#0A4D2E;font-weight:bold}
+input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ccc;border-radius:8px}
 </style>
 </head>
 <body>
-<div class="header"><h1>🇬🇭 CARE233</h1><p>Trusted Home Care Platform • All 16 Regions • 24/7 Support</p></div>
-<div class="hero"><h2>Book Verified Home Nurse in 30 Seconds</h2><p>Police Checked • NMC Certified • Professional Care at Home</p><br><a href="#book" class="btn">📅 BOOK A NURSE NOW</a><p style="margin-top:15px">Use Code: <b>GHANA100</b> for Discount | 📞 0544 121 814</p></div>
-<div class="section"><h2 style="text-align:center;color:#0A4D2E">Why Families Trust CARE233</h2><div class="cards"><div class="card"><h3>👩‍⚕️ Verified Nurses</h3><p>NMC certified, police cleared, verified.</p></div><div class="card"><h3>🌍 All 16 Regions</h3><p>Accra, Kumasi, Tamale, Takoradi - Care everywhere.</p></div><div class="card"><h3>⚡ Fast & Reliable</h3><p>Book in 30 seconds. Nurse in 1 hour.</p></div><div class="card"><h3>💛 Home Care</h3><p>Elderly, post-surgery, baby care at home.</p></div></div></div>
-<div class="section" id="book">
-<div class="form-box">
-<h2 style="color:#0A4D2E;text-align:center">📋 Book Home Care</h2>
-<p style="text-align:center;color:#666;font-size:14px;margin-bottom:15px">We will call you in 30 mins</p>
-<input type="text" id="clientName" placeholder="Your Full Name *">
-<input type="tel" id="clientPhone" placeholder="Your Phone Number *" oninput="checkPhoneHistory()">
-<select id="region"><option value="">Select Region *</option><option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Eastern</option><option>Central</option><option>Northern</option><option>Volta</option><option>Upper East</option><option>Upper West</option><option>Bono</option><option>Bono East</option><option>Ahafo</option><option>Oti</option><option>North East</option><option>Savannah</option><option>Western North</option></select>
-<select id="service"><option>Home Nursing</option><option>Elderly Care</option><option>Post-Surgery Care</option><option>Baby Care</option><option>Physiotherapy</option></select>
-<select id="careType"><option>Basic Care</option><option>Professional Care</option><option>Premium 24hr Care</option></select>
-<textarea id="notes" placeholder="Describe care needed..."></textarea>
-<div style="background:#FFF8E1;border:2px dashed #FFC107;padding:15px;border-radius:10px;margin:15px 0;">
-<label style="font-weight:bold;font-size:14px">🎁 Promo Code?</label>
-<input type="text" id="refCode" placeholder="e.g. GHANA100" oninput="checkReferral()" style="margin-top:8px">
-<div id="refMsg" style="font-weight:bold;margin-top:10px;font-size:15px"></div>
-<div id="phoneMsg" style="font-size:13px;color:#b71c1c;margin-top:8px"></div>
+<div id="loginBox" class="login">
+<h2 style="color:#0A4D2E">🔒 CEO LOGIN V2</h2>
+<input type="password" id="pin" placeholder="Admin PIN">
+<button class="btn" style="width:100%" onclick="login()">UNLOCK</button>
+<p style="font-size:11px;margin-top:10px;color:#888">Default: 121814 - Change in Settings</p>
 </div>
-<button class="btn btn-green" style="width:100%;font-size:18px" onclick="submitBooking()">✅ CONFIRM BOOKING</button>
-<p style="text-align:center;margin-top:12px;font-size:12px;color:#888">We call to confirm. No payment online.</p>
+
+<div id="dash" class="hidden">
+<h1>🇬🇭 CARE233 - CEO CONTROL</h1>
+<div class="tabs">
+<div class="tab active" onclick="showTab('payroll')">💰 Payroll</div>
+<div class="tab" onclick="showTab('staff')">👩‍⚕️ Staff Passwords</div>
+<div class="tab" onclick="showTab('bookings')">📋 Bookings</div>
+<div class="tab" onclick="showTab('settings')">⚙️ Change PIN</div>
+</div>
+
+<div id="tab-payroll">
+<div class="grid">
+<div class="card"><p>Your Profit (10%)</p><div class="big" id="myProfit">GHC 0</div></div>
+<div class="card"><p>To Pay Nurses (80%)</p><div class="big" id="nursePay" style="color:#4CAF50">GHC 0</div><button class="btn btn-green" onclick="payAll('nurse')">✅ Push Nurse Payment</button></div>
+<div class="card"><p>To Pay Blogger (3%)</p><div class="big" id="blogPay">GHC 0</div><button class="btn" onclick="payAll('blogger')">✅ Push Blogger Pay</button></div>
+<div class="card"><p>To Pay Staff (5%)</p><div class="big" id="staffPay">GHC 0</div><button class="btn" onclick="payAll('staff')">✅ Push Staff Pay</button></div>
+</div>
+<table><thead><tr><th>Booking</th><th>Final Paid</th><th>Nurse 80%</th><th>Blogger 3%</th><th>Your 10%</th><th>Status</th><th>Action</th></tr></thead><tbody id="payTable"></tbody></table>
+</div>
+
+<div id="tab-staff" class="hidden">
+<div class="card">
+<h3>Add New Staff / Nurse</h3>
+<input type="text" id="sName" placeholder="Full Name">
+<input type="tel" id="sPhone" placeholder="Phone (for MoMo payout)">
+<input type="text" id="sRole" placeholder="Role - Nurse, Dispatcher, Admin">
+<input type="text" id="sPass" placeholder="Set Password for staff">
+<button class="btn btn-green" onclick="addStaff()">➕ Create Staff Login</button>
+</div>
+<table><thead><tr><th>Name</th><th>Phone</th><th>Role</th><th>Password</th><th>Status</th><th>Action</th></tr></thead><tbody id="staffTable"></tbody></table>
+<p style="font-size:11px;margin-top:10px">Staff login at: /staff.html</p>
+</div>
+
+<div id="tab-bookings" class="hidden">
+<table><thead><tr><th>Date</th><th>Client</th><th>Phone</th><th>Region</th><th>Promo</th><th>Paid</th><th>Your Cut</th></tr></thead><tbody id="bookTable"></tbody></table>
+</div>
+
+<div id="tab-settings" class="hidden">
+<div class="card">
+<h3>⚙️ Change Admin Password</h3>
+<input type="password" id="oldPin" placeholder="Old PIN">
+<input type="password" id="newPin" placeholder="New PIN">
+<input type="password" id="newPin2" placeholder="Confirm New PIN">
+<button class="btn btn-green" onclick="changePin()">🔑 Update PIN</button>
+<p style="font-size:12px;margin-top:10px">Your PIN is stored on this device only. Don't forget it!</p>
+<button class="btn btn-red" onclick="resetSystem()">🗑️ Reset All Data</button>
 </div>
 </div>
-<div class="footer"><h3>CARE233 - Ghana's Trusted Home Care</h3><p>📞 0544 121 814 / 0502 957 280</p><p>All 16 Regions | NMC Certified | Police Checked</p><p style="margin-top:15px;font-size:11px;opacity:0.7">© 2026 CARE233</p></div>
+
+<a href="index.html" class="btn" style="background:#fff">← Site</a>
+<a href="staff.html" class="btn btn-green">Staff Login →</a>
+</div>
+
 <script>
-const bloggers={"GHANA100":{disc:20},"KOBBY100":{disc:20},"ZION100":{disc:20},"AMEYAW100":{disc:20},"NURSE100":{disc:20}};
-function getUsedPhones(){return JSON.parse(localStorage.getItem('care233_used_promos')||'{}');}
-function saveUsedPhone(phone,code){let d=getUsedPhones();d[phone]={code:code,date:new Date().toLocaleString()};localStorage.setItem('care233_used_promos',JSON.stringify(d));}
-function checkPhoneHistory(){
-let phone=document.getElementById('clientPhone').value.trim();
-let pMsg=document.getElementById('phoneMsg');
-let rMsg=document.getElementById('refMsg');
-if(phone.length<10){pMsg.innerHTML="";return false;}
-let used=getUsedPhones();
-if(used[phone]){
-pMsg.innerHTML="⚠️ Number "+phone+" already used promo "+used[phone].code+" on "+used[phone].date+". No discount.";
-document.getElementById('refCode').disabled=true;
-document.getElementById('refCode').placeholder="Already used "+used[phone].code;
-rMsg.innerHTML="❌ Discount already used on this number";
-rMsg.style.color="#C62828";rMsg.style.background="#FFEBEE";rMsg.style.padding="12px";rMsg.style.borderRadius="8px";
-return true;
-}else{
-pMsg.innerHTML="✅ New client - Promo eligible";pMsg.style.color="green";
-document.getElementById('refCode').disabled=false;
-return false;
+function getPin(){return localStorage.getItem('care233_admin_pin')||'121814';}
+function login(){if(document.getElementById('pin').value===getPin()){document.getElementById('loginBox').classList.add('hidden');document.getElementById('dash').classList.remove('hidden');loadAll();}else alert('Wrong PIN!');}
+function showTab(t){document.querySelectorAll('[id^=tab-]').forEach(e=>e.classList.add('hidden'));document.getElementById('tab-'+t).classList.remove('hidden');document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));event.target.classList.add('active');if(t==='payroll'||t==='bookings')loadAll();if(t==='staff')loadStaff();}
+function loadAll(){
+let bookings=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+let totalProfit=0,totalNurse=0,totalBlog=0,totalStaff=0;
+let payBody=document.getElementById('payTable');let bookBody=document.getElementById('bookTable');
+payBody.innerHTML='';bookBody.innerHTML='';
+if(bookings.length===0){payBody.innerHTML='<tr><td colspan=7>No bookings yet</td></tr>';bookBody.innerHTML='<tr><td colspan=7>No bookings</td></tr>';}
+bookings.slice().reverse().forEach((b,i)=>{
+let nurse=Math.round(b.finalPaid*0.8);let blog=Math.round(b.finalPaid*0.03);let staff=Math.round(b.finalPaid*0.05);let profit=Math.round(b.finalPaid*0.1);
+totalProfit+=profit;totalNurse+=nurse;totalBlog+=blog;totalStaff+=staff;
+let status=b.paid?'✅ Paid':'⏳ Pending';
+payBody.innerHTML+=`<tr><td>${b.clientName}<br><small>${b.date}</small></td><td>GHC ${b.finalPaid}</td><td>GHC ${nurse}</td><td>GHC ${blog}</td><td>GHC ${profit}</td><td>${status}</td><td><button class="btn btn-green" onclick="markPaid(${bookings.length-1-i})">Mark Paid</button></td></tr>`;
+bookBody.innerHTML+=`<tr><td>${b.date}</td><td>${b.clientName}</td><td>${b.phone}</td><td>${b.region}</td><td>${b.referral}</td><td>GHC ${b.finalPaid}</td><td>GHC ${profit}</td></tr>`;
+});
+document.getElementById('myProfit').innerText='GHC '+totalProfit;
+document.getElementById('nursePay').innerText='GHC '+totalNurse;
+document.getElementById('blogPay').innerText='GHC '+totalBlog;
+document.getElementById('staffPay').innerText='GHC '+totalStaff;
 }
+function markPaid(idx){let b=JSON.parse(localStorage.getItem('care233_bookings')||'[]');b[idx].paid=true;localStorage.setItem('care233_bookings',JSON.stringify(b));loadAll();alert('Marked as PAID - Now push MoMo');}
+function payAll(type){
+let bookings=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+let total=0;bookings.forEach(b=>{if(!b.paid){if(type==='nurse')total+=Math.round(b.finalPaid*0.8);if(type==='blogger')total+=Math.round(b.finalPaid*0.03);if(type==='staff')total+=Math.round(b.finalPaid*0.05);}});
+if(total===0){alert('No pending payments for '+type);return;}
+let msg=`CARE233 ${type.toUpperCase()} PAYOUT%0ATotal: GHC ${total}%0AConfirm MoMo payment?%0A`;
+if(confirm(`Pay GHC ${total} to ${type}? This will open WhatsApp to confirm`)){window.open(`https://wa.me/233544121814?text=${msg}`,'_blank');}
 }
-function checkReferral(){
-let code=document.getElementById('refCode').value.toUpperCase().trim();
-let msg=document.getElementById('refMsg');
-if(checkPhoneHistory()) return;
-if(code===""){msg.innerHTML="";return;}
-if(bloggers[code]){
-msg.innerHTML="🎉 Awesome! You got "+bloggers[code].disc+"% DISCOUNT with code "+code+"! (One-time)";
-msg.style.color="#0A4D2E";msg.style.background="#E8F5E9";msg.style.padding="12px";msg.style.borderRadius="8px";
-}else if(code.length>=3){
-msg.innerHTML="❌ Code "+code+" not valid. Try GHANA100";
-msg.style.color="#C62828";msg.style.background="#FFEBEE";msg.style.padding="12px";msg.style.borderRadius="8px";
+function addStaff(){
+let name=document.getElementById('sName').value,phone=document.getElementById('sPhone').value,role=document.getElementById('sRole').value,pass=document.getElementById('sPass').value;
+if(!name||!phone||!pass){alert('Fill Name, Phone, Password');return;}
+let staff=JSON.parse(localStorage.getItem('care233_staff')||'[]');
+staff.push({name,phone,role:role||'Nurse',pass,status:'Active',date:new Date().toLocaleDateString()});
+localStorage.setItem('care233_staff',JSON.stringify(staff));
+document.getElementById('sName').value='';document.getElementById('sPhone').value='';document.getElementById('sPass').value='';
+loadStaff();alert('Staff '+name+' created! Login: staff.html / Pass: '+pass);
 }
+function loadStaff(){
+let staff=JSON.parse(localStorage.getItem('care233_staff')||'[]');
+let tbody=document.getElementById('staffTable');
+if(staff.length===0){tbody.innerHTML='<tr><td colspan=6>No staff yet</td></tr>';return;}
+tbody.innerHTML='';
+staff.forEach((s,i)=>{
+tbody.innerHTML+=`<tr><td>${s.name}</td><td>${s.phone}</td><td>${s.role}</td><td>${s.pass}</td><td>${s.status}</td><td><button class="btn" onclick="toggleStaff(${i})">${s.status==='Active'?'Block':'Unblock'}</button><button class="btn btn-red" onclick="delStaff(${i})">Delete</button><button class="btn btn-green" onclick="resetPass(${i})">Reset Pass</button></td></tr>`;
+});
 }
-function submitBooking(){
-let name=document.getElementById('clientName').value.trim();
-let phone=document.getElementById('clientPhone').value.trim();
-let region=document.getElementById('region').value;
-let ref=document.getElementById('refCode').value.toUpperCase().trim()||"DIRECT";
-let careType=document.getElementById('careType').value;
-let service=document.getElementById('service').value;
-if(!name||!phone||!region){alert("Please fill Name, Phone, Region");return;}
-let used=getUsedPhones();
-if(used[phone] && ref!="DIRECT"){alert("⚠️ Number "+phone+" already used promo "+used[phone].code+". No discount twice. Booking without discount.");ref="DIRECT";}
-let discount=0;if(bloggers[ref] &&!used[phone]) discount=bloggers[ref].disc;
-if(discount>0) saveUsedPhone(phone,ref);
-let basePrices={"Basic Care":500,"Professional Care":800,"Premium 24hr Care":1000};
-let base=basePrices[careType]||500;
-let finalPaid=Math.round(base-(base*discount/100));
-let waMsg="NEW BOOKING - CARE233%0AName:"+name+"%0APhone:"+phone+"%0ARegion:"+region+"%0AService:"+service+"%0AType:"+careType+"%0ADiscount:"+discount+"% ("+ref+")%0AEst:GHC"+finalPaid+"%0AUsedBefore:"+(used[phone]?"YES-"+used[phone].code:"NO");
-window.open("https://wa.me/233544121814?text="+waMsg,"_blank");
-alert("✅ Thanks "+name+"! "+(discount?discount+"% discount applied (one-time). ":"")+"We will call "+phone+" in 30 mins.");
-document.getElementById('clientName').value="";document.getElementById('clientPhone').value="";document.getElementById('refCode').value="";document.getElementById('notes').value="";document.getElementById('refMsg').innerHTML="";document.getElementById('phoneMsg').innerHTML="";document.getElementById('refCode').disabled=false;
+function toggleStaff(i){let s=JSON.parse(localStorage.getItem('care233_staff')||'[]');s[i].status=s[i].status==='Active'?'Blocked':'Active';localStorage.setItem('care233_staff',JSON.stringify(s));loadStaff();}
+function delStaff(i){if(confirm('Delete staff?')){let s=JSON.parse(localStorage.getItem('care233_staff')||'[]');s.splice(i,1);localStorage.setItem('care233_staff',JSON.stringify(s));loadStaff();}}
+function resetPass(i){let np=prompt('Enter new password for staff:');if(np){let s=JSON.parse(localStorage.getItem('care233_staff')||'[]');s[i].pass=np;localStorage.setItem('care233_staff',JSON.stringify(s));loadStaff();alert('Password changed to: '+np);}}
+function changePin(){
+let oldP=document.getElementById('oldPin').value,newP=document.getElementById('newPin').value,newP2=document.getElementById('newPin2').value;
+if(oldP!==getPin()){alert('Old PIN wrong');return;}
+if(newP!==newP2){alert('New PINs dont match');return;}
+if(newP.length<4){alert('PIN too short');return;}
+localStorage.setItem('care233_admin_pin',newP);alert('PIN changed to '+newP+' - Remember it!');document.getElementById('oldPin').value='';document.getElementById('newPin').value='';document.getElementById('newPin2').value='';
 }
+function resetSystem(){if(confirm('DELETE EVERYTHING? Bookings, Staff, Promo history?')){localStorage.clear();alert('Reset done. Default PIN 121814');location.reload();}}
 </script>
 </body>
 </html>
