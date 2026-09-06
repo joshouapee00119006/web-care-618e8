@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CARE233 - Nurse Login</title>
+<style>body{background:#0A4D2E;color:white;font-family:sans-serif;padding:20px;text-align:center}
+.card{background:white;color:#0A4D2E;padding:25px;border-radius:15px;max-width:400px;margin:40px auto}
+input{width:90%;padding:15px;margin:10px 0;border:2px solid #FFD700;border-radius:10px;font-size:18px}
+button{background:#FFD700;color:#0A4D2E;padding:15px;border:none;border-radius:10px;font-weight:bold;font-size:18px;width:95%;cursor:pointer}</style>
+</head><body><h1>CARE233 🩺</h1><h2 style="color:#FFD700">Nurse Login</h2>
+<div class="card"><h3>Enter MoMo Number</h3>
+<input id="phone" placeholder="054XXXXXXX" type="tel"><input id="name" placeholder="Your Full Name">
+<button onclick="login()">See My Jobs →</button></div>
+<script>function login(){
+let p=document.getElementById('phone').value.trim(), n=document.getElementById('name').value.trim();
+if(p.length<10){alert('Enter valid number');return;} if(n.length<2){alert('Enter name');return;}
+localStorage.setItem('care233_worker_phone',p); localStorage.setItem('care233_worker_name',n);
+location.href='worker-dashboard.html';}</script></body></html>
