@@ -1,138 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CARE233 - Book & Earn</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CARE233 - Home Nursing</title>
 <style>
-body{margin:0;font-family:sans-serif;background:#f0fdf4;padding:10px}
-.card{background:#fff;padding:18px;border-radius:16px;max-width:500px;margin:12px auto;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-input,select{width:100%;padding:12px;margin:8px 0;border:2px solid #065f46;border-radius:10px;box-sizing:border-box}
-button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;margin:8px 0;font-size:15px}
-.tabs{display:flex;gap:6px;max-width:500px;margin:10px auto}
-.tab{flex:1;padding:12px;background:#e5e7eb;border-radius:10px;text-align:center;font-weight:bold;cursor:pointer}
-.tab.active{background:#065f46;color:#facc15}
-.bonus{background:#fef9c3;border:2px solid #ca8a04;padding:10px;border-radius:10px;text-align:center;margin:10px 0}
-.linkBox{background:#fff;padding:12px;border:2px dashed #ca8a04;border-radius:10px;word-break:break-all;margin:10px 0;font-size:13px}
-.hidden{display:none}
+body{background:#0a2e1f;color:white;font-family:Arial;padding:10px;margin:0}
+.top{display:flex;gap:10px;margin-bottom:10px}
+.btnTop{flex:1;padding:14px;border-radius:12px;border:none;font-weight:bold;font-size:16px}
+.btn1{background:#0a4d2e;color:#ffcc00} .btn2{background:#2a2a2a;color:white}
+.card{background:#111;padding:20px;border-radius:20px}
+input,select{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:2px solid #2a8a6a;background:#222;color:white;box-sizing:border-box}
+.gpsBox{display:flex;gap:8px}
+.gpsBtn{padding:14px;background:#ffcc00;color:#000;border:none;border-radius:12px;font-weight:bold;white-space:nowrap}
+.book{width:100%;padding:16px;background:#0a4d2e;color:#ffcc00;border:none;border-radius:12px;font-weight:bold;font-size:18px;margin-top:12px}
+.small{font-size:13px;color:#8fbc8f}
+.link{color:#25D366;text-decoration:none}
 </style>
 </head>
 <body>
-
-<div class="tabs">
-<div class="tab active" id="tabBook" onclick="showTab('book')">📋 Book Nurse</div>
-<div class="tab" id="tabEarn" onclick="showTab('earn')">💰 Earn 3%</div>
+<div class="top">
+<button class="btnTop btn1">📋 Book Nurse</button>
+<button class="btnTop btn2" onclick="alert('Share to earn 3%')">💰 Earn 3%</button>
 </div>
 
-<!-- BOOK TAB -->
-<div id="pageBook" class="card">
-<h2 style="color:#065f46;text-align:center;margin:0">CARE233 - Home Nursing</h2>
-<div id="refBanner" style="display:none" class="bonus">
-✅ <b>3% Bonus Applied</b><br>Code: <span id="refCodeShow"></span><br>Agent: <span id="refNameShow"></span>
+<div class="card">
+<h2 style="color:#7fdbc0;margin:0;text-align:center">CARE233 - Home Nursing</h2>
+<p id="gpsStatus" class="small">📍 Click GPS button to lock location</p>
+
+<div class="gpsBox">
+<input id="loc" placeholder="East Legon, Accra *">
+<button class="gpsBtn" onclick="getGPS()">📍 GPS</button>
 </div>
-<label>GPS Locked</label>
-<input id="gps" value="10.0km" readonly>
+<input id="gpsCoords" type="hidden">
+<a id="mapLink" class="small link" target="_blank" style="display:none">🗺️ View / Directions on Google Map</a>
+
 <label>Care Type</label>
-<select id="careType" onchange="calc()">
+<select id="care" onchange="calc()">
 <option value="1400">2 Weeks - GHS 1400</option>
+<option value="2800">1 Month - GHS 2800</option>
 <option value="700">1 Week - GHS 700</option>
-<option value="350">3 Days - GHS 350</option>
-<option value="2800">Monthly - GHS 2800</option>
+<option value="200">1 Day - GHS 200</option>
 </select>
+
 <label>Your Phone</label>
-<input id="clientPhone" placeholder="0244...">
-<label>Location</label>
-<input id="location" placeholder="East Legon">
-<div style="background:#f0fdf4;padding:10px;border-radius:10px">
-<p>Care: <b>GHS <span id="careP">1400</span></b> | Transport: GHS 20</p>
-<p>Total: <b>GHS <span id="total">1420</span></b> | Earn for agent: GHS <span id="earn">42.6</span></p>
-</div>
-<button onclick="book()">📲 BOOK NOW</button>
+<input id="phone" placeholder="0244...">
+
+<div style="background:#132a20;padding:12px;border-radius:12px;margin-top:10px">
+<div>Care: <b>GHS <span id="carePrice">1400</span></b></div>
+<div style="margin-top:5px">Total: <b>GHS <span id="totalPrice">1400</span></b> | Agent earns: GHS <span id="earn">42.00</span></div>
+<p class="small" style="margin:5px 0 0">* No transport fee. GPS is for nurse directions only.</p>
 </div>
 
-<!-- EARN TAB -->
-<div id="pageEarn" class="card hidden">
-<h2 style="color:#065f46;text-align:center">💰 Generate Your Earning Link</h2>
-<p>Enter your MoMo to get link. Anyone who books with it, you earn 3%!</p>
-<input id="agentName" placeholder="Your Full Name">
-<input id="agentMoMo" placeholder="Your MoMo Number 0244...">
-<button onclick="genLink()" style="background:#ca8a04;color:#fff">⚡ GENERATE LINK</button>
-<div id="genResult" class="hidden">
-<p><b>Your Code:</b> <span id="myCode" style="font-size:22px;color:#ca8a04"></span></p>
-<div class="linkBox" id="myLink"></div>
-<button onclick="copyL()">📋 COPY LINK</button>
-<button onclick="shareL()" style="background:#25D366;color:#fff">📲 SHARE LINK</button>
-<p style="font-size:11px;background:#ecfdf5;padding:8px;border-radius:8px">Admin will see your Name + MoMo when client books!</p>
-</div>
+<button class="book" onclick="book()">📲 BOOK NOW</button>
+<p id="msg" class="small"></p>
 </div>
 
 <script>
-let finalLink='';
-function showTab(t){
-document.getElementById('pageBook').classList.toggle('hidden', t!=='book');
-document.getElementById('pageEarn').classList.toggle('hidden', t!=='earn');
-document.getElementById('tabBook').classList.toggle('active', t==='book');
-document.getElementById('tabEarn').classList.toggle('active', t==='earn');
-}
-
-// REF CAPTURE
-let params=new URLSearchParams(window.location.search);
-let refCode=params.get('ref')||'DIRECT';
-let refName=params.get('agentName')?decodeURIComponent(params.get('agentName')):'';
-let refMoMo=params.get('agentMoMo')||'';
-if(refCode!=='DIRECT'){
-document.getElementById('refBanner').style.display='block';
-document.getElementById('refCodeShow').innerText=refCode;
-document.getElementById('refNameShow').innerText=refName+' - '+refMoMo;
-}
-
 function calc(){
-let base=parseInt(document.getElementById('careType').value);
-document.getElementById('careP').innerText=base;
-let total=base+20;
-document.getElementById('total').innerText=total;
-document.getElementById('earn').innerText=(total*0.03).toFixed(2);
-return total;
+ let p=document.getElementById('care').value;
+ document.getElementById('carePrice').innerText=p;
+ document.getElementById('totalPrice').innerText=p;
+ document.getElementById('earn').innerText=(p*0.03).toFixed(2);
 }
 calc();
 
-function genLink(){
-let name=document.getElementById('agentName').value.trim();
-let momo=document.getElementById('agentMoMo').value.trim();
-if(!name||!momo){alert('Enter name + MoMo');return;}
-let code='CARE'+Math.random().toString(36).substring(2,5).toUpperCase()+Math.floor(100+Math.random()*900);
-document.getElementById('myCode').innerText=code;
-finalLink=`https://joshouapee00119006.github.io/web-care-618e8/index.html?ref=${code}&agentName=${encodeURIComponent(name)}&agentMoMo=${momo}`;
-document.getElementById('myLink').innerText=finalLink;
-document.getElementById('genResult').classList.remove('hidden');
-localStorage.setItem('care233_my_code',code);
+function getGPS(){
+ let s=document.getElementById('gpsStatus');
+ s.innerText='⏳ Getting GPS...';
+ navigator.geolocation.getCurrentPosition(pos=>{
+   let lat=pos.coords.latitude.toFixed(6);
+   let lng=pos.coords.longitude.toFixed(6);
+   document.getElementById('gpsCoords').value=lat+','+lng;
+   document.getElementById('loc').value=document.getElementById('loc').value || 'My Current Location';
+   s.innerText='✅ GPS Locked: '+lat+','+lng;
+   let link=document.getElementById('mapLink');
+   link.href='https://www.google.com/maps?q='+lat+','+lng;
+   link.style.display='block';
+ }, err=>{
+   s.innerText='❌ GPS failed: '+err.message+' - Type location manually';
+ }, {enableHighAccuracy:true, timeout:10000});
 }
 
-function copyL(){navigator.clipboard.writeText(finalLink);alert('Copied!');}
-function shareL(){window.open(`https://wa.me/?text=Book CARE233 Nurse with my link (3% bonus) 👇%0A${encodeURIComponent(finalLink)}`,'_blank');}
-
 function book(){
-let phone=document.getElementById('clientPhone').value.trim();
-let loc=document.getElementById('location').value.trim();
-if(!phone){alert('Enter phone');return;}
-let total=calc();
-let booking={
-date:new Date().toLocaleString(),
-careType:document.getElementById('careType').options[document.getElementById('careType').selectedIndex].text,
-total:total,
-phone:phone,
-location:loc,
-refCode:refCode,
-agentName:refName,
-agentMoMo:refMoMo,
-earn:(total*0.03).toFixed(2)
-};
-let bookings=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
-bookings.push(booking);
-localStorage.setItem('care233_bookings',JSON.stringify(bookings));
-let admin='233544121814';
-let msg=`NEW BOOKING%0AService: ${booking.careType}%0ATotal: GHS ${total}%0AClient: ${phone} - ${loc}%0A%0AREF: ${refCode}%0AAgent: ${refName}%0AMoMo TO PAY: ${refMoMo}%0AEarn: GHS ${booking.earn}`;
-window.open(`https://wa.me/${admin}?text=${msg}`,'_blank');
-alert('Booked! Admin will call you. Ref: '+refCode);
+ let phone=document.getElementById('phone').value.trim();
+ let location=document.getElementById('loc').value.trim();
+ let coords=document.getElementById('gpsCoords').value;
+ let careSelect=document.getElementById('care');
+ let careText=careSelect.options[careSelect.selectedIndex].text;
+ let total=document.getElementById('totalPrice').innerText;
+ if(!phone||!location){document.getElementById('msg').innerText='Enter phone & location';return}
+ let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');
+ jobs.push({service:careText, location:location, gps:coords, phone:phone, price:total, desc:'Phone:'+phone+' GPS:'+coords+' Loc:'+location, date:new Date().toLocaleString()});
+ localStorage.setItem('care233_jobs',JSON.stringify(jobs));
+ let waMsg='CARE233 Booking%0A'+careText+'%0APhone:'+phone+'%0ALocation:'+encodeURIComponent(location)+'%0AGPS:'+encodeURIComponent(coords)+'%0AMap:https://www.google.com/maps?q='+encodeURIComponent(coords)+'%0ATotal:GHS'+total;
+ window.open('https://wa.me/233554466448?text='+waMsg,'_blank');
+ document.getElementById('msg').innerText='✅ Booked! We will call you. GPS saved for directions.';
 }
 </script>
 </body>
