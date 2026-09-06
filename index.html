@@ -25,105 +25,82 @@ input,select,textarea{width:100%;padding:14px;margin:8px 0;border:1px solid #ccc
 <div class="header"><h1>🇬🇭 CARE233</h1><p>Trusted Home Care Platform • All 16 Regions • 24/7 Support</p></div>
 <div class="hero"><h2>Book Verified Home Nurse in 30 Seconds</h2><p>Police Checked • NMC Certified • Professional Care at Home</p><br><a href="#book" class="btn">📅 BOOK A NURSE NOW</a><p style="margin-top:15px">Use Code: <b>GHANA100</b> for Discount | 📞 0544 121 814</p></div>
 <div class="section"><h2 style="text-align:center;color:#0A4D2E">Why Families Trust CARE233</h2><div class="cards"><div class="card"><h3>👩‍⚕️ Verified Nurses</h3><p>NMC certified, police cleared, verified.</p></div><div class="card"><h3>🌍 All 16 Regions</h3><p>Accra, Kumasi, Tamale, Takoradi - Care everywhere.</p></div><div class="card"><h3>⚡ Fast & Reliable</h3><p>Book in 30 seconds. Nurse in 1 hour.</p></div><div class="card"><h3>💛 Home Care</h3><p>Elderly, post-surgery, baby care at home.</p></div></div></div>
-
 <div class="section" id="book">
 <div class="form-box">
 <h2 style="color:#0A4D2E;text-align:center">📋 Book Home Care</h2>
 <p style="text-align:center;color:#666;font-size:14px;margin-bottom:15px">We will call you in 30 mins</p>
-<input type="text" id="clientName" placeholder="Your Full Name *" required>
-<input type="tel" id="clientPhone" placeholder="Your Phone Number *" required oninput="checkPhoneHistory()">
-<select id="region" required><option value="">Select Region *</option><option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Eastern</option><option>Central</option><option>Northern</option><option>Volta</option><option>Upper East</option><option>Upper West</option><option>Bono</option><option>Bono East</option><option>Ahafo</option><option>Oti</option><option>North East</option><option>Savannah</option><option>Western North</option></select>
+<input type="text" id="clientName" placeholder="Your Full Name *">
+<input type="tel" id="clientPhone" placeholder="Your Phone Number *" oninput="checkPhoneHistory()">
+<select id="region"><option value="">Select Region *</option><option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Eastern</option><option>Central</option><option>Northern</option><option>Volta</option><option>Upper East</option><option>Upper West</option><option>Bono</option><option>Bono East</option><option>Ahafo</option><option>Oti</option><option>North East</option><option>Savannah</option><option>Western North</option></select>
 <select id="service"><option>Home Nursing</option><option>Elderly Care</option><option>Post-Surgery Care</option><option>Baby Care</option><option>Physiotherapy</option></select>
 <select id="careType"><option>Basic Care</option><option>Professional Care</option><option>Premium 24hr Care</option></select>
 <textarea id="notes" placeholder="Describe care needed..."></textarea>
-
 <div style="background:#FFF8E1;border:2px dashed #FFC107;padding:15px;border-radius:10px;margin:15px 0;">
 <label style="font-weight:bold;font-size:14px">🎁 Promo Code?</label>
 <input type="text" id="refCode" placeholder="e.g. GHANA100" oninput="checkReferral()" style="margin-top:8px">
 <div id="refMsg" style="font-weight:bold;margin-top:10px;font-size:15px"></div>
 <div id="phoneMsg" style="font-size:13px;color:#b71c1c;margin-top:8px"></div>
 </div>
-
 <button class="btn btn-green" style="width:100%;font-size:18px" onclick="submitBooking()">✅ CONFIRM BOOKING</button>
 <p style="text-align:center;margin-top:12px;font-size:12px;color:#888">We call to confirm. No payment online.</p>
 </div>
 </div>
-
 <div class="footer"><h3>CARE233 - Ghana's Trusted Home Care</h3><p>📞 0544 121 814 / 0502 957 280</p><p>All 16 Regions | NMC Certified | Police Checked</p><p style="margin-top:15px;font-size:11px;opacity:0.7">© 2026 CARE233</p></div>
-
 <script>
-const bloggers={"GHANA100":{disc:20},"KOBBY100":{disc:20},"ZION100":{disc:20},"AMEYAW100":{disc:20},"NURSE100":{disc:20},"BLOGGER100":{disc:20}};
-
+const bloggers={"GHANA100":{disc:20},"KOBBY100":{disc:20},"ZION100":{disc:20},"AMEYAW100":{disc:20},"NURSE100":{disc:20}};
 function getUsedPhones(){return JSON.parse(localStorage.getItem('care233_used_promos')||'{}');}
 function saveUsedPhone(phone,code){let d=getUsedPhones();d[phone]={code:code,date:new Date().toLocaleString()};localStorage.setItem('care233_used_promos',JSON.stringify(d));}
-
 function checkPhoneHistory(){
-  let phone=document.getElementById('clientPhone').value.trim();
-  let pMsg=document.getElementById('phoneMsg');
-  let rMsg=document.getElementById('refMsg');
-  if(phone.length<10){pMsg.innerHTML="";return;}
-  let used=getUsedPhones();
-  if(used[phone]){
-    pMsg.innerHTML=`⚠️ This number ${phone} already used promo ${used[phone].code} on ${used[phone].date}. No more discount.`;
-    document.getElementById('refCode').disabled=true;
-    document.getElementById('refCode').placeholder=`Already used ${used[phone].code}`;
-    rMsg.innerHTML="❌ Discount already used on this number";
-    rMsg.style.color="#C62828";rMsg.style.background="#FFEBEE";rMsg.style.padding="12px";rMsg.style.borderRadius="8px";
-    return true;
-  }else{
-    pMsg.innerHTML="✅ New client - Promo eligible";
-    pMsg.style.color="green";
-    document.getElementById('refCode').disabled=false;
-    document.getElementById('refCode').placeholder="e.g. GHANA100";
-    return false;
-  }
+let phone=document.getElementById('clientPhone').value.trim();
+let pMsg=document.getElementById('phoneMsg');
+let rMsg=document.getElementById('refMsg');
+if(phone.length<10){pMsg.innerHTML="";return false;}
+let used=getUsedPhones();
+if(used[phone]){
+pMsg.innerHTML="⚠️ Number "+phone+" already used promo "+used[phone].code+" on "+used[phone].date+". No discount.";
+document.getElementById('refCode').disabled=true;
+document.getElementById('refCode').placeholder="Already used "+used[phone].code;
+rMsg.innerHTML="❌ Discount already used on this number";
+rMsg.style.color="#C62828";rMsg.style.background="#FFEBEE";rMsg.style.padding="12px";rMsg.style.borderRadius="8px";
+return true;
+}else{
+pMsg.innerHTML="✅ New client - Promo eligible";pMsg.style.color="green";
+document.getElementById('refCode').disabled=false;
+return false;
 }
-
+}
 function checkReferral(){
-  let code=document.getElementById('refCode').value.toUpperCase().trim();
-  let msg=document.getElementById('refMsg');
-  let phone=document.getElementById('clientPhone').value.trim();
-  if(checkPhoneHistory()) return; // Block if already used
-  if(code===""){msg.innerHTML="";return;}
-  if(bloggers[code]){
-    msg.innerHTML=`🎉 Awesome! You got ${bloggers[code].disc}% DISCOUNT with code ${code}! (One-time use)`;
-    msg.style.color="#0A4D2E";msg.style.background="#E8F5E9";msg.style.padding="12px";msg.style.borderRadius="8px";
-  }else if(code.length>=3){
-    msg.innerHTML=`❌ Code "${code}" not valid. Try GHANA100`;
-    msg.style.color="#C62828";msg.style.background="#FFEBEE";msg.style.padding="12px";msg.style.borderRadius="8px";
-  }
+let code=document.getElementById('refCode').value.toUpperCase().trim();
+let msg=document.getElementById('refMsg');
+if(checkPhoneHistory()) return;
+if(code===""){msg.innerHTML="";return;}
+if(bloggers[code]){
+msg.innerHTML="🎉 Awesome! You got "+bloggers[code].disc+"% DISCOUNT with code "+code+"! (One-time)";
+msg.style.color="#0A4D2E";msg.style.background="#E8F5E9";msg.style.padding="12px";msg.style.borderRadius="8px";
+}else if(code.length>=3){
+msg.innerHTML="❌ Code "+code+" not valid. Try GHANA100";
+msg.style.color="#C62828";msg.style.background="#FFEBEE";msg.style.padding="12px";msg.style.borderRadius="8px";
 }
-
+}
 function submitBooking(){
-  let name=document.getElementById('clientName').value.trim();
-  let phone=document.getElementById('clientPhone').value.trim();
-  let region=document.getElementById('region').value;
-  let ref=document.getElementById('refCode').value.toUpperCase().trim()||"DIRECT";
-  let careType=document.getElementById('careType').value;
-  let service=document.getElementById('service').value;
-  if(!name||!phone||!region){alert("Please fill Name, Phone, Region");return;}
-
-  let used=getUsedPhones();
-  if(used[phone] && ref!=="DIRECT"){
-    alert(`⚠️ Sorry! Number ${phone} already used promo ${used[phone].code}. You cannot use discount twice. Booking will proceed without discount.`);
-    ref="DIRECT";
-  }
-
-  let discount=0; if(bloggers[ref] &&!used[phone]) discount=bloggers[ref].disc;
-  if(discount>0) saveUsedPhone(phone,ref);
-
-  let basePrices={"Basic Care":500,"Professional Care":800,"Premium 24hr Care":1000};
-  let base=basePrices[careType]||500;
-  let finalPaid=Math.round(base-(base*discount/100));
-  let secretSplit={nurse:Math.round(finalPaid*0.80),blogger:Math.round(finalPaid*0.03),staff:Math.round(finalPaid*0.05),data:Math.round(finalPaid*0.02),profit:Math.round(finalPaid*0.10)};
-
-  let bookingData={date:new Date().toLocaleString(),clientName:name,phone:phone,region:region,service:service,careType:careType,base:base,discount:discount+"%",finalPaid:finalPaid,referral:ref,_split:secretSplit};
-  let all=JSON.parse(localStorage.getItem('care233_bookings')||'[]');all.push(bookingData);localStorage.setItem('care233_bookings',JSON.stringify(all));
-
-  let waMsg=`NEW BOOKING - CARE233%0AName:${name}%0APhone:${phone}%0ARegion:${region}%0AService:${service}%0AType:${careType}%0ADiscount:${discount}% (${ref})%0AEst:${finalPaid}%0AUsedBefore:${used[phone]? 'YES-'+used[phone].code : 'NO'}`;
-  window.open(`https://wa.me/233544121814?text=${waMsg}`,'_blank');
-  alert(`✅ Thanks ${name}! ${discount?`Your ${discount}% discount applied (one-time use). `:''}We will call ${phone} in 30 mins.`);
-  document.getElementById('clientName').value="";document.getElementById('clientPhone').value="";document.getElementById('refCode').value="";document.getElementById('notes').value="";document.getElementById('refMsg').innerHTML="";document.getElementById('phoneMsg').innerHTML="";document.getElementById('refCode').disabled=false;
+let name=document.getElementById('clientName').value.trim();
+let phone=document.getElementById('clientPhone').value.trim();
+let region=document.getElementById('region').value;
+let ref=document.getElementById('refCode').value.toUpperCase().trim()||"DIRECT";
+let careType=document.getElementById('careType').value;
+let service=document.getElementById('service').value;
+if(!name||!phone||!region){alert("Please fill Name, Phone, Region");return;}
+let used=getUsedPhones();
+if(used[phone] && ref!="DIRECT"){alert("⚠️ Number "+phone+" already used promo "+used[phone].code+". No discount twice. Booking without discount.");ref="DIRECT";}
+let discount=0;if(bloggers[ref] &&!used[phone]) discount=bloggers[ref].disc;
+if(discount>0) saveUsedPhone(phone,ref);
+let basePrices={"Basic Care":500,"Professional Care":800,"Premium 24hr Care":1000};
+let base=basePrices[careType]||500;
+let finalPaid=Math.round(base-(base*discount/100));
+let waMsg="NEW BOOKING - CARE233%0AName:"+name+"%0APhone:"+phone+"%0ARegion:"+region+"%0AService:"+service+"%0AType:"+careType+"%0ADiscount:"+discount+"% ("+ref+")%0AEst:GHC"+finalPaid+"%0AUsedBefore:"+(used[phone]?"YES-"+used[phone].code:"NO");
+window.open("https://wa.me/233544121814?text="+waMsg,"_blank");
+alert("✅ Thanks "+name+"! "+(discount?discount+"% discount applied (one-time). ":"")+"We will call "+phone+" in 30 mins.");
+document.getElementById('clientName').value="";document.getElementById('clientPhone').value="";document.getElementById('refCode').value="";document.getElementById('notes').value="";document.getElementById('refMsg').innerHTML="";document.getElementById('phoneMsg').innerHTML="";document.getElementById('refCode').disabled=false;
 }
 </script>
 </body>
