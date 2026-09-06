@@ -1,121 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CARE233 Worker Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CARE233 Worker</title>
 <style>
-body{margin:0;font-family:sans-serif;background:#f0fdf4;padding:12px}
-.card{background:#fff;padding:18px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin-bottom:12px}
-input{width:100%;padding:12px;margin:8px 0;border:2px solid #ddd;border-radius:8px;box-sizing:border-box}
-button{width:100%;padding:14px;background:#065f46;color:#fff;border:none;border-radius:10px;font-weight:bold;margin-top:8px;cursor:pointer}
-.job{border:2px solid #065f46;border-radius:12px;padding:12px;margin:10px 0;background:#ecfdf5}
+body{background:#e8f5e9;font-family:Arial;padding:15px;margin:0}
+.card{max-width:480px;margin:auto;background:white;padding:25px;border-radius:18px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+h1{color:#0a4d2e;text-align:center;font-size:22px}
+.tabs{display:flex;gap:10px;margin:20px 0}
+.tab{flex:1;padding:12px;border-radius:10px;border:2px solid #0a4d2e;background:white;color:#0a4d2e;font-weight:bold;cursor:pointer}
+.tab.active{background:#0a4d2e;color:white}
+input,select,textarea{width:100%;padding:13px;margin:8px 0;border:2px solid #ddd;border-radius:10px;box-sizing:border-box;font-size:15px}
+.btn{width:100%;padding:15px;background:#0a4d2e;color:white;border:none;border-radius:10px;font-weight:bold;font-size:16px;margin-top:10px;cursor:pointer}
+.msg{padding:12px;border-radius:8px;margin:10px 0;text-align:center;display:none}
+.msg.ok{background:#d4edda;color:#155724;display:block}
+.msg.bad{background:#f8d7da;color:#721c24;display:block}
+.msg.wait{background:#fff3cd;color:#856404;display:block}
 .hidden{display:none}
-.badge{background:#facc15;color:#065f46;padding:4px 10px;border-radius:20px;font-weight:bold;font-size:12px}
-.top{display:flex;justify-content:space-between;align-items:center}
-.earn{font-size:22px;font-weight:bold;color:#065f46}
+.job{border:1px solid #ddd;padding:12px;border-radius:10px;margin:10px 0}
 </style>
 </head>
 <body>
-<div id="loginPage" class="card">
-<h2 style="color:#065f46;text-align:center">👷 CARE233 WORKER</h2>
-<p style="text-align:center;color:#666">Login to see jobs</p>
-<input id="wName" placeholder="Full Name">
-<input id="wPhone" placeholder="Phone Number">
-<input id="wMoMo" placeholder="MoMo Number for Payment">
-<button onclick="login()">LOGIN & SEE JOBS</button>
-<p style="font-size:12px;color:#888;text-align:center;margin-top:10px">No password needed - one file login</p>
+<div class="card" id="authCard">
+<h1>👷 CARE233 WORKER</h1>
+<div class="tabs">
+<button class="tab active" id="tabLogin" onclick="showTab('login')">Login</button>
+<button class="tab" id="tabReg" onclick="showTab('reg')">Register</button>
 </div>
 
-<div id="mainPage" class="hidden">
-<div class="card top">
-<div><b id="showName"></b><br><small id="showPhone"></small></div>
-<div><span class="badge" id="showMoMo"></span><br><button onclick="logout()" style="padding:4px 8px;font-size:11px;background:#dc2626;margin-top:4px">Logout</button></div>
+<div id="loginBox">
+<input id="loginPhone" placeholder="Phone Number *">
+<input id="loginPass" type="password" placeholder="Password *">
+<button class="btn" onclick="doLogin()">LOGIN</button>
+<div id="loginMsg" class="msg"></div>
+<p style="font-size:12px;text-align:center;color:gray">Only admin-approved workers can login</p>
 </div>
 
-<div class="card">
-<div class="top"><b>💰 Total Earned</b><span class="earn" id="totalEarn">GHS 0</span></div>
-<small>80% of each job you complete</small>
+<div id="regBox" class="hidden">
+<input id="rName" placeholder="Full Name *">
+<input id="rPhone" placeholder="Phone Number *">
+<input id="rPass" type="password" placeholder="Create Password * (min 4)">
+<input id="rPass2" type="password" placeholder="Confirm Password *">
+<input id="rMomo" placeholder="MoMo Number for Payment *">
+<select id="rService">
+<option value="">Select Your Service *</option>
+<option>House Cleaning</option><option>Cooking / Chef</option>
+<option>Laundry</option><option>Plumbing</option>
+<option>Electrical</option><option>Carpentry</option>
+<option>Painting</option><option>Babysitting / Nanny</option>
+<option>Elderly Care</option><option>Security Guard</option>
+<option>Driver</option><option>Gardening</option><option>Other Artisan</option>
+</select>
+<input id="rLocation" placeholder="Location (eg Accra, East Legon) *">
+<input id="rExp" placeholder="Years Experience">
+<textarea id="rBio" placeholder="Short bio..."></textarea>
+<button class="btn" onclick="doRegister()">SUBMIT FOR APPROVAL</button>
+<div id="regMsg" class="msg"></div>
+</div>
 </div>
 
-<div class="card">
-<h3>📋 Available Jobs (From Admin)</h3>
-<div id="jobsList">Loading...</div>
-</div>
-
-<div class="card">
-<h3>✅ My Accepted Jobs</h3>
-<div id="myJobs">No jobs yet</div>
-</div>
+<div class="card hidden" id="dash">
+<h1>Welcome <span id="wName"></span> ✅</h1>
+<p style="text-align:center"><span id="wService"></span> | Approved</p>
+<button class="btn" style="background:#6c757d" onclick="logout()">Logout</button>
+<h3>Available Jobs</h3>
+<div id="jobsList"></div>
 </div>
 
 <script>
-let currentWorker=null;
-function login(){
- let name=document.getElementById('wName').value.trim();
- let phone=document.getElementById('wPhone').value.trim();
- let momo=document.getElementById('wMoMo').value.trim();
- if(!name||!phone||!momo){alert('Fill all fields');return;}
- currentWorker={name,phone,momo};
- localStorage.setItem('care233_worker',JSON.stringify(currentWorker));
- // Save to workers list for admin
- let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
- let exists=workers.find(w=>w.phone===phone);
- if(!exists){workers.push({...currentWorker,joined:new Date().toLocaleDateString(),jobs:0,earned:0});localStorage.setItem('care233_workers',JSON.stringify(workers));}
- showMain();
+function showTab(t){
+ document.getElementById('loginBox').classList.toggle('hidden', t!=='login');
+ document.getElementById('regBox').classList.toggle('hidden', t!=='reg');
+ document.getElementById('tabLogin').classList.toggle('active', t==='login');
+ document.getElementById('tabReg').classList.toggle('active', t==='reg');
 }
-function showMain(){
- let saved=localStorage.getItem('care233_worker');
- if(!saved){return;}
- currentWorker=JSON.parse(saved);
- document.getElementById('loginPage').classList.add('hidden');
- document.getElementById('mainPage').classList.remove('hidden');
- document.getElementById('showName').innerText=currentWorker.name;
- document.getElementById('showPhone').innerText=currentWorker.phone;
- document.getElementById('showMoMo').innerText=currentWorker.momo;
- loadJobs();
- loadMyJobs();
- loadEarn();
+function getPending(){return JSON.parse(localStorage.getItem('care233_pending')||'[]')}
+function getApproved(){return JSON.parse(localStorage.getItem('care233_workers')||'[]')}
+function savePending(a){localStorage.setItem('care233_pending',JSON.stringify(a))}
+function saveApproved(a){localStorage.setItem('care233_workers',JSON.stringify(a))}
+
+function doRegister(){
+ let name=document.getElementById('rName').value.trim();
+ let phone=document.getElementById('rPhone').value.trim();
+ let pass=document.getElementById('rPass').value.trim();
+ let pass2=document.getElementById('rPass2').value.trim();
+ let momo=document.getElementById('rMomo').value.trim();
+ let service=document.getElementById('rService').value;
+ let loc=document.getElementById('rLocation').value.trim();
+ let exp=document.getElementById('rExp').value.trim();
+ let bio=document.getElementById('rBio').value.trim();
+ let msg=document.getElementById('regMsg');
+ if(!name||!phone||!pass||!momo||!service||!loc){msg.className='msg bad';msg.innerText='Fill all * fields';return}
+ if(pass.length<4){msg.className='msg bad';msg.innerText='Password min 4 characters';return}
+ if(pass!==pass2){msg.className='msg bad';msg.innerText='Passwords do not match';return}
+ let pending=getPending(); let approved=getApproved();
+ if(pending.find(w=>w.phone===phone)||approved.find(w=>w.phone===phone)){msg.className='msg bad';msg.innerText='Phone already registered';return}
+ pending.push({name,phone,password:pass,momo,service,location:loc,exp,bio,date:new Date().toLocaleString(),status:'pending'});
+ savePending(pending);
+ msg.className='msg wait';msg.innerText='✅ Submitted! Wait for admin approval, then login with your password.';
 }
-function logout(){localStorage.removeItem('care233_worker');location.reload();}
-function loadJobs(){
- let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');
- let html='';
- if(jobs.length===0){html='<p style="color:#888">No jobs yet. Admin will create jobs.</p>';}
- else{
-  jobs.forEach((job,i)=>{
-   html+=`<div class="job"><b>${job.title}</b><br><small>📍 ${job.location} | ${job.type} | GHS ${job.pay}</small><p>${job.desc}</p><button onclick="acceptJob(${i})">✅ Accept Job - GHS ${job.pay}</button></div>`;
-  });
+
+function doLogin(){
+ let phone=document.getElementById('loginPhone').value.trim();
+ let pass=document.getElementById('loginPass').value.trim();
+ let msg=document.getElementById('loginMsg');
+ if(!phone||!pass){msg.className='msg bad';msg.innerText='Enter phone & password';return}
+ let approved=getApproved();
+ let worker=approved.find(w=>w.phone===phone && w.password===pass);
+ if(!worker){
+   let pending=getPending();
+   if(pending.find(w=>w.phone===phone && w.password===pass)){msg.className='msg wait';msg.innerText='⏳ Still pending approval. Contact Admin.';}
+   else if(pending.find(w=>w.phone===phone)||approved.find(w=>w.phone===phone)){msg.className='msg bad';msg.innerText='❌ Wrong password!';}
+   else{msg.className='msg bad';msg.innerText='❌ Not found. Please Register.'; showTab('reg');}
+   return;
  }
- document.getElementById('jobsList').innerHTML=html;
+ localStorage.setItem('care233_currentWorker',JSON.stringify(worker));
+ openDash(worker);
 }
-function acceptJob(i){
+function openDash(worker){
+ document.getElementById('authCard').classList.add('hidden');
+ document.getElementById('dash').classList.remove('hidden');
+ document.getElementById('wName').innerText=worker.name;
+ document.getElementById('wService').innerText=worker.service;
  let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');
- let job=jobs[i];
- if(!confirm(`Accept ${job.title} for GHS ${job.pay}?`))return;
- let myJobs=JSON.parse(localStorage.getItem('care233_myJobs_'+currentWorker.phone)||'[]');
- myJobs.push({...job,acceptedAt:new Date().toLocaleString(),clientPhone:job.clientPhone||'Will be shared',clientLocation:job.location});
- localStorage.setItem('care233_myJobs_'+currentWorker.phone,JSON.stringify(myJobs));
- // Update earnings
- let earn=parseFloat(localStorage.getItem('care233_earn_'+currentWorker.phone)||'0');
- earn+=parseFloat(job.pay)*0.8;
- localStorage.setItem('care233_earn_'+currentWorker.phone,earn.toString());
- alert(`Job Accepted! WhatsApp client: ${job.clientPhone||'Admin will share'}`);
- loadMyJobs();loadEarn();
- let waMsg=`CARE233: Worker ${currentWorker.name} (${currentWorker.phone}) accepted job ${job.title}`;
- window.open(`https://wa.me/233000000000?text=${encodeURIComponent(waMsg)}`,'_blank');
+ let list=document.getElementById('jobsList');
+ if(jobs.length===0){list.innerHTML='<p>No jobs yet</p>';return;}
+ list.innerHTML=jobs.map((j,i)=>`<div class="job"><b>${j.service}</b> - ${j.location}<br>${j.desc||''}<br><small>${j.date||''}</small><br><button class="btn" onclick="alert('Accepted Job #${i}')">Accept</button></div>`).join('');
 }
-function loadMyJobs(){
- let myJobs=JSON.parse(localStorage.getItem('care233_myJobs_'+currentWorker.phone)||'[]');
- let html='';
- if(myJobs.length===0)html='No jobs yet';
- else myJobs.forEach(j=>{html+=`<div class="job"><b>${j.title}</b> - GHS ${j.pay}<br><small>Accepted: ${j.acceptedAt}</small><br><button onclick="window.open('https://wa.me/${j.clientPhone}?text=Hello from CARE233 nurse','_blank')" style="background:#25D366">💬 WhatsApp Client</button></div>`});
- document.getElementById('myJobs').innerHTML=html;
-}
-function loadEarn(){
- let earn=localStorage.getItem('care233_earn_'+currentWorker.phone)||'0';
- document.getElementById('totalEarn').innerText='GHS '+earn;
-}
-showMain();
+function logout(){localStorage.removeItem('care233_currentWorker');location.reload();}
+let cur=localStorage.getItem('care233_currentWorker');
+if(cur){try{openDash(JSON.parse(cur));}catch(e){}}
 </script>
 </body>
 </html>
