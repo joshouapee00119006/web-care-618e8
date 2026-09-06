@@ -2,56 +2,192 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CARE233 Admin - See Referral MoMo</title>
+<title>CARE233 - SUPER ADMIN</title>
 <style>
 body{margin:0;font-family:sans-serif;background:#f0fdf4;padding:10px}
-.card{background:#fff;padding:12px;border-radius:12px;margin:10px 0;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-table{width:100%;border-collapse:collapse;font-size:11px}
-th,td{border:1px solid #ccc;padding:6px;text-align:left}
+.card{background:#fff;padding:16px;border-radius:16px;max-width:650px;margin:10px auto;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+input,select,textarea{width:100%;padding:12px;margin:6px 0;border:2px solid #065f46;border-radius:10px;box-sizing:border-box}
+button{width:100%;padding:12px;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;margin:6px 0}
+.tabs{display:flex;gap:4px;max-width:650px;margin:10px auto;overflow:auto}
+.tab{flex:1;padding:10px;background:#e5e7eb;border-radius:10px;text-align:center;font-weight:bold;cursor:pointer;font-size:13px;white-space:nowrap}
+.tab.active{background:#065f46;color:#facc15}
+.job{border-left:4px solid #065f46;padding:10px;margin:10px 0;background:#f9fafb;border-radius:8px}
+.pay{background:#fef9c3;border:2px solid #ca8a04;padding:10px;border-radius:10px;margin:8px 0}
+.hidden{display:none}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid #065f46;padding:6px;text-align:left}
 th{background:#065f46;color:#facc15}
-button{padding:10px;background:#065f46;color:#facc15;border:none;border-radius:8px;font-weight:bold;margin:4px}
-.earn{background:#fef9c3;padding:10px;border-radius:8px;border:2px solid #ca8a04;margin:8px 0}
 </style>
 </head>
 <body>
-<h2 style="color:#065f46;text-align:center">CARE233 Admin - Referral MoMo Pay</h2>
-<div class="card">
-<button onclick="load()">🔄 Refresh</button>
-<button onclick="clearAll()" style="background:#dc2626;color:#fff">🗑️ Clear</button>
-<div id="report"></div>
+
+<div id="login" class="card" style="margin-top:50px">
+<h2 style="text-align:center;color:#065f46">🔐 SUPER ADMIN LOGIN</h2>
+<input id="pin" type="password" placeholder="Enter PIN: 1234">
+<button onclick="checkPin()">LOGIN</button>
+<p style="font-size:11px;text-align:center">PIN is 1234 - Change in code</p>
 </div>
-<div class="card">
-<table><thead><tr><th>Date</th><th>Ref</th><th>Agent Name</th><th>Agent MoMo</th><th>Total</th><th>Pay 3%</th></tr></thead><tbody id="body"></tbody></table>
+
+<div id="main" class="hidden">
+<div class="tabs">
+<div class="tab active" onclick="show('dash')" id="tDash">📊 Dashboard</div>
+<div class="tab" onclick="show('book')" id="tBook">📋 Bookings</div>
+<div class="tab" onclick="show('create')" id="tCreate">➕ Create Job</div>
+<div class="tab" onclick="show('workers')" id="tWorkers">👷 Workers</div>
 </div>
+
+<!-- DASHBOARD -->
+<div id="pDash" class="card">
+<h3>📊 Business Overview</h3>
+<p>Total Bookings: <b id="totalB">0</b></p>
+<p>Total Revenue: <b>GHS <span id="totalR">0</span></b></p>
+<p>Total Referral to Pay (3%): <b>GHS <span id="totalRef">0</span></b></p>
+<p>Pending MoMo Payouts: <b id="pending">0</b></p>
+<div class="pay">
+<b>Your Profit:</b> GHS <span id="profit">0</span><br>
+<small>Revenue - Referral</small>
+</div>
+<button onclick="clearAll()" style="background:#dc2626;color:#fff">🗑️ Clear All Data (Test)</button>
+</div>
+
+<!-- BOOKINGS + REFERRAL MOMO -->
+<div id="pBook" class="card hidden">
+<h3>📋 All Bookings + Referral MoMo</h3>
+<div id="bookTable"></div>
+</div>
+
+<!-- CREATE JOB (owner-create-job) -->
+<div id="pCreate" class="card hidden">
+<h3>➕ Create New Job (Owner)</h3>
+<input id="jTitle" placeholder="Job Title - e.g. Monthly Care East Legon">
+<input id="jLoc" placeholder="Location">
+<select id="jType">
+<option>2 Weeks - GHS 1400</option>
+<option>1 Week - GHS 700</option>
+<option>3 Days - GHS 350</option>
+<option>Monthly - GHS 2800</option>
+</select>
+<input id="jPay" type="number" placeholder="Total Pay GHS">
+<textarea id="jDesc" placeholder="Job Description..."></textarea>
+<button onclick="createJob()">⚡ CREATE JOB</button>
+<div id="createdJobs"></div>
+</div>
+
+<!-- WORKERS (staff.html) -->
+<div id="pWorkers" class="card hidden">
+<h3>👷 Workers / Staff</h3>
+<p>Workers who logged in on worker.html will appear here (from localStorage demo)</p>
+<div id="workerList"></div>
+<button onclick="loadWorkers()">🔄 Refresh Workers</button>
+</div>
+
+</div>
+
 <script>
-function load(){
-let bookings=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
-let tbody=document.getElementById('body');
-tbody.innerHTML='';
-let map={};
-bookings.forEach(b=>{
-let code=b.refCode||'DIRECT';
-let name=b.agentName||'-';
-let momo=b.agentMoMo||'-';
-let total=parseFloat(b.total||0);
-let earn=(total*0.03).toFixed(2);
-if(!map[code]) map[code]={name:name,momo:momo,count:0,earn:0};
-map[code].count++; map[code].earn+=parseFloat(earn);
-let tr=document.createElement('tr');
-tr.innerHTML=`<td>${b.date||''}</td><td><b>${code}</b></td><td>${name}</td><td style="color:green;font-weight:bold">${momo}</td><td>GHS ${total}</td><td>GHS ${earn}</td>`;
-tbody.appendChild(tr);
+function checkPin(){
+if(document.getElementById('pin').value==='1234'){
+document.getElementById('login').classList.add('hidden');
+document.getElementById('main').classList.remove('hidden');
+loadAll();
+}else alert('Wrong PIN');
+}
+function show(t){
+['dash','book','create','workers'].forEach(x=>{
+document.getElementById('p'+x.charAt(0).toUpperCase()+x.slice(1)).classList.add('hidden');
+document.getElementById('t'+x.charAt(0).toUpperCase()+x.slice(1)).classList.remove('active');
 });
-let rep=document.getElementById('report');
-let html='<h3>💰 Who To Pay MoMo:</h3>';
-for(let c in map){
-if(c==='DIRECT') continue;
-let d=map[c];
-html+=`<div class="earn"><b>Code: ${c}</b><br>Name: ${d.name}<br>MoMo: <b style="font-size:18px">${d.momo}</b><br>${d.count} bookings = <b>GHS ${d.earn.toFixed(2)} to PAY</b><br><button onclick="window.open('https://wa.me/${d.momo}?text=Hi ${d.name}, your CARE233 code ${c} earned GHS ${d.earn.toFixed(2)} - Sending MoMo now!','_blank')" style="background:#25D366">📲 Pay MoMo Now</button></div>`;
+document.getElementById('p'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('hidden');
+document.getElementById('t'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active');
+if(t==='book') loadBookings();
+if(t==='create') loadCreated();
+if(t==='workers') loadWorkers();
+if(t==='dash') loadAll();
 }
-rep.innerHTML=html||'No referral bookings yet';
+
+function loadAll(){
+let b=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+document.getElementById('totalB').innerText=b.length;
+let rev=0,ref=0;
+b.forEach(x=>{rev+=parseInt(x.total||0); ref+=parseFloat(x.earn||0);});
+document.getElementById('totalR').innerText=rev;
+document.getElementById('totalRef').innerText=ref.toFixed(2);
+document.getElementById('profit').innerText=(rev-ref).toFixed(2);
+document.getElementById('pending').innerText=b.filter(x=>x.refCode!=='DIRECT').length;
+loadBookings();
 }
-function clearAll(){if(confirm('Clear all?')){localStorage.removeItem('care233_bookings');load();}}
-load();
+
+function loadBookings(){
+let b=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+if(b.length==0){document.getElementById('bookTable').innerHTML='<p>No bookings</p>';return;}
+let h=`<table><tr><th>Date</th><th>Care</th><th>Client</th><th>Total</th><th>Ref Code</th><th>Agent Name</th><th>MoMo to PAY</th><th>3%</th><th>Action</th></tr>`;
+b.forEach((x,i)=>{
+h+=`<tr>
+<td>${x.date}</td><td>${x.careType}</td><td>${x.phone}<br>${x.location}</td>
+<td>${x.total}</td><td>${x.refCode}</td><td>${x.agentName}</td>
+<td style="background:#fef9c3"><b>${x.agentMoMo}</b></td><td>GHS ${x.earn}</td>
+<td><button style="padding:6px;background:#25D366" onclick="payMoMo('${x.agentMoMo}','${x.earn}','${x.agentName}')">Pay</button><br><button style="padding:6px;background:#dc2626" onclick="delB(${i})">Del</button></td>
+</tr>`;
+});
+h+=`</table>`;
+document.getElementById('bookTable').innerHTML=h;
+}
+function payMoMo(momo,earn,name){
+if(!momo){alert('No MoMo - Direct booking');return;}
+let msg=`Hello ${name}, CARE233 referral bonus GHS ${earn} for you!`;
+window.open(`https://wa.me/${momo}?text=${encodeURIComponent(msg)}`,'_blank');
+window.open(`tel:*170#`,'_blank'); // MoMo USSD
+}
+function delB(i){
+let b=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+b.splice(i,1);
+localStorage.setItem('care233_bookings',JSON.stringify(b));
+loadAll();
+}
+function createJob(){
+let t=document.getElementById('jTitle').value.trim();
+let l=document.getElementById('jLoc').value.trim();
+let tp=document.getElementById('jType').value;
+let p=document.getElementById('jPay').value||'1400';
+let d=document.getElementById('jDesc').value;
+if(!t||!l){alert('Title + Location');return;}
+let jobs=JSON.parse(localStorage.getItem('care233_owner_jobs')||'[]');
+jobs.push({service:t,careType:tp,location:l,total:p,desc:d,date:new Date().toLocaleString()});
+localStorage.setItem('care233_owner_jobs',JSON.stringify(jobs));
+alert('Job Created! Workers will see on worker.html');
+document.getElementById('jTitle').value='';document.getElementById('jLoc').value='';
+loadCreated();
+}
+function loadCreated(){
+let jobs=JSON.parse(localStorage.getItem('care233_owner_jobs')||'[]');
+let h='';
+jobs.forEach((j,i)=>{h+=`<div class="job"><b>${j.service}</b> - ${j.location} - GHS ${j.total}<br><small>${j.date}</small><br><button style="background:#dc2626;padding:6px" onclick="delJ(${i})">Delete</button></div>`;});
+document.getElementById('createdJobs').innerHTML=h||'<p>No jobs created</p>';
+}
+function delJ(i){
+let jobs=JSON.parse(localStorage.getItem('care233_owner_jobs')||'[]');
+jobs.splice(i,1);
+localStorage.setItem('care233_owner_jobs',JSON.stringify(jobs));
+loadCreated();
+}
+function loadWorkers(){
+let keys=Object.keys(localStorage).filter(k=>k.startsWith('care233_my_jobs_'));
+let h='';
+if(keys.length==0)h='<p>No workers yet. Worker must login on worker.html</p>';
+else keys.forEach(k=>{
+let phone=k.replace('care233_my_jobs_','');
+let jobs=JSON.parse(localStorage.getItem(k)||'[]');
+let w=JSON.parse(localStorage.getItem('care233_worker')||'{}');
+h+=`<div class="job">Phone: ${phone}<br>Jobs Accepted: ${jobs.length}<br>Total Jobs Value: GHS ${jobs.reduce((s,j)=>s+parseInt(j.total||0),0)}</div>`;
+});
+document.getElementById('workerList').innerHTML=h;
+}
+function clearAll(){
+if(confirm('Clear all bookings & jobs?')){
+localStorage.removeItem('care233_bookings');
+localStorage.removeItem('care233_owner_jobs');
+loadAll();
+}
+}
 </script>
 </body>
 </html>
