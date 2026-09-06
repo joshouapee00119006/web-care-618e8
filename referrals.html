@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earn 3% - CARE233</title>
+<style>
+body{background:#0A4D2E;color:#FFD700;font-family:Arial;padding:20px;text-align:center}
+.box{background:white;color:#0A4D2E;padding:25px;border-radius:15px;max-width:400px;margin:auto}
+input{width:90%;padding:12px;margin:8px;border-radius:8px;border:1px solid #0A4D2E}
+button{background:#0A4D2E;color:#FFD700;padding:12px 25px;border:none;border-radius:8px;font-weight:bold;width:95%;cursor:pointer}
+#result{margin-top:15px;background:#0A4D2E;color:#FFD700;padding:15px;border-radius:8px;word-break:break-all;display:none}
+</style>
+</head>
+<body>
+<h1>💰 EARN 3% PER REFERRAL</h1>
+<p>Everyone can earn! Share and get paid via MoMo instantly</p>
+<div class="box">
+<h3>Generate Your Referral Link</h3>
+<input id="name" placeholder="Your Name (e.g. Kofi)">
+<input id="momo" placeholder="Your MoMo Number (054...)">
+<button onclick="genLink()">Generate My Link</button>
+<div id="result"></div>
+<button id="shareBtn" style="display:none;background:#25D366;margin-top:10px" onclick="shareWA()">Share on WhatsApp</button>
+</div>
+
+<script>
+function genLink(){
+ let n=document.getElementById('name').value.trim().replace(/\s+/g,'').toUpperCase();
+ let m=document.getElementById('momo').value.trim().slice(-4);
+ if(!n || !m){alert('Enter Name and MoMo');return}
+ let code=n+m;
+ let link=`https://joshouapee00119006.github.io/web-care-618e8/?ref=${code}`;
+ document.getElementById('result').style.display='block';
+ document.getElementById('result').innerHTML=`Your Code: <b>${code}</b><br><br>Your Link:<br>${link}<br><br><small>Share this link! When someone books, you get 3%</small>`;
+ document.getElementById('result').dataset.link=link;
+ document.getElementById('result').dataset.code=code;
+ document.getElementById('shareBtn').style.display='block';
+ localStorage.setItem('myReferCode',code);
+}
+function shareWA(){
+ let link=document.getElementById('result').dataset.link;
+ let text=`Need a nurse at home? Book trusted nurses with CARE233! Use my link: ${link} - Professional home nursing in Ghana!`;
+ window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+}
+</script>
+</body>
+</html>
