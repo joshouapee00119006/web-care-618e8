@@ -17,7 +17,7 @@ button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;bord
 <body>
 <div class="top">
 <h1 style="color:#facc15;margin:0">CARE233</h1>
-<p>Home Nursing Ghana - Earn 3% - GPS Smart</p>
+<p>Home Nursing Ghana - Earn 3% - GPS Smart + Ref Link</p>
 </div>
 <div class="card">
 <h3>Book a Nurse Now</h3>
@@ -140,18 +140,18 @@ document.getElementById('refEarnDisplay').innerText=`GHS ${refEarn}`;
 document.getElementById('finalPayDisplay').innerText=`GHS ${total}`;
 return {careCost,transport,total,refEarn,careType,qty,distKm,hasGPS};
 }
-calcPrice();// AUTO-FILL REFERRAL FROM LINK ?ref=NUMBER
+calcPrice();
 (function(){
-  let p=new URLSearchParams(window.location.search);
-  let r=p.get('ref')||p.get('referral');
-  if(r){
-    document.getElementById('refCode').value=r;
-    document.getElementById('refCode').style.background="#fef9c3";
-    document.getElementById('refCode').style.border="2px solid #ca8a04";
-    calcPrice();
-  }
+let p=new URLSearchParams(window.location.search);
+let r=p.get('ref')||p.get('referral');
+if(r){
+document.getElementById('refCode').value=r;
+document.getElementById('refCode').style.background="#fef9c3";
+document.getElementById('refCode').style.border="2px solid #ca8a04";
+document.getElementById('refCode').placeholder="Referral from link: "+r;
+calcPrice();
+}
 })();
-function bookNow(){
 function bookNow(){
 let name=document.getElementById('clientName').value.trim();
 let phone=document.getElementById('clientPhone').value.trim();
