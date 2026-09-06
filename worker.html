@@ -5,131 +5,130 @@
 <title>Nurses Group - Worker App</title>
 <style>
 body{background:#0a2e1f;color:white;font-family:Arial;padding:12px;margin:0}
-.card{background:#111;padding:22px;border-radius:20px;max-width:450px;margin:auto}
-h2{color:#ffcc00;text-align:center;margin:0 0 5px}
-.sub{text-align:center;color:#8fbc8f;font-size:13px;margin-bottom:15px}
-.tabs{display:flex;gap:10px;margin-bottom:15px}
-.tab{flex:1;padding:12px;border-radius:12px;border:none;font-weight:bold;cursor:pointer}
-.tabActive{background:#0a4d2e;color:#ffcc00} .tabOff{background:#2a2a2a;color:white}
-input,select{width:100%;padding:14px;margin:7px 0;border-radius:12px;border:2px solid #2a8a6a;background:#222;color:white;box-sizing:border-box}
-.btn{width:100%;padding:15px;background:#0a4d2e;color:#ffcc00;border:none;border-radius:12px;font-weight:bold;font-size:17px;margin-top:10px}
-.small{font-size:12px;color:#8fbc8f;text-align:center;margin-top:10px}
-.link{color:#25D366}
-.job{background:#132a20;padding:12px;border-radius:12px;margin:8px 0;border-left:4px solid #ffcc00}
+.card{background:#111;padding:20px;border-radius:20px;max-width:480px;margin:auto}
+h2{color:#ffcc00;text-align:center;margin:0}
+.sub{text-align:center;color:#8fbc8f;font-size:12px;margin-bottom:12px}
+.tabs{display:flex;gap:10px;margin:10px 0}
+.tab{flex:1;padding:11px;border-radius:12px;border:none;font-weight:bold}
+.tabActive{background:#0a4d2e;color:#ffcc00}.tabOff{background:#2a2a2a;color:white}
+input,select{width:100%;padding:13px;margin:6px 0;border-radius:12px;border:2px solid #2a8a6a;background:#222;color:white;box-sizing:border-box}
+.fileBox{background:#1a1a1a;padding:10px;border-radius:10px;margin:6px 0;border:1px dashed #2a8a6a}
+label{font-size:12px;color:#ffcc00;margin-top:8px;display:block}
+.btn{width:100%;padding:15px;background:#0a4d2e;color:#ffcc00;border:none;border-radius:12px;font-weight:bold;font-size:17px;margin-top:12px}
+.small{font-size:11px;color:#8fbc8f}
+.job{background:#132a20;padding:10px;border-radius:12px;margin:8px 0;border-left:4px solid #ffcc00}
 .hidden{display:none}
+.preview{width:60px;height:60px;border-radius:8px;object-fit:cover;margin-top:5px;display:none}
 </style>
 </head>
 <body>
 <div class="card">
 <h2>👩‍⚕️ NURSES GROUP</h2>
-<p class="sub">Official Worker Platform - Ghana</p>
+<p class="sub">Official Worker Platform - Ghana<br>Upload All Documents For Approval</p>
 
 <div class="tabs">
 <button id="tLogin" class="tab tabActive" onclick="show('login')">Login</button>
 <button id="tReg" class="tab tabOff" onclick="show('reg')">Register</button>
 </div>
 
-<!-- LOGIN -->
 <div id="loginBox">
-<input id="lPhone" placeholder="Phone Number (0244...)">
+<input id="lPhone" placeholder="Phone Number">
 <input id="lPass" type="password" placeholder="Password">
 <button class="btn" onclick="login()">🔓 LOGIN</button>
 <p id="lMsg" class="small"></p>
 </div>
 
-<!-- REGISTER -->
 <div id="regBox" class="hidden">
 <input id="rName" placeholder="Full Name *">
-<input id="rPhone" placeholder="Phone Number * (0244...)">
-<input id="rPass" type="password" placeholder="Create Password * (min 4 chars)">
-<input id="rMoMo" placeholder="MoMo Number * (for payment)">
-<input id="rLoc" placeholder="Your Location * (East Legon)">
-<select id="rSkill">
-<option>General Nurse</option>
-<option>Midwife</option>
-<option>Care Assistant</option>
-<option>Physiotherapy</option>
-</select>
-<button class="btn" onclick="register()">📝 REGISTER</button>
+<input id="rPhone" placeholder="Phone Number *">
+<input id="rPass" type="password" placeholder="Create Password *">
+<input id="rMoMo" placeholder="MoMo Number *">
+<input id="rLoc" placeholder="Location * (East Legon)">
+<select id="rSkill"><option>General Nurse</option><option>Midwife</option><option>Care Assistant</option><option>Community Health Nurse</option></select>
+
+<label>📸 Profile Photo *</label>
+<div class="fileBox"><input type="file" id="rPhoto" accept="image/*" onchange="prev(this,'pPhoto')"><img id="pPhoto" class="preview"></div>
+
+<label>🪪 Ghana Card (Front & Back) *</label>
+<div class="fileBox"><input type="file" id="rGhana" accept="image/*,.pdf" onchange="prev(this,'pGhana')"><img id="pGhana" class="preview"><span id="fGhana" class="small"></span></div>
+
+<label>📜 Nursing License / PIN *</label>
+<div class="fileBox"><input type="file" id="rLicense" accept="image/*,.pdf" onchange="prev(this,'pLicense')"><img id="pLicense" class="preview"><span id="fLicense" class="small"></span></div>
+
+<label>📄 CV / Resume *</label>
+<div class="fileBox"><input type="file" id="rCV" accept="image/*,.pdf,.doc" onchange="prev(this,'pCV')"><span id="fCV" class="small"></span></div>
+
+<label>📜 Any Other Certificate (Optional)</label>
+<div class="fileBox"><input type="file" id="rOther" accept="image/*,.pdf"><span id="fOther" class="small"></span></div>
+
+<button class="btn" onclick="register()">📤 SUBMIT FOR APPROVAL</button>
 <p id="rMsg" class="small"></p>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashBox" class="hidden">
 <h3 style="color:#7fdbc0">Welcome, <span id="wName"></span> 👋</h3>
-<p class="small">Phone: <span id="wPhone"></span> | Status: <span id="wStatus"></span></p>
-<h4>📋 Available Jobs</h4>
+<p class="small">Status: <span id="wStatus"></span></p>
 <div id="jobsList"></div>
-<button class="btn" style="background:#2a2a2a;color:white" onclick="logout()">Logout</button>
+<button class="btn" style="background:#2a2a2a" onclick="logout()">Logout</button>
 </div>
 
 </div>
-
 <script>
 function show(t){
- document.getElementById('loginBox').className = t==='login'?'':'hidden';
- document.getElementById('regBox').className = t==='reg'?'':'hidden';
- document.getElementById('tLogin').className = t==='login'?'tab tabActive':'tab tabOff';
- document.getElementById('tReg').className = t==='reg'?'tab tabActive':'tab tabOff';
+ document.getElementById('loginBox').className=t==='login'?'':'hidden';
+ document.getElementById('regBox').className=t==='reg'?'':'hidden';
+ document.getElementById('tLogin').className=t==='login'?'tab tabActive':'tab tabOff';
+ document.getElementById('tReg').className=t==='reg'?'tab tabActive':'tab tabOff';
 }
-
-function register(){
+function prev(input, imgId){
+ if(input.files[0]){
+   let span=document.getElementById('f'+imgId.substring(1));
+   if(span) span.innerText='✅ '+input.files[0].name;
+   if(input.files[0].type.startsWith('image/')){
+     let r=new FileReader(); r.onload=e=>{let im=document.getElementById(imgId); im.src=e.target.result; im.style.display='block'}; r.readAsDataURL(input.files[0]);
+   }
+ }
+}
+function fileToBase64(file){return new Promise(res=>{if(!file)res('');else{let r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(file)}})}
+async function register(){
  let name=document.getElementById('rName').value.trim();
  let phone=document.getElementById('rPhone').value.trim();
  let pass=document.getElementById('rPass').value.trim();
  let momo=document.getElementById('rMoMo').value.trim();
  let loc=document.getElementById('rLoc').value.trim();
- let skill=document.getElementById('rSkill').value;
- if(!name||!phone||!pass||!momo||!loc){document.getElementById('rMsg').innerText='Fill all * fields';return}
- if(pass.length<4){document.getElementById('rMsg').innerText='Password too short';return}
+ if(!name||!phone||!pass||!momo||!loc||!document.getElementById('rPhoto').files[0]||!document.getElementById('rGhana').files[0]||!document.getElementById('rLicense').files[0]||!document.getElementById('rCV').files[0]){document.getElementById('rMsg').innerText='❌ Upload ALL * documents';return}
+ document.getElementById('rMsg').innerText='⏳ Uploading documents...';
+ let photo=await fileToBase64(document.getElementById('rPhoto').files[0]);
+ let ghana=await fileToBase64(document.getElementById('rGhana').files[0]);
+ let lic=await fileToBase64(document.getElementById('rLicense').files[0]);
+ let cv=await fileToBase64(document.getElementById('rCV').files[0]);
+ let other=await fileToBase64(document.getElementById('rOther').files[0]);
  let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
- if(workers.find(w=>w.phone===phone)){document.getElementById('rMsg').innerText='Phone already registered. Login.';return}
- workers.push({name:name, phone:phone, pass:pass, momo:momo, loc:loc, skill:skill, approved:false, date:new Date().toLocaleString()});
+ if(workers.find(w=>w.phone===phone)){document.getElementById('rMsg').innerText='Phone already exists. Login.';return}
+ workers.push({name,phone,pass,momo,loc,skill:document.getElementById('rSkill').value,photo,ghanaCard:ghana,license:lic,cv,otherDoc:other,approved:false,date:new Date().toLocaleString()});
  localStorage.setItem('care233_workers',JSON.stringify(workers));
- document.getElementById('rMsg').innerText='✅ Registered! Wait for Admin Approval. Then Login.';
- setTimeout(()=>show('login'),1500);
+ document.getElementById('rMsg').innerText='✅ ALL Documents Submitted! Wait for Admin Approval.';
+ setTimeout(()=>show('login'),2000);
 }
-
 function login(){
  let phone=document.getElementById('lPhone').value.trim();
  let pass=document.getElementById('lPass').value.trim();
  let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
- let w=workers.find(x=>x.phone===phone && x.pass===pass);
- if(!w){document.getElementById('lMsg').innerText='❌ Wrong phone or password';return}
- if(!w.approved){document.getElementById('lMsg').innerText='⏳ Not yet approved by Admin. Call CEO.';return}
+ let w=workers.find(x=>x.phone===phone&&x.pass===pass);
+ if(!w){document.getElementById('lMsg').innerText='❌ Wrong phone/password';return}
+ if(!w.approved){document.getElementById('lMsg').innerText='⏳ Documents under review. Admin will approve soon.';return}
  localStorage.setItem('care233_current',JSON.stringify(w));
  openDash(w);
 }
-
 function openDash(w){
- document.getElementById('loginBox').className='hidden';
- document.getElementById('regBox').className='hidden';
- document.getElementById('dashBox').className='';
- document.getElementById('wName').innerText=w.name;
- document.getElementById('wPhone').innerText=w.phone;
- document.getElementById('wStatus').innerText=w.approved?'✅ Approved':'Pending';
- loadJobs();
-}
-
-function loadJobs(){
- let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');
- let html='';
- if(jobs.length===0) html='<p class="small">No jobs yet. Wait for bookings.</p>';
- jobs.reverse().forEach(j=>{
-   let gpsBtn=j.gps?`<a class="link" target="_blank" href="https://www.google.com/maps?q=${j.gps}">🗺️ GPS Directions</a>`:'No GPS';
-   html+=`<div class="job"><b>${j.service}</b><br>📍 ${j.location}<br>💰 ${j.price}<br>📞 ${j.phone}<br>${gpsBtn}<br><small>${j.date}</small></div>`;
- });
+ document.getElementById('loginBox').className='hidden';document.getElementById('regBox').className='hidden';document.getElementById('dashBox').className='';
+ document.getElementById('wName').innerText=w.name;document.getElementById('wStatus').innerText='✅ Approved';
+ let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');let html=jobs.length?'':'<p class="small">No jobs yet</p>';
+ jobs.reverse().forEach(j=>{html+=`<div class="job"><b>${j.service}</b><br>📍 ${j.location}<br>💰 ${j.price}<br><a style="color:#25D366" target="_blank" href="https://www.google.com/maps?q=${j.gps}">🗺️ Directions</a></div>`});
  document.getElementById('jobsList').innerHTML=html;
 }
-
-function logout(){
- localStorage.removeItem('care233_current');
- location.reload();
-}
-
-// Auto login if already
-let cur=JSON.parse(localStorage.getItem('care233_current')||'null');
-if(cur && cur.approved) openDash(cur);
+function logout(){localStorage.removeItem('care233_current');location.reload()}
+let cur=JSON.parse(localStorage.getItem('care233_current')||'null');if(cur&&cur.approved)openDash(cur);
 </script>
 </body>
 </html>
