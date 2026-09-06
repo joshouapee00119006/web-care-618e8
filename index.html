@@ -1,89 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CARE233 - Home Nursing Ghana | Earn 3% Referral</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CARE233 - Book a Nurse</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f5f5f5}
-.header{background:#0A4D2E;color:#FFD700;padding:15px;text-align:center;position:sticky;top:0;z-index:99}
-.logo{font-size:28px;font-weight:bold}
-.banner-ref{background:#FFD700;color:#0A4D2E;padding:10px;text-align:center;font-weight:bold;display:none}
-.container{max-width:500px;margin:20px auto;background:white;padding:20px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-h2{color:#0A4D2E;text-align:center;margin-bottom:15px}
-label{font-weight:bold;color:#0A4D2E;display:block;margin-top:12px}
-input,select,textarea{width:100%;padding:12px;margin-top:5px;border:1px solid #ccc;border-radius:8px;font-size:16px}
-.btn{background:#0A4D2E;color:#FFD700;padding:14px;width:100%;border:none;border-radius:8px;font-size:18px;font-weight:bold;margin-top:15px;cursor:pointer}
-.btn-earn{background:#FFD700;color:#0A4D2E;padding:12px;text-align:center;border-radius:8px;display:block;text-decoration:none;font-weight:bold;margin-bottom:15px;border:2px solid #0A4D2E}
-.msg{padding:8px;border-radius:5px;margin-top:5px;font-size:14px}
-.success{background:#d4edda;color:#155724}
+body{margin:0;font-family:sans-serif;background:#f0fdf4}
+.top{background:#065f46;color:#fff;padding:20px;text-align:center}
+.card{background:#fff;margin:12px;padding:18px;border-radius:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
+button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;font-size:16px}
+.refBox{background:#fef9c3;padding:12px;border-radius:10px;margin:10px 0;border:1px dashed #ca8a04}
+.priceBox{background:#ecfdf5;padding:12px;border-radius:10px;border:2px solid #065f46;margin:10px 0}
 </style>
 </head>
 <body>
-<div class="header">
-<div class="logo">🏠 CARE233</div>
-<div>Home Nursing • Ghana - Earn 3% Per Referral</div>
+<div class="top">
+<h1 style="color:#facc15;margin:0">CARE233</h1>
+<p>Home Nursing • Ghana - Earn 3% Per Referral</p>
 </div>
-<div id="refBanner" class="banner-ref"></div>
-<div class="container">
-<a href="refer.html" class="btn-earn">💰 EVERYONE CAN EARN 3% - Get Your Link</a>
-<h2>Book a Nurse Now</h2>
-<label>Your Name *</label>
-<input id="clientName" placeholder="e.g. Ama Mensah">
-<label>Your Phone *</label>
-<input id="clientPhone" placeholder="e.g. 0544121814">
-<div id="phoneMsg"></div>
-<label>Region *</label>
-<select id="region"><option value="">Select Region</option><option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Eastern</option><option>Central</option><option>Volta</option><option>Northern</option><option>Others</option></select>
-<label>Service Needed *</label>
-<select id="service"><option value="">Select Service</option><option>Elderly Care - GHC 500</option><option>Baby Care - GHC 400</option><option>Wound Dressing - GHC 300</option><option>Post-Surgery Care - GHC 600</option><option>Injection Service - GHC 200</option><option>Full Time Nurse - GHC 2500</option></select>
-<label>Care Type</label>
-<select id="careType"><option>Day</option><option>Night</option><option>Live-in</option><option>Part-time</option></select>
-<label>Referral Code</label>
-<input id="refCode" placeholder="e.g. KOFI1814 or leave blank">
-<div id="refMsg"></div>
-<label>Notes</label>
-<textarea id="notes" placeholder="Describe what you need..."></textarea>
-<button class="btn" onclick="bookNow()">Book Nurse via WhatsApp</button>
-<p style="font-size:13px;text-align:center;margin-top:15px">When you book with referral code, your friend earns 3% via MoMo!<br>Everyone can refer - <a href="refer.html">Get your link here</a></p>
+
+<div class="card" style="background:#fef9c3;border:2px dashed #ca8a04">
+<b>🎁 EVERYONE CAN EARN 3% - Get Your Link</b>
+<p style="font-size:13px">Share your phone number as referral code. When someone books, you earn 3%!</p>
+<input id="myRefPhone" placeholder="Enter YOUR phone e.g 0244121814" oninput="makeMyLink()">
+<p id="myLinkDisplay" style="font-weight:bold;word-break:break-all;color:#065f46"></p>
 </div>
+
+<div class="card">
+<h3>📝 Book a Nurse Now</h3>
+<input id="clientName" placeholder="Your Name e.g Ama">
+<input id="clientPhone" placeholder="Your WhatsApp Number e.g 0244123456">
+<select id="region">
+<option value="">Select Region</option>
+<option>Greater Accra</option>
+<option>Central Region</option>
+<option>Ashanti Region</option>
+<option>Eastern Region</option>
+<option>Western Region</option>
+</select>
+<select id="service">
+<option value="">Select Service</option>
+<option>Elderly Care - GHC 500</option>
+<option>Nanny / Child Care - GHC 600</option>
+<option>House Help - GHC 400</option>
+<option>Hospital Sitting - GHC 300</option>
+<option>Homecare - GHC 200</option>
+</select>
+
+<label style="font-weight:bold;margin-top:10px;display:block">Care Type</label>
+<select id="careType" onchange="calcPrice()">
+<option>1 Hour</option>
+<option>Half Day (4 Hours)</option>
+<option selected>Full Day (8 Hours)</option>
+<option>Live-in (24 Hours)</option>
+<option>1 Week</option>
+<option>2 Weeks</option>
+<option>1 Month</option>
+</select>
+
+<label style="font-weight:bold;margin-top:10px;display:block">How many hours/days/weeks do you need worker?</label>
+<input id="durationQty" type="number" value="1" min="1" oninput="calcPrice()">
+<p style="font-size:12px;background:#fef9c3;padding:8px;border-radius:6px;margin:5px 0">💰 RATE: 1 Hour=GHS 50 | 1 Day=GHS 100 | 2 Days=GHS 200 | 1 Week=GHS 700</p>
+
+<div class="priceBox">
+<b>Est Total: <span id="estTotal">GHS 100</span></b><br>
+Discount: <span id="discountDisplay">0%</span><br>
+Referrer Earns 3%: <span id="refEarnDisplay">GHS 0</span><br>
+<b>Client Pays: <span id="finalPayDisplay" style="color:#065f46;font-size:18px">GHS 100</span></b>
+</div>
+
+<input id="refCode" placeholder="Referral Code e.g 0244... or Direct" oninput="calcPrice()">
+<textarea id="notes" placeholder="Tell us about patient / child / extra info"></textarea>
+
+<button onclick="bookNow()">📨 Book a Nurse Now</button>
+<p id="msg"></p>
+</div>
+
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const urlRef = urlParams.get('ref');
-if(urlRef){localStorage.setItem('care233_ref', urlRef.toUpperCase());}
-window.addEventListener('load', ()=>{
-  let savedRef = localStorage.getItem('care233_ref');
-  if(savedRef || urlRef){
-    let code = (urlRef || savedRef).toUpperCase();
-    document.getElementById('refCode').value = code;
-    document.getElementById('refCode').disabled = true;
-    document.getElementById('refMsg').innerHTML = "✅ Referred by: <b>"+code+"</b> - You get 5% discount, they earn 3%!";
-    document.getElementById('refBanner').style.display = "block";
-    document.getElementById('refBanner').innerHTML = "🎉 Referred by "+code+" - Discount! | <a href='refer.html' style='color:#0A4D2E'>Earn 3% too?</a>";
+let all = JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+
+// Make referral link
+function makeMyLink(){
+  let p = document.getElementById('myRefPhone').value.trim();
+  if(p.length>=10){
+    let link = `https://joshouapee00119006.github.io/web-care-618e8/?ref=${p}`;
+    document.getElementById('myLinkDisplay').innerHTML = `Your Link:<br>${link}`;
   }
-});
+}
+
+// Auto-fill referral from URL ?ref=
+let urlParams = new URLSearchParams(window.location.search);
+let urlRef = urlParams.get('ref');
+if(urlRef){ document.getElementById('refCode').value = urlRef; }
+
+// DYNAMIC PRICING CALCULATION - YOUR SUGGESTION
+function calcPrice(){
+  let careType = document.getElementById('careType').value;
+  let qty = parseInt(document.getElementById('durationQty').value) || 1;
+  let refCode = document.getElementById('refCode').value.trim();
+  let total = 0;
+
+  if(careType.includes("1 Hour")) total = 50 * qty; // 1hr=50, 2hr=100
+  else if(careType.includes("Half Day")) total = 120 * qty;
+  else if(careType.includes("Full Day")) total = 100 * qty; // YOUR RULE: 1 day=100, 2 days=200
+  else if(careType.includes("Live-in")) total = 150 * qty;
+  else if(careType.includes("1 Week")) total = 700 * qty;
+  else if(careType.includes("2 Weeks")) total = 1400 * qty;
+  else if(careType.includes("Month")) total = 3000 * qty;
+  else total = 100 * qty;
+
+  let refEarn = (refCode && refCode.toLowerCase()!='direct')? Math.round(total*0.03) : 0;
+  
+  document.getElementById('estTotal').innerText = `GHS ${total}`;
+  document.getElementById('discountDisplay').innerText = "0% (Direct)";
+  document.getElementById('refEarnDisplay').innerText = `GHS ${refEarn}`;
+  document.getElementById('finalPayDisplay').innerText = `GHS ${total}`;
+  
+  return {total, refEarn, careType, qty};
+}
+calcPrice(); // run on load
+
 function bookNow(){
   let name = document.getElementById('clientName').value.trim();
   let phone = document.getElementById('clientPhone').value.trim();
   let region = document.getElementById('region').value;
   let service = document.getElementById('service').value;
   let careType = document.getElementById('careType').value;
-  let refCode = document.getElementById('refCode').value.trim().toUpperCase() || localStorage.getItem('care233_ref') || 'Direct';
+  let qty = document.getElementById('durationQty').value;
+  let refCode = document.getElementById('refCode').value.trim()||'Direct';
   let notes = document.getElementById('notes').value.trim();
-  if(!name ||!phone ||!region ||!service){alert("Please fill Name, Phone, Region, Service");return;}
-  let priceMatch = service.match(/GHC\s*(\d+)/i);
-  let basePrice = priceMatch? parseInt(priceMatch[1]) : 500;
-  let discount = (refCode!== 'Direct' && refCode!== '')? 5 : 0;
-  let finalPaid = Math.round(basePrice * (1 - discount/100));
-  let bookingData = {id:'C233'+Date.now(),name,phone,region,service,careType,refCode,notes,basePrice,discount,finalPaid,r:Math.round(finalPaid*0.03),staff:Math.round(finalPaid*0.05),data:Math.round(finalPaid*0.02),profit:Math.round(finalPaid*0.1),paid:false,date:new Date().toLocaleString()};
-  let all = JSON.parse(localStorage.getItem('care233_bookings') || '[]');
+
+  if(!name ||!phone ||!region ||!service){
+    alert("Please fill Name, Phone, Region, Service");
+    return;
+  }
+
+  let calc = calcPrice();
+  let basePrice = calc.total;
+  let finalPaid = calc.total;
+  let refEarns = calc.refEarn;
+  let discount = 0;
+
+  let bookingData = {id:'C233'+Date.now(), name, phone, region, service, careType, durationQty: qty, duration: `${qty} x ${careType}`, basePrice, finalPaid, refCode, refEarns, discount, notes, time: new Date().toLocaleString()};
+
   all.push(bookingData);
   localStorage.setItem('care233_bookings', JSON.stringify(all));
-  let waMsg = "NEW BOOKING - CARE233%0AName: "+name+"%0APhone: "+phone+"%0ARegion: "+region+"%0AService: "+service+"%0AType: "+careType+"%0ADiscount: "+discount+"% ("+refCode+")%0ARef Earns (3%): GHC "+bookingData.r+"%0AEst: GHC "+finalPaid+"%0ANotes: "+notes+"%0AID: "+bookingData.id;
-  window.open("https://wa.me/233544121814?text="+waMsg, "_blank");
-  alert("✅ Thanks "+name+"! "+(discount? discount+"% discount applied. ":"")+"We will call "+phone+" in 30 mins.");
-  document.getElementById('clientName').value="";document.getElementById('clientPhone').value="";document.getElementById('refCode').value="";document.getElementById('notes').value="";document.getElementById('refMsg').innerHTML="";document.getElementById('refCode').disabled=false;
+
+  let waMsg = `NEW BOOKING - CARE233%0AName: ${name}%0APhone: ${phone}%0ARegion: ${region}%0AService: ${service}%0ACare Type: ${careType}%0ADuration: ${qty} x ${careType}%0ATotal: GHS ${finalPaid}%0ARef Code: ${refCode}%0ARef Earns (3%): GHS ${refEarns}%0ANotes: ${notes}%0AID: ${bookingData.id}%0ATime: ${bookingData.time}`;
+
+  window.open(`https://wa.me/233544121814?text=${waMsg}`, '_blank');
+  alert(`✅ Thanks ${name}! Your booking for ${qty} x ${careType} = GHS ${finalPaid}. Admin will call you soon!`);
+  document.getElementById('clientName').value='';
+  document.getElementById('msg').innerHTML = `✅ Booked! Total GHS ${finalPaid} | Ref earns GHS ${refEarns}`;
 }
 </script>
 </body>
