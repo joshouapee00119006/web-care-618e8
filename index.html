@@ -1,5 +1,90 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CARE233 - Ghana's Trusted Home Care</title><style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}body{background:#f5f9f6;color:#222}.header{background:#0A4D2E;color:white;padding:15px;text-align:center;position:sticky;top:0;z-index:100}.header h1{font-size:28px}.header p{color:#FFD700;font-size:14px}.hero{background:linear-gradient(rgba(10,77,46,0.92),rgba(10,77,46,0.92)),url('https://images.unsplash.com/photo-1576765607924-3f7b8410a787?w=1200');background-size:cover;color:white;padding:60px 20px;text-align:center}.hero h2{font-size:34px;margin-bottom:12px}.btn{background:#FFD700;color:#0A4D2E;padding:14px 28px;border:none;border-radius:30px;font-weight:bold;font-size:16px;cursor:pointer;margin:8px;display:inline-block;text-decoration:none}.btn-green{background:#0A4D2E;color:white}.section{padding:40px 20px;max-width:1100px;margin:auto}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}.card{background:white;padding:25px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.08);border-top:4px solid #0A4D2E}.form-box{background:white;padding:30px;border-radius:15px;max-width:600px;margin:30px auto;box-shadow:0 10px 30px rgba(0,0,0,0.15)}input,select,textarea{width:100%;padding:14px;margin:8px 0;border:1px solid #ccc;border-radius:8px;font-size:16px}.footer{background:#0A4D2E;color:white;text-align:center;padding:30px 20px;margin-top:40px}</style></head><body><div class="header"><h1>🇬🇭 CARE233</h1><p>Trusted Home Care • All 16 Regions • 24/7</p></div><div class="hero"><h2>Book Verified Home Nurse in 30 Seconds</h2><p>Police Checked • NMC Certified</p><br><a href="#book" class="btn">📅 BOOK A NURSE NOW</a><p style="margin-top:15px">Use Code: <b>GHANA100</b> | 📞 0544 121 814</p></div><div class="section"><h2 style="text-align:center;color:#0A4D2E">Why Families Trust CARE233</h2><div class="cards"><div class="card"><h3>👩‍⚕️ Verified Nurses</h3><p>NMC certified, police cleared.</p></div><div class="card"><h3>🌍 All 16 Regions</h3><p>Accra, Kumasi, Tamale, everywhere.</p></div><div class="card"><h3>⚡ Fast & Reliable</h3><p>Book in 30 seconds.</p></div><div class="card"><h3>💛 Home Care</h3><p>Elderly, post-surgery, baby care.</p></div></div></div><div class="section" id="book"><div class="form-box"><h2 style="color:#0A4D2E;text-align:center">📋 Book Home Care</h2><input type="text" id="clientName" placeholder="Your Full Name *"><input type="tel" id="clientPhone" placeholder="Your Phone *" oninput="checkPhoneHistory()"><select id="region"><option value="">Select Region *</option><option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Eastern</option><option>Central</option><option>Northern</option><option>Volta</option><option>Upper East</option><option>Upper West</option><option>Bono</option><option>Bono East</option><option>Ahafo</option><option>Oti</option><option>North East</option><option>Savannah</option><option>Western North</option></select><select id="service"><option>Home Nursing</option><option>Elderly Care</option><option>Post-Surgery Care</option><option>Baby Care</option><option>Physiotherapy</option></select><select id="careType"><option>Basic Care</option><option>Professional Care</option><option>Premium 24hr Care</option></select><textarea id="notes" placeholder="Describe care needed..."></textarea><div style="background:#FFF8E1;border:2px dashed #FFC107;padding:15px;border-radius:10px;margin:15px 0;"><label style="font-weight:bold;font-size:14px">🎁 Promo Code?</label><input type="text" id="refCode" placeholder="e.g. GHANA100" oninput="checkReferral()" style="margin-top:8px"><div id="refMsg" style="font-weight:bold;margin-top:10px;font-size:15px"></div><div id="phoneMsg" style="font-size:13px;color:#b71c1c;margin-top:8px"></div></div><button class="btn btn-green" style="width:100%;font-size:18px" onclick="submitBooking()">✅ CONFIRM BOOKING</button></div></div><div class="footer"><h3>CARE233</h3><p>📞 0544 121 814 / 0502 957 280</p></div><script>const bloggers={"GHANA100":{disc:20},"KOBBY100":{disc:20},"ZION100":{disc:20},"AMEYAW100":{disc:20},"NURSE100":{disc:20}};function getUsedPhones(){return JSON.parse(localStorage.getItem('care233_used_promos')||'{}');}function saveUsedPhone(phone,code){let d=getUsedPhones();d[phone]={code:code,date:new Date().toLocaleString()};localStorage.setItem('care233_used_promos',JSON.stringify(d));}
-function checkPhoneHistory(){let phone=document.getElementById('clientPhone').value.trim();let pMsg=document.getElementById('phoneMsg');let rMsg=document.getElementById('refMsg');if(phone.length<10){pMsg.innerHTML="";return false;}let used=getUsedPhones();if(used[phone]){pMsg.innerHTML="⚠️ Number "+phone+" already used promo "+used[phone].code+". No discount.";document.getElementById('refCode').disabled=true;document.getElementById('refCode').placeholder="Already used "+used[phone].code;rMsg.innerHTML="❌ Discount already used";rMsg.style.color="#C62828";rMsg.style.background="#FFEBEE";rMsg.style.padding="12px";rMsg.style.borderRadius="8px";return true;}else{pMsg.innerHTML="✅ New client - Promo eligible";pMsg.style.color="green";document.getElementById('refCode').disabled=false;return false;}}
-function checkReferral(){let code=document.getElementById('refCode').value.toUpperCase().trim();let msg=document.getElementById('refMsg');if(checkPhoneHistory())return;if(code===""){msg.innerHTML="";return;}if(bloggers[code]){msg.innerHTML="🎉 Awesome! You got "+bloggers[code].disc+"% DISCOUNT with code "+code+"! (One-time)";msg.style.color="#0A4D2E";msg.style.background="#E8F5E9";msg.style.padding="12px";msg.style.borderRadius="8px";}else if(code.length>=3){msg.innerHTML="❌ Code "+code+" not valid. Try GHANA100";msg.style.color="#C62828";msg.style.background="#FFEBEE";msg.style.padding="12px";msg.style.borderRadius="8px";}}
-function submitBooking(){let name=document.getElementById('clientName').value.trim();let phone=document.getElementById('clientPhone').value.trim();let region=document.getElementById('region').value;let ref=document.getElementById('refCode').value.toUpperCase().trim()||"DIRECT";let careType=document.getElementById('careType').value;let service=document.getElementById('service').value;if(!name||!phone||!region){alert("Please fill Name, Phone, Region");return;}let used=getUsedPhones();if(used[phone]&&ref!="DIRECT"){alert("⚠️ Number "+phone+" already used promo "+used[phone].code+". No discount twice.");ref="DIRECT";}let discount=0;if(bloggers[ref]&&!used[phone])discount=bloggers[ref].disc;if(discount>0)saveUsedPhone(phone,ref);let basePrices={"Basic Care":500,"Professional Care":800,"Premium 24hr Care":1000};let base=basePrices[careType]||500;let finalPaid=Math.round(base-(base*discount/100));let all=JSON.parse(localStorage.getItem('care233_bookings')||'[]');all.push({clientName:name,phone,region,service,careType,referral:ref,discount:discount+'%',finalPaid,date:new Date().toLocaleString(),_split:{nurse:Math.round(finalPaid*0.8),blogger:Math.round(finalPaid*0.03),staff:Math.round(finalPaid*0.05),data:Math.round(finalPaid*0.02),profit:Math.round(finalPaid*0.1)},paid:false});localStorage.setItem('care233_bookings',JSON.stringify(all));let waMsg="NEW BOOKING - CARE233%0AName:"+name+"%0APhone:"+phone+"%0ARegion:"+region+"%0AService:"+service+"%0AType:"+careType+"%0ADiscount:"+discount+"% ("+ref+")%0AEst:GHC"+finalPaid;window.open("https://wa.me/233544121814?text="+waMsg,"_blank");alert("✅ Thanks "+name+"! "+(discount?discount+"% discount applied. ":"")+"We will call "+phone+" in 30 mins.");document.getElementById('clientName').value="";document.getElementById('clientPhone').value="";document.getElementById('refCode').value="";document.getElementById('notes').value="";document.getElementById('refMsg').innerHTML="";document.getElementById('phoneMsg').innerHTML="";document.getElementById('refCode').disabled=false;}</script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CARE233 - Home Nursing Ghana | Earn 3% Referral</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f5f5f5}
+.header{background:#0A4D2E;color:#FFD700;padding:15px;text-align:center;position:sticky;top:0;z-index:99}
+.logo{font-size:28px;font-weight:bold}
+.banner-ref{background:#FFD700;color:#0A4D2E;padding:10px;text-align:center;font-weight:bold;display:none}
+.container{max-width:500px;margin:20px auto;background:white;padding:20px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+h2{color:#0A4D2E;text-align:center;margin-bottom:15px}
+label{font-weight:bold;color:#0A4D2E;display:block;margin-top:12px}
+input,select,textarea{width:100%;padding:12px;margin-top:5px;border:1px solid #ccc;border-radius:8px;font-size:16px}
+.btn{background:#0A4D2E;color:#FFD700;padding:14px;width:100%;border:none;border-radius:8px;font-size:18px;font-weight:bold;margin-top:15px;cursor:pointer}
+.btn-earn{background:#FFD700;color:#0A4D2E;padding:12px;text-align:center;border-radius:8px;display:block;text-decoration:none;font-weight:bold;margin-bottom:15px;border:2px solid #0A4D2E}
+.msg{padding:8px;border-radius:5px;margin-top:5px;font-size:14px}
+.success{background:#d4edda;color:#155724}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo">🏠 CARE233</div>
+<div>Home Nursing • Ghana - Earn 3% Per Referral</div>
+</div>
+<div id="refBanner" class="banner-ref"></div>
+<div class="container">
+<a href="refer.html" class="btn-earn">💰 EVERYONE CAN EARN 3% - Get Your Link</a>
+<h2>Book a Nurse Now</h2>
+<label>Your Name *</label>
+<input id="clientName" placeholder="e.g. Ama Mensah">
+<label>Your Phone *</label>
+<input id="clientPhone" placeholder="e.g. 0544121814">
+<div id="phoneMsg"></div>
+<label>Region *</label>
+<select id="region"><option value="">Select Region</option><option>Greater Accra</option><option>Ashanti</option><option>Western</option><option>Eastern</option><option>Central</option><option>Volta</option><option>Northern</option><option>Others</option></select>
+<label>Service Needed *</label>
+<select id="service"><option value="">Select Service</option><option>Elderly Care - GHC 500</option><option>Baby Care - GHC 400</option><option>Wound Dressing - GHC 300</option><option>Post-Surgery Care - GHC 600</option><option>Injection Service - GHC 200</option><option>Full Time Nurse - GHC 2500</option></select>
+<label>Care Type</label>
+<select id="careType"><option>Day</option><option>Night</option><option>Live-in</option><option>Part-time</option></select>
+<label>Referral Code</label>
+<input id="refCode" placeholder="e.g. KOFI1814 or leave blank">
+<div id="refMsg"></div>
+<label>Notes</label>
+<textarea id="notes" placeholder="Describe what you need..."></textarea>
+<button class="btn" onclick="bookNow()">Book Nurse via WhatsApp</button>
+<p style="font-size:13px;text-align:center;margin-top:15px">When you book with referral code, your friend earns 3% via MoMo!<br>Everyone can refer - <a href="refer.html">Get your link here</a></p>
+</div>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const urlRef = urlParams.get('ref');
+if(urlRef){localStorage.setItem('care233_ref', urlRef.toUpperCase());}
+window.addEventListener('load', ()=>{
+  let savedRef = localStorage.getItem('care233_ref');
+  if(savedRef || urlRef){
+    let code = (urlRef || savedRef).toUpperCase();
+    document.getElementById('refCode').value = code;
+    document.getElementById('refCode').disabled = true;
+    document.getElementById('refMsg').innerHTML = "✅ Referred by: <b>"+code+"</b> - You get 5% discount, they earn 3%!";
+    document.getElementById('refBanner').style.display = "block";
+    document.getElementById('refBanner').innerHTML = "🎉 Referred by "+code+" - Discount! | <a href='refer.html' style='color:#0A4D2E'>Earn 3% too?</a>";
+  }
+});
+function bookNow(){
+  let name = document.getElementById('clientName').value.trim();
+  let phone = document.getElementById('clientPhone').value.trim();
+  let region = document.getElementById('region').value;
+  let service = document.getElementById('service').value;
+  let careType = document.getElementById('careType').value;
+  let refCode = document.getElementById('refCode').value.trim().toUpperCase() || localStorage.getItem('care233_ref') || 'Direct';
+  let notes = document.getElementById('notes').value.trim();
+  if(!name ||!phone ||!region ||!service){alert("Please fill Name, Phone, Region, Service");return;}
+  let priceMatch = service.match(/GHC\s*(\d+)/i);
+  let basePrice = priceMatch? parseInt(priceMatch[1]) : 500;
+  let discount = (refCode!== 'Direct' && refCode!== '')? 5 : 0;
+  let finalPaid = Math.round(basePrice * (1 - discount/100));
+  let bookingData = {id:'C233'+Date.now(),name,phone,region,service,careType,refCode,notes,basePrice,discount,finalPaid,r:Math.round(finalPaid*0.03),staff:Math.round(finalPaid*0.05),data:Math.round(finalPaid*0.02),profit:Math.round(finalPaid*0.1),paid:false,date:new Date().toLocaleString()};
+  let all = JSON.parse(localStorage.getItem('care233_bookings') || '[]');
+  all.push(bookingData);
+  localStorage.setItem('care233_bookings', JSON.stringify(all));
+  let waMsg = "NEW BOOKING - CARE233%0AName: "+name+"%0APhone: "+phone+"%0ARegion: "+region+"%0AService: "+service+"%0AType: "+careType+"%0ADiscount: "+discount+"% ("+refCode+")%0ARef Earns (3%): GHC "+bookingData.r+"%0AEst: GHC "+finalPaid+"%0ANotes: "+notes+"%0AID: "+bookingData.id;
+  window.open("https://wa.me/233544121814?text="+waMsg, "_blank");
+  alert("✅ Thanks "+name+"! "+(discount? discount+"% discount applied. ":"")+"We will call "+phone+" in 30 mins.");
+  document.getElementById('clientName').value="";document.getElementById('clientPhone').value="";document.getElementById('refCode').value="";document.getElementById('notes').value="";document.getElementById('refMsg').innerHTML="";document.getElementById('refCode').disabled=false;
+}
+</script>
+</body>
+</html>
