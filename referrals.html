@@ -1,40 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Earn 3% - CARE233</title>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CARE233 - Auto Earn Link</title>
 <style>
-body{background:#0A4D2E;color:#FFD700;font-family:Arial;padding:20px;text-align:center}
-.box{background:white;color:#0A4D2E;padding:25px;border-radius:15px;max-width:450px;margin:20px auto}
-input{width:90%;padding:14px;margin:10px;border-radius:8px;border:1px solid #0A4D2E;font-size:16px}
-button{background:#0A4D2E;color:#FFD700;padding:14px;width:95%;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:10px}
-#result{margin-top:15px;background:#0A4D2E;color:#FFD700;padding:15px;border-radius:8px;word-break:break-all;display:none}
+body{margin:0;font-family:sans-serif;background:#f0fdf4;padding:12px}
+.card{background:#fff;padding:22px;border-radius:18px;max-width:500px;margin:30px auto;box-shadow:0 6px 15px rgba(0,0,0,0.15);text-align:center}
+button{width:100%;padding:16px;background:#065f46;color:#facc15;border:none;border-radius:12px;font-weight:bold;font-size:18px;margin:10px 0}
+.linkBox{background:#fef9c3;padding:16px;border-radius:12px;border:2px dashed #ca8a04;word-break:break-all;margin:15px 0;font-weight:bold}
 </style>
 </head>
 <body>
-<h1>💰 EVERYONE CAN EARN 3%</h1>
-<p>Not just bloggers! Anyone can refer and earn via MoMo</p>
-<div class="box">
-<h3>Generate Your Link in 5 Secs</h3>
-<input id="name" placeholder="Your Name e.g. Kofi">
-<input id="momo" placeholder="Your MoMo Number 054...">
-<button onclick="genLink()">Generate My Link</button>
-<div id="result"></div>
-<button id="copyBtn" style="display:none" onclick="copyLink()">📋 Copy Link</button>
-<button id="shareBtn" style="display:none;background:#25D366;color:white;padding:14px;width:95%;border:none;border-radius:8px;margin-top:10px;font-weight:bold" onclick="shareWA()">📱 Share on WhatsApp</button>
-<a href="index.html" style="display:block;margin-top:15px;color:#0A4D2E;font-weight:bold">← Back to Booking</a>
+<div class="card">
+<h1 style="color:#065f46;margin:0">💰 CARE233</h1>
+<h3>Your Auto Earning Link is Ready!</h3>
+<p>Share this link. Anyone who books via it, you earn 3% automatically. System tracks for you.</p>
+<p><b>Your Code:</b><br><span id="code" style="font-size:32px;color:#ca8a04;font-weight:bold">LOADING...</span></p>
+<div class="linkBox" id="link">Generating...</div>
+<button onclick="copyL()">📋 COPY LINK</button>
+<button onclick="share()" style="background:#25D366;color:#fff">📲 SHARE LINK NOW</button>
+<p style="background:#ecfdf5;padding:12px;border-radius:8px;font-size:13px;text-align:left">
+✅ No typing needed<br>
+✅ Link is saved on your phone forever<br>
+✅ Admin sees your earnings on dashboard<br>
+✅ We pay your MoMo every Friday<br><br>
+<b>Example:</b><br>
+Client pays GHS 220 → You get GHS 6.60 auto
+</p>
+<a href="index.html" style="color:#065f46;font-weight:bold">← Go to Main Site</a>
 </div>
 <script>
-function genLink(){
- let n=document.getElementById('name').value.trim().replace(/\s+/g,'').toUpperCase();
- let m=document.getElementById('momo').value.trim().slice(-4);
- if(!n || m.length<4){alert('Enter Name and MoMo');return}
- let code=n+m; let link="https://joshouapee00119006.github.io/web-care-618e8/?ref="+code;
- let r=document.getElementById('result'); r.style.display='block';
- r.innerHTML="✅ Code: <b>"+code+"</b><br><br>Link:<br><b>"+link+"</b><br><br>Share! When they book, you earn 3%!";
- r.dataset.link=link; document.getElementById('shareBtn').style.display='block'; document.getElementById('copyBtn').style.display='block';
+// AUTO SYSTEM - NO TYPING!
+let agentCode = localStorage.getItem('care233_my_code');
+if(!agentCode){
+let rand = Math.random().toString(36).substring(2,6).toUpperCase();
+let num = Math.floor(1000+Math.random()*9000);
+agentCode = "CARE"+rand+num;
+localStorage.setItem('care233_my_code', agentCode);
 }
-function shareWA(){let link=document.getElementById('result').dataset.link; window.open("https://wa.me/?text="+encodeURIComponent("Need a nurse? Book CARE233 here: "+link));}
-function copyLink(){navigator.clipboard.writeText(document.getElementById('result').dataset.link).then(()=>alert("✅ Copied! Share now"));}
+document.getElementById('code').innerText = agentCode;
+let fullLink = "https://joshouapee00119006.github.io/web-care-618e8/index.html?ref="+agentCode;
+document.getElementById('link').innerText = fullLink;
+
+function copyL(){ navigator.clipboard.writeText(fullLink); alert("✅ Your earning link copied!\n"+fullLink); }
+function share(){
+let msg = `Need a Nurse at Home? 🏥%0ABook CARE233 Trusted Nurses Ghana 🇬🇭%0A%0ABook here 👇%0A${fullLink}`;
+window.open("https://wa.me/?text="+msg, "_blank");
+}
 </script>
 </body>
 </html>
