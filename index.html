@@ -17,7 +17,7 @@ button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;bord
 <body>
 <div class="top">
 <h1 style="color:#facc15;margin:0">CARE233</h1>
-<p>Home Nursing Ghana - Earn 3% - GPS Smart + Ref Link</p>
+<p>Home Nursing Ghana - Earn 3% - GPS + KUSI Codes</p>
 </div>
 <div class="card">
 <h3>Book a Nurse Now</h3>
@@ -65,7 +65,7 @@ Transport (<span id="regionLabel">Region static</span>): <span id="transportDisp
 Referrer 3%: <span id="refEarnDisplay" style="color:#ca8a04;font-weight:bold">GHS 0</span><br>
 <b>Total Pays: <span id="finalPayDisplay" style="color:#065f46;font-size:20px">GHS 220</span></b>
 </div>
-<input id="refCode" placeholder="Referral Code e.g 0244... or Direct" oninput="calcPrice()">
+<input id="refCode" placeholder="Referral Code e.g KUSI3456 or 0244... or Direct" oninput="calcPrice()">
 <textarea id="notes" placeholder="Patient notes - e.g has stroke"></textarea>
 <button onclick="bookNow()">📨 Book a Nurse Now</button>
 <p id="msg"></p>
@@ -87,7 +87,7 @@ let lat=pos.coords.latitude,lng=pos.coords.longitude;
 document.getElementById('clientLat').value=lat;document.getElementById('clientLng').value=lng;
 let dist=haversine(ACCRA_HUB.lat,ACCRA_HUB.lng,lat,lng);
 document.getElementById('distanceKm').value=dist.toFixed(1);
-document.getElementById('gpsStatus').innerText=`✅ GPS Locked! ${dist.toFixed(1)}km from Accra hub. Transport now dynamic!`;
+document.getElementById('gpsStatus').innerText=`✅ GPS Locked! ${dist.toFixed(1)}km from hub. Transport dynamic!`;
 calcPrice();
 },err=>{document.getElementById('gpsStatus').innerText="❌ GPS denied - Using Region static";calcPrice();});
 }
@@ -132,7 +132,7 @@ label=region?`Static - ${region}`:"Region static";
 document.getElementById('distanceLabel').innerText="";
 }
 let total=careCost+transport;
-let refEarn=(refCode&&refCode.toLowerCase()!='direct'&&refCode.length>=10)?Math.round(total*0.03):0;
+let refEarn=(refCode&&refCode.toLowerCase()!='direct'&&refCode.length>=4)?Math.round(total*0.03):0;
 document.getElementById('estTotal').innerText=`GHS ${careCost}`;
 document.getElementById('transportDisplay').innerText=`GHS ${transport}`;
 document.getElementById('regionLabel').innerText=label;
@@ -145,10 +145,11 @@ calcPrice();
 let p=new URLSearchParams(window.location.search);
 let r=p.get('ref')||p.get('referral');
 if(r){
-document.getElementById('refCode').value=r;
-document.getElementById('refCode').style.background="#fef9c3";
-document.getElementById('refCode').style.border="2px solid #ca8a04";
-document.getElementById('refCode').placeholder="Referral from link: "+r;
+let el=document.getElementById('refCode');
+el.value=r;
+el.style.background="#fef9c3";
+el.style.border="2px solid #ca8a04";
+el.placeholder="Referral from link: "+r;
 calcPrice();
 }
 })();
@@ -170,7 +171,7 @@ let bookingData={id:'C233'+Date.now(),name,phone,region,service,careType,qty,dur
 all.push(bookingData);localStorage.setItem('care233_bookings',JSON.stringify(all));
 let waMsg=`NEW BOOKING - CARE233%0AName: ${name}%0APhone: ${phone}%0ARegion: ${region}%0AService: ${service}%0ACare Type: ${careType}%0ADuration: ${qty} x ${careType}%0ACare: GHS ${calc.careCost}%0ATransport: GHS ${calc.transport} (${calc.hasGPS? dist+'km GPS' : 'Static'})%0ATotal: GHS ${calc.total}%0ARef: ${refCode} Earns GHS ${calc.refEarn}%0AGPS: ${lat},${lng}%0ANotes: ${notes}%0AID: ${bookingData.id}`;
 window.open(`https://wa.me/233544121814?text=${waMsg}`, '_blank');
-alert(`✅ Booked! ${qty} x ${careType} = GHS ${calc.total}`);
+alert(`✅ Booked! ${qty} x ${careType} = GHS ${calc.total} - Ref ${refCode} earns GHS ${calc.refEarn}`);
 }
 </script>
 </body>
