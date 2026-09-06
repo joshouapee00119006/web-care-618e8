@@ -1,16 +1,40 @@
-<!DOCTYPE html>
-<html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CARE233 - Nurse Login</title>
-<style>body{background:#0A4D2E;color:white;font-family:sans-serif;padding:20px;text-align:center}
-.card{background:white;color:#0A4D2E;padding:25px;border-radius:15px;max-width:400px;margin:40px auto}
-input{width:90%;padding:15px;margin:10px 0;border:2px solid #FFD700;border-radius:10px;font-size:18px}
-button{background:#FFD700;color:#0A4D2E;padding:15px;border:none;border-radius:10px;font-weight:bold;font-size:18px;width:95%;cursor:pointer}</style>
-</head><body><h1>CARE233 🩺</h1><h2 style="color:#FFD700">Nurse Login</h2>
-<div class="card"><h3>Enter MoMo Number</h3>
-<input id="phone" placeholder="054XXXXXXX" type="tel"><input id="name" placeholder="Your Full Name">
-<button onclick="login()">See My Jobs →</button></div>
-<script>function login(){
-let p=document.getElementById('phone').value.trim(), n=document.getElementById('name').value.trim();
-if(p.length<10){alert('Enter valid number');return;} if(n.length<2){alert('Enter name');return;}
-localStorage.setItem('care233_worker_phone',p); localStorage.setItem('care233_worker_name',n);
-location.href='worker-dashboard.html';}</script></body></html>
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>CARE233 - My Jobs</title><style>body{margin:0;font-family:sans-serif;background:#f5f5f5}.header{background:#065f46;color:#fff;padding:15px;text-align:center}.card{background:#fff;margin:10px;padding:15px;border-radius:12px}input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}button{padding:12px 18px;border:none;border-radius:8px;font-weight:bold;margin:5px;cursor:pointer}.accept{background:#16a34a;color:#fff}.reject{background:#dc2626;color:#fff}.logout{background:#facc15}</style></head><body><div class="header"><h1 style="color:#facc15;margin:0">CARE233</h1><div id="welcome"></div></div><div id="loginBox" class="card"><h3>Nurse Login</h3><input id="phone" placeholder="Your number e.g 0544121814" value="0544121814"><input id="name" placeholder="Your name" value="Joshua"><button onclick="login()" style="background:#065f46;color:#facc15;width:100%">See My Jobs</button></div><div id="jobsBox"><h3 style="padding:10px">🔔 My Job Offers (Live)</h3><div id="jobsList">Please login</div></div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";import{getFirestore,collection,query,where,onSnapshot,doc,updateDoc}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyB52-X1D8Cg-wUDWPds_tR7X3cF82dMdRg",authDomain:"web-care-618e8.firebaseapp.com",projectId:"web-care-618e8",storageBucket:"web-care-618e8.firebasestorage.app",messagingSenderId:"1062578660694",appId:"1:1062578660694:web:f94dfe12c929df05bce2f7"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+let myPhone="",myName="";
+window.login=()=>{
+myPhone=document.getElementById('phone').value.trim();myName=document.getElementById('name').value.trim();
+if(!myPhone||!myName){alert("Enter phone & name");return;}
+localStorage.setItem('nursePhone',myPhone);localStorage.setItem('nurseName',myName);
+document.getElementById('loginBox').style.display='none';
+document.getElementById('welcome').innerHTML=`Welcome <b>${myName}</b> - ${myPhone} <button class="logout" onclick="logout()">Logout</button>`;
+loadJobs();};
+window.logout=()=>{localStorage.clear();location.reload();};
+function loadJobs(){
+const q=query(collection(db,"jobs"),where("offeredTo","array-contains",myPhone));
+onSnapshot(q,snap=>{
+let h="";if(snap.empty){h="<div class='card'>No jobs offered to you yet. Create one from owner page with your number.</div>";}
+snap.forEach(d=>{
+let j=d.data();let id=d.id;
+let statusColor=j.status==='accepted'?'green':j.status==='rejected'?'red':'orange';
+h+=`<div class="card"><b>${j.clientName}</b> - ${j.location}<br>${j.service} | ${j.date} ${j.time}<br>Pay: GHS ${j.pay} + Transport ${j.transport}<br>Notes: ${j.notes}<br>Status: <b style="color:${statusColor}">${j.status.toUpperCase()}</b> ${j.acceptedBy?'<br>AcceptedBy:'+j.acceptedBy:''}<br>`;
+if(j.status==='offered'){h+=`<button class="accept" onclick="acceptJob('${id}')">✅ ACCEPT - I will show up!</button><button class="reject" onclick="rejectJob('${id}')">❌ REJECT</button>`;}
+else if(j.status==='accepted'&&j.acceptedBy===myPhone){h+=`<div style="background:#dcfce7;padding:8px;border-radius:8px;color:green"><b>✅ YOU ACCEPTED - Please show up on ${j.date}</b></div>`;}
+h+=`</div>`;
+});
+document.getElementById('jobsList').innerHTML=h;
+},err=>{document.getElementById('jobsList').innerHTML="Error: "+err.message+" - Check Firestore Rules!";});
+}
+window.acceptJob=async(id)=>{
+if(!confirm("CONFIRM: You MUST show up for this job! Accept?"))return;
+await updateDoc(doc(db,"jobs",id),{status:"accepted",acceptedBy:myPhone,acceptedAt:new Date().toISOString(),acceptedByName:myName});
+alert("✅ Accepted! Owner will see you accepted.");
+};
+window.rejectJob=async(id)=>{
+let reason=prompt("Reason for reject?")||"Not available";
+await updateDoc(doc(db,"jobs",id),{status:"rejected",rejectedBy:myPhone,rejectedReason:reason});
+};
+let p=localStorage.getItem('nursePhone');let n=localStorage.getItem('nurseName');if(p&&n){document.getElementById('phone').value=p;document.getElementById('name').value=n;login();}
+</script></body></html>
