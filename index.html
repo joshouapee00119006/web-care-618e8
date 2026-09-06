@@ -2,110 +2,137 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CARE233 - Home Nursing</title>
+<title>CARE233 - Book & Earn</title>
 <style>
 body{margin:0;font-family:sans-serif;background:#f0fdf4;padding:10px}
 .card{background:#fff;padding:18px;border-radius:16px;max-width:500px;margin:12px auto;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
 input,select{width:100%;padding:12px;margin:8px 0;border:2px solid #065f46;border-radius:10px;box-sizing:border-box}
-button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;margin:8px 0;font-size:16px}
-.bonus{background:#fef9c3;border:2px solid #ca8a04;padding:10px;border-radius:10px;text-align:center}
+button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;margin:8px 0;font-size:15px}
+.tabs{display:flex;gap:6px;max-width:500px;margin:10px auto}
+.tab{flex:1;padding:12px;background:#e5e7eb;border-radius:10px;text-align:center;font-weight:bold;cursor:pointer}
+.tab.active{background:#065f46;color:#facc15}
+.bonus{background:#fef9c3;border:2px solid #ca8a04;padding:10px;border-radius:10px;text-align:center;margin:10px 0}
+.linkBox{background:#fff;padding:12px;border:2px dashed #ca8a04;border-radius:10px;word-break:break-all;margin:10px 0;font-size:13px}
+.hidden{display:none}
 </style>
 </head>
 <body>
-<div class="card">
-<h2 style="color:#065f46;text-align:center">CARE233 - Book Nurse</h2>
+
+<div class="tabs">
+<div class="tab active" id="tabBook" onclick="showTab('book')">📋 Book Nurse</div>
+<div class="tab" id="tabEarn" onclick="showTab('earn')">💰 Earn 3%</div>
+</div>
+
+<!-- BOOK TAB -->
+<div id="pageBook" class="card">
+<h2 style="color:#065f46;text-align:center;margin:0">CARE233 - Home Nursing</h2>
 <div id="refBanner" style="display:none" class="bonus">
-✅ <b>3% Bonus Applied</b><br>Code: <span id="refCodeShow"></span> | Agent: <span id="refNameShow"></span>
+✅ <b>3% Bonus Applied</b><br>Code: <span id="refCodeShow"></span><br>Agent: <span id="refNameShow"></span>
 </div>
-
-<label>GPS Distance (km) - Auto</label>
-<input id="gps" value="10.0" readonly>
-
+<label>GPS Locked</label>
+<input id="gps" value="10.0km" readonly>
 <label>Care Type</label>
-<select id="careType">
-<option value="2 Weeks - GHS 1400">2 Weeks - GHS 1400</option>
-<option value="1 Week - GHS 700">1 Week - GHS 700</option>
-<option value="3 Days - GHS 350">3 Days - GHS 350</option>
-<option value="Monthly - GHS 2800">Monthly - GHS 2800</option>
+<select id="careType" onchange="calc()">
+<option value="1400">2 Weeks - GHS 1400</option>
+<option value="700">1 Week - GHS 700</option>
+<option value="350">3 Days - GHS 350</option>
+<option value="2800">Monthly - GHS 2800</option>
 </select>
-
-<label>Your Phone Number</label>
-<input id="clientPhone" placeholder="Your number 0244...">
-
-<label>Your Location</label>
-<input id="location" placeholder="e.g. East Legon, Accra">
-
-<div class="card" style="background:#f0fdf4;margin:10px 0">
-<p>Care: <b id="carePrice">GHS 1400</b></p>
-<p>Transport: GHS <span id="trans">20</span> - <span id="km">10.0</span>km</p>
-<p>Total: <b>GHS <span id="total">1420</span></b></p>
+<label>Your Phone</label>
+<input id="clientPhone" placeholder="0244...">
+<label>Location</label>
+<input id="location" placeholder="East Legon">
+<div style="background:#f0fdf4;padding:10px;border-radius:10px">
+<p>Care: <b>GHS <span id="careP">1400</span></b> | Transport: GHS 20</p>
+<p>Total: <b>GHS <span id="total">1420</span></b> | Earn for agent: GHS <span id="earn">42.6</span></p>
+</div>
+<button onclick="book()">📲 BOOK NOW</button>
 </div>
 
-<button onclick="book()">📲 BOOK NOW - Pay on Delivery</button>
-<p style="text-align:center"><a href="referrals.html">Want to Earn 3%? Generate Your Link</a></p>
+<!-- EARN TAB -->
+<div id="pageEarn" class="card hidden">
+<h2 style="color:#065f46;text-align:center">💰 Generate Your Earning Link</h2>
+<p>Enter your MoMo to get link. Anyone who books with it, you earn 3%!</p>
+<input id="agentName" placeholder="Your Full Name">
+<input id="agentMoMo" placeholder="Your MoMo Number 0244...">
+<button onclick="genLink()" style="background:#ca8a04;color:#fff">⚡ GENERATE LINK</button>
+<div id="genResult" class="hidden">
+<p><b>Your Code:</b> <span id="myCode" style="font-size:22px;color:#ca8a04"></span></p>
+<div class="linkBox" id="myLink"></div>
+<button onclick="copyL()">📋 COPY LINK</button>
+<button onclick="shareL()" style="background:#25D366;color:#fff">📲 SHARE LINK</button>
+<p style="font-size:11px;background:#ecfdf5;padding:8px;border-radius:8px">Admin will see your Name + MoMo when client books!</p>
+</div>
 </div>
 
 <script>
-// --- CAPTURE REFERRAL FROM LINK ---
-let params = new URLSearchParams(window.location.search);
-let refCode = params.get('ref') || 'DIRECT';
-let agentName = params.get('agentName') ? decodeURIComponent(params.get('agentName')) : '';
-let agentMoMo = params.get('agentMoMo') || '';
-
-if(refCode !== 'DIRECT'){
- document.getElementById('refBanner').style.display='block';
- document.getElementById('refCodeShow').innerText=refCode;
- document.getElementById('refNameShow').innerText=agentName+' - '+agentMoMo;
+let finalLink='';
+function showTab(t){
+document.getElementById('pageBook').classList.toggle('hidden', t!=='book');
+document.getElementById('pageEarn').classList.toggle('hidden', t!=='earn');
+document.getElementById('tabBook').classList.toggle('active', t==='book');
+document.getElementById('tabEarn').classList.toggle('active', t==='earn');
 }
 
-// --- CALCULATE TOTAL ---
-let basePrice=1400;
-document.getElementById('careType').addEventListener('change',function(){
- let val=this.value;
- if(val.includes('1400')) basePrice=1400;
- else if(val.includes('700')) basePrice=700;
- else if(val.includes('350')) basePrice=350;
- else if(val.includes('2800')) basePrice=2800;
- document.getElementById('carePrice').innerText='GHS '+basePrice;
- calcTotal();
-});
-function calcTotal(){
- let total=basePrice+20;
- document.getElementById('total').innerText=total;
- return total;
+// REF CAPTURE
+let params=new URLSearchParams(window.location.search);
+let refCode=params.get('ref')||'DIRECT';
+let refName=params.get('agentName')?decodeURIComponent(params.get('agentName')):'';
+let refMoMo=params.get('agentMoMo')||'';
+if(refCode!=='DIRECT'){
+document.getElementById('refBanner').style.display='block';
+document.getElementById('refCodeShow').innerText=refCode;
+document.getElementById('refNameShow').innerText=refName+' - '+refMoMo;
 }
 
-// --- BOOKING SAVE WITH MOMO ---
+function calc(){
+let base=parseInt(document.getElementById('careType').value);
+document.getElementById('careP').innerText=base;
+let total=base+20;
+document.getElementById('total').innerText=total;
+document.getElementById('earn').innerText=(total*0.03).toFixed(2);
+return total;
+}
+calc();
+
+function genLink(){
+let name=document.getElementById('agentName').value.trim();
+let momo=document.getElementById('agentMoMo').value.trim();
+if(!name||!momo){alert('Enter name + MoMo');return;}
+let code='CARE'+Math.random().toString(36).substring(2,5).toUpperCase()+Math.floor(100+Math.random()*900);
+document.getElementById('myCode').innerText=code;
+finalLink=`https://joshouapee00119006.github.io/web-care-618e8/index.html?ref=${code}&agentName=${encodeURIComponent(name)}&agentMoMo=${momo}`;
+document.getElementById('myLink').innerText=finalLink;
+document.getElementById('genResult').classList.remove('hidden');
+localStorage.setItem('care233_my_code',code);
+}
+
+function copyL(){navigator.clipboard.writeText(finalLink);alert('Copied!');}
+function shareL(){window.open(`https://wa.me/?text=Book CARE233 Nurse with my link (3% bonus) 👇%0A${encodeURIComponent(finalLink)}`,'_blank');}
+
 function book(){
- let phone=document.getElementById('clientPhone').value.trim();
- let loc=document.getElementById('location').value.trim();
- let care=document.getElementById('careType').value;
- if(!phone){alert('Enter your phone!');return;}
- let total=calcTotal();
- let booking={
-   date:new Date().toLocaleString(),
-   service:'Home Nursing',
-   careType:care,
-   total:total,
-   phone:phone,
-   location:loc,
-   gps:'10.0km',
-   refCode:refCode,
-   agentName:agentName,
-   agentMoMo:agentMoMo,
-   earn:(total*0.03).toFixed(2)
- };
- let bookings=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
- bookings.push(booking);
- localStorage.setItem('care233_bookings',JSON.stringify(bookings));
-
- // AUTO WHATSAPP TO ADMIN WITH AGENT MOMO
- let adminNumber='233544121814'; // CHANGE TO YOUR NUMBER
- let msg=`NEW BOOKING CARE233%0A%0AService: ${care}%0ATotal: GHS ${total}%0AClient Phone: ${phone}%0ALocation: ${loc}%0A%0AREFERRAL CODE: ${refCode}%0AAgent Name: ${agentName}%0AAgent MoMo to PAY: ${agentMoMo}%0AEarn 3%: GHS ${booking.earn}%0A%0AGPS: 10km`;
- window.open(`https://wa.me/${adminNumber}?text=${msg}`,'_blank');
- 
- alert(`✅ Booked! Total GHS ${total}\nReferral: ${refCode}\nAgent MoMo: ${agentMoMo}\nAdmin will contact you!`);
- window.location.href='admin.html';
+let phone=document.getElementById('clientPhone').value.trim();
+let loc=document.getElementById('location').value.trim();
+if(!phone){alert('Enter phone');return;}
+let total=calc();
+let booking={
+date:new Date().toLocaleString(),
+careType:document.getElementById('careType').options[document.getElementById('careType').selectedIndex].text,
+total:total,
+phone:phone,
+location:loc,
+refCode:refCode,
+agentName:refName,
+agentMoMo:refMoMo,
+earn:(total*0.03).toFixed(2)
+};
+let bookings=JSON.parse(localStorage.getItem('care233_bookings')||'[]');
+bookings.push(booking);
+localStorage.setItem('care233_bookings',JSON.stringify(bookings));
+let admin='233544121814';
+let msg=`NEW BOOKING%0AService: ${booking.careType}%0ATotal: GHS ${total}%0AClient: ${phone} - ${loc}%0A%0AREF: ${refCode}%0AAgent: ${refName}%0AMoMo TO PAY: ${refMoMo}%0AEarn: GHS ${booking.earn}`;
+window.open(`https://wa.me/${admin}?text=${msg}`,'_blank');
+alert('Booked! Admin will call you. Ref: '+refCode);
 }
 </script>
 </body>
