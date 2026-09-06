@@ -1,1 +1,87 @@
-... (Tell me "YES GIVE ADMIN TOO" and I will paste the admin code that shows all documents with VIEW buttons)
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin - Nurses Group</title>
+<style>
+body{background:#0a0a0a;color:white;font-family:Arial;padding:10px;margin:0}
+.card{background:#111;padding:15px;border-radius:15px;max-width:600px;margin:auto;border:1px solid #0a4d2e}
+h2{color:#ffcc00;text-align:center}
+.worker{background:#1a2a1f;padding:12px;border-radius:12px;margin:10px 0;border-left:4px solid #ffcc00}
+.btn{padding:8px 12px;border:none;border-radius:8px;font-weight:bold;margin:3px;cursor:pointer}
+.approve{background:#0a4d2e;color:#ffcc00}
+.reject{background:#4d0a0a;color:white}
+.view{background:#222;color:#7fdbc0;border:1px solid #2a8a6a}
+img.doc{width:100%;max-width:300px;border-radius:8px;margin:5px 0;border:2px solid #2a8a6a}
+.small{font-size:11px;color:#8fbc8f}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>🔐 ADMIN - NURSES GROUP</h2>
+<p class="small" style="text-align:center">Review CV, Ghana Card, License & Approve</p>
+<input id="adminPass" type="password" placeholder="Admin Password (admin123)" style="width:100%;padding:12px;border-radius:10px;background:#222;color:white;border:2px solid #2a8a6a;box-sizing:border-box">
+<button class="btn approve" style="width:100%;margin-top:8px" onclick="unlock()">Unlock Dashboard</button>
+
+<div id="dash" style="display:none">
+<h3>👩‍⚕️ Pending Approvals (<span id="count">0</span>)</h3>
+<div id="list"></div>
+<hr>
+<h3>✅ Approved Nurses</h3>
+<div id="approvedList"></div>
+</div>
+</div>
+
+<script>
+let PASS="admin123";
+function unlock(){
+ if(document.getElementById('adminPass').value!==PASS){alert('Wrong password');return}
+ document.getElementById('dash').style.display='block';
+ load();
+}
+function load(){
+ let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
+ let pending=workers.filter(w=>!w.approved);
+ let approved=workers.filter(w=>w.approved);
+ document.getElementById('count').innerText=pending.length;
+ let html='';
+ if(pending.length==0) html='<p class="small">No pending</p>';
+ pending.forEach((w,i)=>{
+   let idx=workers.indexOf(w);
+   html+=`<div class="worker">
+   <b>${w.name}</b> - ${w.skill}<br>
+   📞 ${w.phone} | MoMo: ${w.momo}<br>📍 ${w.loc}<br><small>${w.date}</small><br><br>
+   <b>Documents:</b><br>
+   ${w.photo?`<div>📸 Photo: <br><img class="doc" src="${w.photo}"><br><a class="btn view" href="${w.photo}" target="_blank">View Photo</a></div>`:''}
+   ${w.ghanaCard?`<div>🪪 Ghana Card: <br><a class="btn view" href="${w.ghanaCard}" target="_blank">📄 VIEW GHANA CARD</a></div>`:''}
+   ${w.license?`<div>📜 License: <br><a class="btn view" href="${w.license}" target="_blank">📄 VIEW LICENSE</a></div>`:''}
+   ${w.cv?`<div>📄 CV: <br><a class="btn view" href="${w.cv}" target="_blank">📄 VIEW CV</a></div>`:''}
+   ${w.otherDoc?`<div>📜 Other: <br><a class="btn view" href="${w.otherDoc}" target="_blank">📄 VIEW OTHER DOC</a></div>`:''}
+   <br>
+   <button class="btn approve" onclick="approve(${idx})">✅ APPROVE</button>
+   <button class="btn reject" onclick="reject(${idx})">❌ REJECT</button>
+   </div>`;
+ });
+ document.getElementById('list').innerHTML=html;
+
+ let html2='';
+ approved.forEach(w=>{html2+=`<div class="worker" style="border-left-color:#0a4d2e"><b>${w.name}</b> - ${w.phone} - ✅ Approved</div>`});
+ document.getElementById('approvedList').innerHTML=html2||'<p class="small">None yet</p>';
+}
+function approve(i){
+ let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
+ workers[i].approved=true;
+ localStorage.setItem('care233_workers',JSON.stringify(workers));
+ load();
+ alert('✅ Approved! Nurse can now login');
+}
+function reject(i){
+ if(!confirm('Reject and delete this nurse?'))return;
+ let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
+ workers.splice(i,1);
+ localStorage.setItem('care233_workers',JSON.stringify(workers));
+ load();
+}
+</script>
+</body>
+</html>
