@@ -7,10 +7,10 @@
 body{margin:0;font-family:sans-serif;background:#f0fdf4}
 .top{background:#065f46;color:#fff;padding:20px;text-align:center}
 .card{background:#fff;margin:12px;padding:18px;border-radius:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box}
-button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;font-size:16px}
-.refBox{background:#fef9c3;padding:12px;border-radius:10px;margin:10px 0;border:1px dashed #ca8a04}
-.priceBox{background:#ecfdf5;padding:12px;border-radius:10px;border:2px solid #065f46;margin:10px 0}
+input,select,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:15px}
+button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer}
+.priceBox{background:#ecfdf5;padding:14px;border-radius:10px;border:2px solid #065f46;margin:12px 0;line-height:1.6}
+.small{font-size:12px;background:#fef9c3;padding:8px;border-radius:6px;margin:6px 0}
 </style>
 </head>
 <body>
@@ -21,7 +21,7 @@ button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;bord
 
 <div class="card" style="background:#fef9c3;border:2px dashed #ca8a04">
 <b>🎁 EVERYONE CAN EARN 3% - Get Your Link</b>
-<p style="font-size:13px">Share your phone number as referral code. When someone books, you earn 3%!</p>
+<p style="font-size:13px">Enter YOUR phone as referral code. When someone books, you earn 3% automatically!</p>
 <input id="myRefPhone" placeholder="Enter YOUR phone e.g 0244121814" oninput="makeMyLink()">
 <p id="myLinkDisplay" style="font-weight:bold;word-break:break-all;color:#065f46"></p>
 </div>
@@ -30,95 +30,116 @@ button{width:100%;padding:14px;background:#065f46;color:#facc15;border:none;bord
 <h3>📝 Book a Nurse Now</h3>
 <input id="clientName" placeholder="Your Name e.g Ama">
 <input id="clientPhone" placeholder="Your WhatsApp Number e.g 0244123456">
-<select id="region">
+
+<label>Region (Transport adds)</label>
+<select id="region" onchange="calcPrice()">
 <option value="">Select Region</option>
-<option>Greater Accra</option>
-<option>Central Region</option>
-<option>Ashanti Region</option>
-<option>Eastern Region</option>
-<option>Western Region</option>
+<option value="Greater Accra">Greater Accra - Transport GHS 20</option>
+<option value="Central Region">Central Region - Transport GHS 40</option>
+<option value="Ashanti Region">Ashanti Region - Transport GHS 50</option>
+<option value="Eastern Region">Eastern Region - Transport GHS 40</option>
+<option value="Western Region">Western Region - Transport GHS 50</option>
+<option value="Volta Region">Volta Region - Transport GHS 60</option>
+<option value="Northern Region">Northern Region - Transport GHS 80</option>
 </select>
+
+<label>Service</label>
 <select id="service">
 <option value="">Select Service</option>
-<option>Elderly Care - GHC 500</option>
-<option>Nanny / Child Care - GHC 600</option>
-<option>House Help - GHC 400</option>
-<option>Hospital Sitting - GHC 300</option>
-<option>Homecare - GHC 200</option>
+<option>Elderly Care</option>
+<option>Nanny / Child Care</option>
+<option>House Help</option>
+<option>Hospital Sitting</option>
+<option>Homecare</option>
+<option>Physiotherapy</option>
 </select>
 
 <label style="font-weight:bold;margin-top:10px;display:block">Care Type</label>
 <select id="careType" onchange="calcPrice()">
-<option>1 Hour</option>
-<option>Half Day (4 Hours)</option>
-<option selected>Full Day (8 Hours)</option>
-<option>Live-in (24 Hours)</option>
-<option>1 Week</option>
-<option>2 Weeks</option>
-<option>1 Month</option>
+<option value="1 Hour">1 Hour - GHS 50/hr</option>
+<option value="Half Day (4 Hours)">Half Day (4 Hours) - GHS 120</option>
+<option value="Full Day (8 Hours)" selected>Full Day (8 Hours) - GHS 100/day</option>
+<option value="Live-in (24 Hours)">Live-in (24 Hours) - GHS 150/day</option>
+<option value="1 Week">1 Week (7 days) - GHS 700/week</option>
+<option value="2 Weeks">2 Weeks - GHS 1400</option>
+<option value="1 Month">1 Month - GHS 3000/month</option>
 </select>
 
 <label style="font-weight:bold;margin-top:10px;display:block">How many hours/days/weeks do you need worker?</label>
-<input id="durationQty" type="number" value="1" min="1" oninput="calcPrice()">
-<p style="font-size:12px;background:#fef9c3;padding:8px;border-radius:6px;margin:5px 0">💰 RATE: 1 Hour=GHS 50 | 1 Day=GHS 100 | 2 Days=GHS 200 | 1 Week=GHS 700</p>
+<input id="durationQty" type="number" value="1" min="1" max="12" oninput="calcPrice()">
+<p class="small">💰 YOUR RULE: 1 Hour=GHS 50 | 1 Day=GHS 100 | 2 Days=GHS 200 | 1 Week=GHS 700 | Max 12</p>
 
 <div class="priceBox">
-<b>Est Total: <span id="estTotal">GHS 100</span></b><br>
-Discount: <span id="discountDisplay">0%</span><br>
-Referrer Earns 3%: <span id="refEarnDisplay">GHS 0</span><br>
-<b>Client Pays: <span id="finalPayDisplay" style="color:#065f46;font-size:18px">GHS 100</span></b>
+<b>Care Cost: <span id="estTotal">GHS 100</span></b><br>
+Transport (<span id="regionLabel">-</span>): <span id="transportDisplay">GHS 0</span><br>
+Discount: <span id="discountDisplay">0% (Direct)</span><br>
+Referrer Earns 3%: <span id="refEarnDisplay" style="color:#ca8a04;font-weight:bold">GHS 0</span><br>
+<hr>
+<b>Client Pays Total: <span id="finalPayDisplay" style="color:#065f46;font-size:20px">GHS 100</span></b>
 </div>
 
 <input id="refCode" placeholder="Referral Code e.g 0244... or Direct" oninput="calcPrice()">
-<textarea id="notes" placeholder="Tell us about patient / child / extra info"></textarea>
+<textarea id="notes" placeholder="Tell us about patient - e.g Patient has stroke and cannot eat"></textarea>
 
 <button onclick="bookNow()">📨 Book a Nurse Now</button>
-<p id="msg"></p>
+<p id="msg" style="font-weight:bold"></p>
 </div>
 
 <script>
 let all = JSON.parse(localStorage.getItem('care233_bookings')||'[]');
 
-// Make referral link
 function makeMyLink(){
   let p = document.getElementById('myRefPhone').value.trim();
   if(p.length>=10){
     let link = `https://joshouapee00119006.github.io/web-care-618e8/?ref=${p}`;
-    document.getElementById('myLinkDisplay').innerHTML = `Your Link:<br>${link}`;
+    document.getElementById('myLinkDisplay').innerHTML = `Your Link:<br>${link}<br><small>Share this! You earn 3%</small>`;
   }
 }
-
-// Auto-fill referral from URL ?ref=
 let urlParams = new URLSearchParams(window.location.search);
 let urlRef = urlParams.get('ref');
 if(urlRef){ document.getElementById('refCode').value = urlRef; }
 
-// DYNAMIC PRICING CALCULATION - YOUR SUGGESTION
+const TRANSPORT = {
+  "Greater Accra": 20,
+  "Central Region": 40,
+  "Ashanti Region": 50,
+  "Eastern Region": 40,
+  "Western Region": 50,
+  "Volta Region": 60,
+  "Northern Region": 80
+};
+
 function calcPrice(){
   let careType = document.getElementById('careType').value;
   let qty = parseInt(document.getElementById('durationQty').value) || 1;
+  if(qty>12) {qty=12; document.getElementById('durationQty').value=12;}
+  let region = document.getElementById('region').value;
   let refCode = document.getElementById('refCode').value.trim();
-  let total = 0;
 
-  if(careType.includes("1 Hour")) total = 50 * qty; // 1hr=50, 2hr=100
-  else if(careType.includes("Half Day")) total = 120 * qty;
-  else if(careType.includes("Full Day")) total = 100 * qty; // YOUR RULE: 1 day=100, 2 days=200
-  else if(careType.includes("Live-in")) total = 150 * qty;
-  else if(careType.includes("1 Week")) total = 700 * qty;
-  else if(careType.includes("2 Weeks")) total = 1400 * qty;
-  else if(careType.includes("Month")) total = 3000 * qty;
-  else total = 100 * qty;
+  let careCost = 0;
+  if(careType.includes("1 Hour")) careCost = 50 * qty;
+  else if(careType.includes("Half Day")) careCost = 120 * qty;
+  else if(careType.includes("Full Day")) careCost = 100 * qty; // YOUR RULE
+  else if(careType.includes("Live-in")) careCost = 150 * qty;
+  else if(careType.includes("1 Week")) careCost = 700 * qty;
+  else if(careType.includes("2 Weeks")) careCost = 1400 * qty;
+  else if(careType.includes("1 Month")) careCost = 3000 * qty;
+  else careCost = 100 * qty;
 
-  let refEarn = (refCode && refCode.toLowerCase()!='direct')? Math.round(total*0.03) : 0;
-  
-  document.getElementById('estTotal').innerText = `GHS ${total}`;
-  document.getElementById('discountDisplay').innerText = "0% (Direct)";
+  let transport = TRANSPORT[region] || 0;
+  let totalPay = careCost + transport;
+  let refEarn = (refCode && refCode.toLowerCase()!='direct' && refCode.length>=10)? Math.round(totalPay*0.03) : 0;
+
+  document.getElementById('estTotal').innerText = `GHS ${careCost}`;
+  document.getElementById('transportDisplay').innerText = `GHS ${transport}`;
+  document.getElementById('regionLabel').innerText = region || '-';
   document.getElementById('refEarnDisplay').innerText = `GHS ${refEarn}`;
-  document.getElementById('finalPayDisplay').innerText = `GHS ${total}`;
-  
-  return {total, refEarn, careType, qty};
+  document.getElementById('finalPayDisplay').innerText = `GHS ${totalPay}`;
+  document.getElementById('discountDisplay').innerText = refCode? "0% (Referral)" : "0% (Direct)";
+
+  return {careCost, transport, totalPay, refEarn, careType, qty};
 }
-calcPrice(); // run on load
+calcPrice();
 
 function bookNow(){
   let name = document.getElementById('clientName').value.trim();
@@ -136,22 +157,23 @@ function bookNow(){
   }
 
   let calc = calcPrice();
-  let basePrice = calc.total;
-  let finalPaid = calc.total;
-  let refEarns = calc.refEarn;
-  let discount = 0;
-
-  let bookingData = {id:'C233'+Date.now(), name, phone, region, service, careType, durationQty: qty, duration: `${qty} x ${careType}`, basePrice, finalPaid, refCode, refEarns, discount, notes, time: new Date().toLocaleString()};
+  let bookingData = {
+    id:'C233'+Date.now(),
+    name, phone, region, service,
+    careType, durationQty: qty, duration: `${qty} x ${careType}`,
+    careCost: calc.careCost, transport: calc.transport, finalPaid: calc.totalPay,
+    refCode, refEarns: calc.refEarn,
+    notes, time: new Date().toLocaleString()
+  };
 
   all.push(bookingData);
   localStorage.setItem('care233_bookings', JSON.stringify(all));
 
-  let waMsg = `NEW BOOKING - CARE233%0AName: ${name}%0APhone: ${phone}%0ARegion: ${region}%0AService: ${service}%0ACare Type: ${careType}%0ADuration: ${qty} x ${careType}%0ATotal: GHS ${finalPaid}%0ARef Code: ${refCode}%0ARef Earns (3%): GHS ${refEarns}%0ANotes: ${notes}%0AID: ${bookingData.id}%0ATime: ${bookingData.time}`;
+  let waMsg = `NEW BOOKING - CARE233%0AName: ${name}%0APhone: ${phone}%0ARegion: ${region}%0AService: ${service}%0ACare Type: ${careType}%0ADuration: ${qty} x ${careType}%0ACare Cost: GHS ${calc.careCost}%0ATransport: GHS ${calc.transport}%0ATotal: GHS ${calc.totalPay}%0ARef Code: ${refCode}%0ARef Earns (3%): GHS ${calc.refEarn}%0ANotes: ${notes}%0AID: ${bookingData.id}%0ATime: ${bookingData.time}`;
 
   window.open(`https://wa.me/233544121814?text=${waMsg}`, '_blank');
-  alert(`✅ Thanks ${name}! Your booking for ${qty} x ${careType} = GHS ${finalPaid}. Admin will call you soon!`);
-  document.getElementById('clientName').value='';
-  document.getElementById('msg').innerHTML = `✅ Booked! Total GHS ${finalPaid} | Ref earns GHS ${refEarns}`;
+  document.getElementById('msg').innerHTML = `✅ Booked! ${qty} x ${careType} = GHS ${calc.totalPay} | Ref earns GHS ${calc.refEarn}`;
+  alert(`✅ Thanks ${name}! Booked for ${qty} x ${careType}. Total GHS ${calc.totalPay} (Care ${calc.careCost} + Transport ${calc.transport}). Admin will call you!`);
 }
 </script>
 </body>
