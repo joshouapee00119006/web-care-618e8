@@ -8,82 +8,81 @@
 <style>
 body{background:#050a07;color:white;font-family:Arial;padding:8px;margin:0}
 .card{background:#111;padding:12px;border-radius:16px;max-width:720px;margin:auto;border:1px solid #0a4d2e}
-.top{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:10px}
-.icon{width:45px;height:45px;background:#0a4d2e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#ffcc00;font-size:18px;cursor:pointer;user-select:none;border:2px solid #ffcc00}
-h2{color:#ffcc00;margin:0;text-align:center;font-size:22px}
+.top{display:flex;align-items:center;gap:15px;justify-content:center;margin-bottom:15px;padding-top:10px}
+.icon{width:55px;height:55px;background:#0a4d2e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#ffcc00;font-size:22px;cursor:pointer;border:3px solid #ffcc00;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+h2{color:#ffcc00;margin:0;text-align:center;font-size:26px}
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
 .tab{padding:10px 11px;border-radius:10px;border:none;font-weight:bold;font-size:12px;cursor:pointer}
-.active{background:#0a4d2e;color:#ffcc00}.off{background:#222;color:#ccc}.locked{opacity:0.4}
+.active{background:#0a4d2e;color:#ffcc00}.off{background:#222;color:#ccc}
 .box{background:#1a2a1f;padding:10px;border-radius:10px;margin:8px 0;border-left:4px solid #ffcc00}
 .btn{padding:8px 12px;border:none;border-radius:8px;font-weight:bold;margin:2px;cursor:pointer}
 .green{background:#0a4d2e;color:#ffcc00}.red{background:#4d0a0a;color:white}.blue{background:#0a2a4d;color:#7fdbc0}.grey{background:#222;color:white}
-input,textarea{width:100%;padding:11px;margin:5px 0;border-radius:10px;border:2px solid #2a8a6a;background:#222;color:white;box-sizing:border-box}
-.small{font-size:11px;color:#8fbc8f}.hidden{display:none}
+input,textarea{width:100%;padding:14px;margin:6px 0;border-radius:12px;border:2px solid #2a8a6a;background:#1e1e1e;color:white;box-sizing:border-box;font-size:16px}
+.small{font-size:12px;color:#8fbc8f}.hidden{display:none !important}
 .newFlash{animation: flash 1s infinite}
 @keyframes flash{0%,100%{background:#1a2a1f}50%{background:#3a2a00}}
+#adTapCount{font-size:10px;color:#ffcc00;text-align:center;height:12px}
 </style>
 </head>
 <body>
 <div class="card">
 <div class="top">
-<div class="icon" onclick="tapAdmin()">AD</div>
-<div><h2>STAFFS</h2><p class="small" style="margin:0;text-align:center">LIVE</p></div>
+<div class="icon" id="adIcon">AD</div>
+<div><h2>STAFFS</h2><p class="small" style="margin:0;text-align:center;color:#7fdbc0">LIVE • Real-Time</p><p id="adTapCount"></p></div>
 </div>
 
 <div id="loginStaff">
-<input id="sPhone" placeholder="Phone Number">
+<input id="sPhone" placeholder="Phone Number" type="tel">
 <input id="sPass" type="password" placeholder="Password">
-<button class="btn green" style="width:100%;padding:14px" onclick="loginStaff()">Login</button>
-<p id="sMsg" class="small" style="text-align:center"></p>
+<button class="btn green" style="width:100%;padding:16px;font-size:18px" onclick="loginStaff()">Login</button>
+<p id="sMsg" class="small" style="text-align:center;color:#ff6b6b"></p>
+<p class="small" style="text-align:center;margin-top:20px;opacity:0.5">Tap AD logo 5 times for Super Admin</p>
 </div>
 
 <div id="loginSuper" class="hidden">
-<input id="superPass" type="password" placeholder="">
-<button class="btn green" style="width:100%;padding:14px" onclick="loginSuper()">Enter</button>
-<button class="btn grey" style="width:100%;margin-top:8px" onclick="showStaffLogin()">Back</button>
+<h3 style="color:#ffcc00;text-align:center">SUPER ADMIN</h3>
+<input id="superPass" type="password" placeholder="Super Password">
+<button class="btn green" style="width:100%;padding:16px;font-size:18px" onclick="loginSuper()">UNLOCK</button>
+<button class="btn grey" style="width:100%;margin-top:10px;padding:14px" onclick="showStaffLogin()">← Back to Staff Login</button>
+<p class="small" style="text-align:center">Default: 1234</p>
 </div>
 
 <div id="dash" class="hidden">
-<p style="text-align:center"><b id="userName"></b> <button class="btn grey" onclick="logout()" style="float:right">Logout</button></p>
+<p style="text-align:center"><b id="userName" style="color:#ffcc00"></b> <button class="btn grey" onclick="logout()" style="float:right">Logout</button></p>
 <div class="tabs">
-<button id="tb1" class="tab active" onclick="tab('bookings')">Bookings <span id="newCount" style="background:red;color:white;border-radius:10px;padding:1px 6px;font-size:10px" class="hidden">0</span></button>
+<button id="tb1" class="tab active" onclick="tab('bookings')">Bookings <span id="newCount" style="background:red;color:white;border-radius:10px;padding:2px 7px;font-size:11px" class="hidden">0</span></button>
 <button id="tb2" class="tab off" onclick="tab('nurses')">Nurses</button>
 <button id="tb3" class="tab off" onclick="tab('jobs')">Jobs</button>
 <button id="tb4" class="tab off" onclick="tab('edu')">Talks</button>
 <button id="tb5" class="tab off" onclick="tab('staff')">Staffs</button>
 </div>
 
-<div id="vBookings"><div id="bookList"><p class="small">Listening...</p></div></div>
-<div id="vNurses" class="hidden"><div id="nurseList"></div><div id="approvedList"></div></div>
+<div id="vBookings"><div id="bookList"><p class="small">Listening to live bookings...</p></div></div>
+<div id="vNurses" class="hidden"><h3>Pending Nurses</h3><div id="nurseList"></div><h3>Approved</h3><div id="approvedList"></div></div>
 <div id="vJobs" class="hidden">
 <input id="jService" placeholder="Service"><input id="jLoc" placeholder="Location"><input id="jPrice" placeholder="Price"><input id="jPhone" placeholder="Client Phone"><input id="jGPS" placeholder="GPS">
-<button class="btn green" style="width:100%" onclick="createJobManual()">+ CREATE</button>
+<button class="btn green" style="width:100%;padding:14px" onclick="createJobManual()">+ CREATE JOB</button>
 <div id="jobList"></div>
 </div>
-<div id="vEdu" class="hidden"><input id="eTitle" placeholder="Title"><textarea id="eMsg" placeholder="Message" rows="3"></textarea><button class="btn blue" style="width:100%" onclick="sendEdu()">Send</button><div id="eduList"></div></div>
+<div id="vEdu" class="hidden"><input id="eTitle" placeholder="Title"><textarea id="eMsg" placeholder="Message" rows="4"></textarea><button class="btn blue" style="width:100%;padding:14px" onclick="sendEdu()">Send Talk</button><div id="eduList"></div></div>
 
 <div id="vStaff" class="hidden">
-<div id="staffContent">
-<!-- SUPER ADMIN PASSWORD CHANGER - ONLY SUPER ADMIN SEES THIS -->
-<div id="superPassBox" style="background:#2a1a00;padding:12px;border-radius:12px;border:1px solid #ffcc00;margin-bottom:15px">
-<h4 style="margin:0 0 8px 0;color:#ffcc00">🔐 Change Super Admin Password</h4>
-<p class="small" style="text-align:left">Current: <b id="curSuperPass" style="color:#ffcc00;font-size:14px"></b></p>
-<input id="newSuperPass" placeholder="Enter new super admin password">
-<input id="confirmSuperPass" placeholder="Confirm new password">
-<button class="btn green" style="width:100%;padding:12px" onclick="changeSuperPass()">💾 Save New Super Password</button>
-<p id="superPassMsg" class="small"></p>
+<div id="superPassBox" style="background:#2a1a00;padding:14px;border-radius:12px;border:2px solid #ffcc00;margin-bottom:15px">
+<h4 style="margin:0 0 10px 0;color:#ffcc00">🔐 Change Super Admin Password</h4>
+<p class="small">Current Super Password: <b id="curSuperPass" style="color:#ffcc00;font-size:16px;background:#111;padding:4px 8px;border-radius:6px"></b></p>
+<input id="newSuperPass" type="text" placeholder="Enter NEW super password">
+<input id="confirmSuperPass" type="text" placeholder="Confirm new password">
+<button class="btn green" style="width:100%;padding:14px;font-size:16px" onclick="changeSuperPass()">💾 SAVE NEW PASSWORD</button>
+<p id="superPassMsg" class="small" style="text-align:center;font-weight:bold"></p>
 </div>
-
 <h3>Staff Management</h3>
-<div style="background:#0f1f15;padding:10px;border-radius:10px;border:1px dashed #ffcc00">
-<input id="stName" placeholder="Staff Name"><input id="stPhone" placeholder="Staff Phone">
-<button class="btn green" onclick="addStaff()" style="width:100%">Add Staff</button>
+<div style="background:#0f1f15;padding:12px;border-radius:12px;border:1px dashed #ffcc00">
+<input id="stName" placeholder="Staff Name"><input id="stPhone" placeholder="Staff Phone" type="tel">
+<button class="btn green" onclick="addStaff()" style="width:100%;padding:14px">+ Add Staff</button>
 <p id="stMsg" class="small"></p>
 </div>
 <div id="staffList"></div>
 </div>
-</div>
-
 </div>
 </div>
 
@@ -100,33 +99,125 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// GET SUPER PASSWORD FROM STORAGE OR DEFAULT 1234
 function getSuperPass(){ return localStorage.getItem('care233_super_pass') || "1234"; }
 
-let taps=0, tapTimer=null, isSuper=false;
-function tapAdmin(){taps++;clearTimeout(tapTimer);tapTimer=setTimeout(()=>{taps=0},3000);if(taps>=5){document.getElementById('loginStaff').className='hidden';document.getElementById('loginSuper').className='';taps=0;if(navigator.vibrate) navigator.vibrate(200);}}
-function showStaffLogin(){document.getElementById('loginSuper').className='hidden';document.getElementById('loginStaff').className='';}
+let taps=0, tapTimer=null, pressTimer=null, isSuper=false;
+
+const adIcon = document.getElementById('adIcon');
+adIcon.addEventListener('click', handleTap);
+adIcon.addEventListener('touchstart', (e)=>{ e.preventDefault(); handleTap(); startPress(); });
+adIcon.addEventListener('touchend', ()=>{ clearTimeout(pressTimer); });
+adIcon.addEventListener('mousedown', startPress);
+adIcon.addEventListener('mouseup', ()=>{ clearTimeout(pressTimer); });
+
+function startPress(){
+  clearTimeout(pressTimer);
+  pressTimer = setTimeout(()=>{
+    openSuperLogin();
+    if(navigator.vibrate) navigator.vibrate([100,50,100]);
+  }, 1500);
+}
+
+function handleTap(){
+  taps++;
+  document.getElementById('adTapCount').innerText = `Taps: ${taps}/5`;
+  if(navigator.vibrate) navigator.vibrate(50);
+  clearTimeout(tapTimer);
+  tapTimer=setTimeout(()=>{ taps=0; document.getElementById('adTapCount').innerText=''; }, 3000);
+  if(taps>=5){ openSuperLogin(); }
+}
+
+function openSuperLogin(){
+  document.getElementById('loginStaff').className='hidden';
+  document.getElementById('loginSuper').className='';
+  taps=0;
+  document.getElementById('adTapCount').innerText='SUPER ADMIN UNLOCKED';
+  if(navigator.vibrate) navigator.vibrate([200,100,200]);
+}
+
+function showStaffLogin(){document.getElementById('loginSuper').className='hidden';document.getElementById('loginStaff').className='';document.getElementById('adTapCount').innerText='';taps=0;}
+
 function loginStaff(){
  let phone=document.getElementById('sPhone').value.trim(); let pass=document.getElementById('sPass').value.trim();
  let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
  let s=staffs.find(x=>x.phone===phone && x.password===pass);
- if(!s){document.getElementById('sMsg').innerText='Wrong';return}
- if(!s.active){document.getElementById('sMsg').innerText='Disabled';return}
+ if(!s){document.getElementById('sMsg').innerText='Wrong phone or password';return}
+ if(!s.active){document.getElementById('sMsg').innerText='Account disabled by CEO';return}
  isSuper=false; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:false,staff:s})); openDash(s.name,false);
 }
-function loginSuper(){if(document.getElementById('superPass').value!==getSuperPass()){alert('Wrong');return} isSuper=true; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:true,name:'CEO'})); openDash('CEO',true);}
+function loginSuper(){
+  let entered = document.getElementById('superPass').value.trim();
+  let real = getSuperPass();
+  if(entered!==real){alert('Wrong Super Password! Current is: '+real);return}
+  isSuper=true; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:true,name:'CEO'})); openDash('CEO (Super Admin)',true);
+}
 function openDash(name,superFlag){
  document.getElementById('loginStaff').className='hidden';document.getElementById('loginSuper').className='hidden';document.getElementById('dash').className='';
  document.getElementById('userName').innerText=name;
  document.getElementById('curSuperPass').innerText = getSuperPass();
- if(!superFlag){document.getElementById('tb5').className='tab off locked';}else{document.getElementById('tb5').className='tab off';}
+ if(!superFlag){document.getElementById('tb5').className='tab off';} 
  tab('bookings'); loadBookingsRealTime();
 }
-
-// CHANGE SUPER ADMIN PASSWORD FUNCTION
 function changeSuperPass(){
   let newP = document.getElementById('newSuperPass').value.trim();
   let confirmP = document.getElementById('confirmSuperPass').value.trim();
-  if(!newP || newP.length<4){document.getElementById('superPassMsg').innerText='Password must be at least 4 characters';return}
-  if(newP !== confirmP){document.getElementById('superPassMsg').innerText='Passwords do not match!';return}
-  localStorage.setItem
+  if(!newP || newP.length<4){document.getElementById('superPassMsg').innerText='❌ Must be at least 4 characters';document.getElementById('superPassMsg').style.color='#ff6b6b';return}
+  if(newP!==confirmP){document.getElementById('superPassMsg').innerText='❌ Passwords do not match!';document.getElementById('superPassMsg').style.color='#ff6b6b';return}
+  localStorage.setItem('care233_super_pass', newP);
+  document.getElementById('curSuperPass').innerText = newP;
+  document.getElementById('superPassMsg').innerHTML = `✅ Changed! New password is: <span style="color:#00ff00;font-size:18px">${newP}</span>`;
+  document.getElementById('superPassMsg').style.color='#00ff00';
+  document.getElementById('newSuperPass').value='';document.getElementById('confirmSuperPass').value='';
+  alert('✅ Super Admin Password Changed to: '+newP+'\n\nRemember it!');
+}
+function loadBookingsRealTime(){
+  db.ref('bookings').orderByChild('timestamp').on('value', snap=>{
+    let bookings = []; snap.forEach(child=>{ bookings.push({id:child.key,...child.val()}) }); bookings.reverse();
+    let newCount = bookings.filter(b=>b.status==='new').length;
+    let countEl = document.getElementById('newCount');
+    if(newCount>0){countEl.innerText=newCount;countEl.className='';}else{countEl.className='hidden';}
+    document.getElementById('bookList').innerHTML = bookings.map(j=>`
+      <div class="box ${j.status==='new'?'newFlash':''}">
+      ${j.status==='new'?'<span style="background:red;color:white;padding:3px 8px;border-radius:12px;font-size:11px">🔔 NEW</span>':''}
+      <b style="font-size:16px">${j.service}</b><br>
+      <b>${j.name}</b> - ${j.phone}<br>📍 ${j.location} ${j.price?'- '+j.price:''}<br>
+      ${j.notes?`📝 ${j.notes}<br>`:''}
+      <div style="margin-top:8px">
+      <a class="btn blue" href="tel:${j.phone}" style="text-decoration:none">📞 Call</a>
+      <a class="btn green" style="text-decoration:none" target="_blank" href="https://wa.me/${j.phone.replace(/[^0-9]/g,'')}?text=Hello%20from%20Nurses%20Group">💬 WhatsApp</a>
+      <button class="btn grey" onclick="markDone('${j.id}')">${j.status==='new'?'✅ Done':'↩️ Undo'}</button>
+      </div>
+      <small style="opacity:0.6">${j.date}</small>
+      </div>
+    `).join('') || '<p class="small">No bookings yet - Listening...</p>';
+  });
+}
+function markDone(id){ db.ref('bookings/'+id).once('value').then(s=>{let cur=s.val().status; db.ref('bookings/'+id).update({status:cur==='new'?'done':'new'});});}
+function createJobManual(){
+ let j={name:'Manual Job',service:document.getElementById('jService').value,location:document.getElementById('jLoc').value,price:document.getElementById('jPrice').value,phone:document.getElementById('jPhone').value,gps:document.getElementById('jGPS').value,date:new Date().toLocaleString(),timestamp:Date.now(),status:'new'};
+ if(!j.service||!j.phone){alert('Fill Service and Phone');return} db.ref('bookings').push(j);alert('Job Created!');['jService','jLoc','jPrice','jPhone','jGPS'].forEach(id=>document.getElementById(id).value='');
+}
+function tab(t){
+ ['Bookings','Nurses','Jobs','Edu','Staff'].forEach(x=>{
+  let el=document.getElementById('v'+x); if(el) el.className=x.toLowerCase()===t.toLowerCase()?'':'hidden';
+  let btn=document.getElementById('tb'+(['Bookings','Nurses','Jobs','Edu','Staff'].indexOf(x)+1));
+  if(btn) btn.className=x.toLowerCase()===t.toLowerCase()?'tab active':'tab off';
+ });
+ if(t==='staff' &&!isSuper){alert('Only Super Admin! Tap AD 5 times or hold AD 2 seconds');tab('bookings');return;}
+ if(t==='nurses')loadNurses();if(t==='jobs'){}if(t==='staff'&&isSuper){loadStaff();document.getElementById('curSuperPass').innerText=getSuperPass();}if(t==='edu')loadEdu();if(t==='bookings')loadBookingsRealTime();
+}
+function loadNurses(){let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');document.getElementById('nurseList').innerHTML=workers.filter(w=>!w.approved).map((w,i)=>{let idx=workers.indexOf(w);return `<div class="box"><b>${w.name}</b> - ${w.skill||''}<br>${w.phone}<br><button class="btn green" onclick="approveN(${idx})">Approve</button><button class="btn red" onclick="rejectN(${idx})">Reject</button></div>`}).join('')||'<p class="small">No pending</p>';document.getElementById('approvedList').innerHTML=workers.filter(w=>w.approved).map(w=>`<div class="box"><b>${w.name}</b> - ${w.phone}</div>`).join('')||'<p class="small">None</p>';}
+function approveN(i){let w=JSON.parse(localStorage.getItem('care233_workers')||'[]');w[i].approved=true;localStorage.setItem('care233_workers',JSON.stringify(w));loadNurses()}
+function rejectN(i){let w=JSON.parse(localStorage.getItem('care233_workers')||'[]');w.splice(i,1);localStorage.setItem('care233_workers',JSON.stringify(w));loadNurses()}
+function addStaff(){let name=document.getElementById('stName').value.trim();let phone=document.getElementById('stPhone').value.trim();if(!name||!phone){alert('Fill name and phone');return}let pass='STAFF'+Math.floor(1000+Math.random()*9000);let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');staffs.push({id:Date.now(),name,phone,password:pass,active:true,created:new Date().toLocaleString()});localStorage.setItem('care233_staffs',JSON.stringify(staffs));document.getElementById('stMsg').innerHTML=`✅ Added!<br><b>${name}</b><br>Phone: ${phone}<br>Password: <b style="color:#ffcc00;font-size:20px">${pass}</b><br><small>Give this to staff</small>`;document.getElementById('stName').value='';document.getElementById('stPhone').value='';loadStaff();}
+function loadStaff(){let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');document.getElementById('staffList').innerHTML=staffs.map((s,i)=>`<div class="box"><b>${s.name}</b> - ${s.phone}<br>Pass: <b style="color:#ffcc00">${s.password}</b> - ${s.active?'Active':'Disabled'}<br><button class="btn blue" onclick="changePass(${i})">New Pass</button><button class="btn ${s.active?'red':'green'}" onclick="toggleStaff(${i})">${s.active?'Disable':'Enable'}</button><button class="btn red" onclick="delStaff(${i})">Delete</button></div>`).join('')||'<p class="small">No staffs</p>';}
+function changePass(i){let np='STAFF'+Math.floor(1000+Math.random()*9000);let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s[i].password=np;localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff();alert('New password: '+np)}
+function toggleStaff(i){let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s[i].active=!s[i].active;localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff()}
+function delStaff(i){if(!confirm('Delete this staff?'))return;let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s.splice(i,1);localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff();}
+function sendEdu(){let t=document.getElementById('eTitle').value;let m=document.getElementById('eMsg').value;if(!t||!m){alert('Fill');return}let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');edus.push({title:t,msg:m,date:new Date().toLocaleString(),by:isSuper?'CEO':'Staff'});localStorage.setItem('care233_edu',JSON.stringify(edus));document.getElementById('eTitle').value='';document.getElementById('eMsg').value='';loadEdu();alert('Talk Sent!')}
+function loadEdu(){let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');document.getElementById('eduList').innerHTML=edus.slice().reverse().map(e=>`<div class="box"><b>${e.title}</b><br>${e.msg}<br><small>${e.date} - ${e.by}</small></div>`).join('')||'<p class="small">No talks</p>'}
+function logout(){localStorage.removeItem('care233_current_role');location.reload()}
+let cur=JSON.parse(localStorage.getItem('care233_current_role')||'null'); if(cur){isSuper=cur.isSuper;openDash(cur.isSuper?cur.name:cur.staff.name,cur.isSuper);}
+</script>
+</body>
+</html>
