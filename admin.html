@@ -3,6 +3,8 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Staffs Portal</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
 body{background:#050a07;color:white;font-family:Arial;padding:8px;margin:0}
 .card{background:#111;padding:12px;border-radius:16px;max-width:720px;margin:auto;border:1px solid #0a4d2e}
@@ -19,13 +21,15 @@ input,textarea{width:100%;padding:11px;margin:5px 0;border-radius:10px;border:2p
 .small{font-size:11px;color:#8fbc8f}.hidden{display:none}
 img.doc{width:100%;max-width:280px;border-radius:8px;margin:4px 0}
 .lockMsg{background:#2a1a00;border:1px dashed #ffcc00;padding:15px;border-radius:10px;text-align:center;color:#ffcc00}
+.newFlash{animation: flash 1s infinite}
+@keyframes flash{0%,100%{background:#1a2a1f}50%{background:#3a2a00}}
 </style>
 </head>
 <body>
 <div class="card">
 <div class="top">
 <div class="icon" id="adIcon" onclick="tapAdmin()">AD</div>
-<div><h2>STAFFS</h2><p class="small" style="margin:0;text-align:center">Staffs Portal</p></div>
+<div><h2>STAFFS</h2><p class="small" style="margin:0;text-align:center">Staffs Portal • LIVE 🔴</p></div>
 </div>
 
 <div id="loginStaff">
@@ -46,29 +50,29 @@ img.doc{width:100%;max-width:280px;border-radius:8px;margin:4px 0}
 <div id="dash" class="hidden">
 <p style="text-align:center"><span id="roleBadge"></span> Welcome <b id="userName"></b> <button class="btn grey" onclick="logout()" style="float:right">Logout</button></p>
 <div class="tabs">
-<button id="tb1" class="tab active" onclick="tab('bookings')">📋 Bookings</button>
+<button id="tb1" class="tab active" onclick="tab('bookings')">📋 Bookings <span id="newCount" style="background:red;color:white;border-radius:10px;padding:1px 6px;font-size:10px" class="hidden">0</span></button>
 <button id="tb2" class="tab off" onclick="tab('nurses')">👩‍⚕️ Nurses</button>
 <button id="tb3" class="tab off" onclick="tab('jobs')">💼 Jobs</button>
 <button id="tb4" class="tab off" onclick="tab('edu')">🎓 Talks</button>
 <button id="tb5" class="tab off" onclick="tab('staff')">👥 Staffs</button>
 </div>
 
-<div id="vBookings"><h3>📋 Bookings & Jobs</h3><div id="bookList"></div></div>
+<div id="vBookings"><h3>📋 Real-Time Bookings 🔴 LIVE</h3><p class="small">Bookings from clients appear automatically here!</p><div id="bookList"><p class="small">Listening for bookings...</p></div></div>
 <div id="vNurses" class="hidden"><h3>👩‍⚕️ Nurse Approvals</h3><div id="nurseList"></div><h3>✅ Approved</h3><div id="approvedList"></div></div>
 <div id="vJobs" class="hidden">
-<h3>💼 Create Job</h3>
-<input id="jService" placeholder="Service e.g. Home Nursing"><input id="jLoc" placeholder="Location"><input id="jPrice" placeholder="Price GH₵"><input id="jPhone" placeholder="Client Phone"><input id="jGPS" placeholder="GPS e.g. 5.60,-0.18">
-<button class="btn green" style="width:100%" onclick="createJob()">+ CREATE JOB</button>
+<h3>💼 Create Job Manually</h3>
+<input id="jService" placeholder="Service"><input id="jLoc" placeholder="Location"><input id="jPrice" placeholder="Price"><input id="jPhone" placeholder="Client Phone"><input id="jGPS" placeholder="GPS">
+<button class="btn green" style="width:100%" onclick="createJobManual()">+ CREATE JOB</button>
 <div id="jobList" style="margin-top:10px"></div>
 </div>
-<div id="vEdu" class="hidden"><h3>🎓 Educational Talks</h3><input id="eTitle" placeholder="Title"><textarea id="eMsg" placeholder="Message" rows="3"></textarea><button class="btn blue" style="width:100%" onclick="sendEdu()">📢 Send Talk</button><div id="eduList"></div></div>
+<div id="vEdu" class="hidden"><h3>🎓 Talks</h3><input id="eTitle" placeholder="Title"><textarea id="eMsg" placeholder="Message" rows="3"></textarea><button class="btn blue" style="width:100%" onclick="sendEdu()">📢 Send</button><div id="eduList"></div></div>
 <div id="vStaff" class="hidden">
-<div id="staffLock" class="lockMsg hidden">🔒 <b>LOCKED</b><br>Access Restricted.</div>
+<div id="staffLock" class="lockMsg hidden">🔒 LOCKED</div>
 <div id="staffContent">
 <h3>👥 Staff Management</h3>
 <div style="background:#0f1f15;padding:10px;border-radius:10px;border:1px dashed #ffcc00">
 <input id="stName" placeholder="Staff Full Name"><input id="stPhone" placeholder="Staff Phone">
-<button class="btn green" onclick="addStaff()" style="width:100%">🔑 GENERATE PASSWORD & ADD STAFF</button>
+<button class="btn green" onclick="addStaff()" style="width:100%">🔑 GENERATE & ADD</button>
 <p id="stMsg" class="small"></p>
 </div>
 <div id="staffList"></div>
@@ -78,119 +82,103 @@ img.doc{width:100%;max-width:280px;border-radius:8px;margin:4px 0}
 </div>
 
 <script>
+// YOUR FIREBASE CONFIG - REAL-TIME
+const firebaseConfig = {
+  apiKey: "AIzaSyB52-X1D8Cg-wUDWPds_tR7X3cF82dMdRg",
+  authDomain: "web-care-618e8.firebaseapp.com",
+  databaseURL: "https://web-care-618e8-default-rtdb.firebaseio.com",
+  projectId: "web-care-618e8",
+  storageBucket: "web-care-618e8.firebasestorage.app",
+  messagingSenderId: "1062578660694",
+  appId: "1:1062578660694:web:f94dfe12c929df05bce2f7"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 const SUPER_PASS="ceo123";
 let taps=0, tapTimer=null, isSuper=false;
-function tapAdmin(){
- taps++; clearTimeout(tapTimer); tapTimer=setTimeout(()=>{taps=0},3000);
- if(taps>=5){
-  document.getElementById('loginStaff').className='hidden';
-  document.getElementById('loginSuper').className='';
-  taps=0; if(navigator.vibrate) navigator.vibrate(200);
- }
-}
+function tapAdmin(){taps++;clearTimeout(tapTimer);tapTimer=setTimeout(()=>{taps=0},3000);if(taps>=5){document.getElementById('loginStaff').className='hidden';document.getElementById('loginSuper').className='';taps=0;if(navigator.vibrate) navigator.vibrate(200);}}
 function showStaffLogin(){document.getElementById('loginSuper').className='hidden';document.getElementById('loginStaff').className='';}
 function loginStaff(){
  let phone=document.getElementById('sPhone').value.trim(); let pass=document.getElementById('sPass').value.trim();
  let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
  let s=staffs.find(x=>x.phone===phone && x.password===pass);
- if(!s){document.getElementById('sMsg').innerText='❌ Wrong phone or password';return}
- if(!s.active){document.getElementById('sMsg').innerText='❌ Account Disabled';return}
- isSuper=false; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:false,staff:s}));
- openDash(s.name,false);
+ if(!s){document.getElementById('sMsg').innerText='❌ Wrong';return}
+ if(!s.active){document.getElementById('sMsg').innerText='❌ Disabled';return}
+ isSuper=false; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:false,staff:s})); openDash(s.name,false);
 }
-function loginSuper(){
- if(document.getElementById('superPass').value!==SUPER_PASS){alert('Wrong Password');return}
- isSuper=true; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:true,name:'CEO'}));
- openDash('CEO',true);
-}
+function loginSuper(){if(document.getElementById('superPass').value!==SUPER_PASS){alert('Wrong');return} isSuper=true; localStorage.setItem('care233_current_role',JSON.stringify({isSuper:true,name:'CEO'})); openDash('CEO',true);}
 function openDash(name,superFlag){
  document.getElementById('loginStaff').className='hidden';document.getElementById('loginSuper').className='hidden';document.getElementById('dash').className='';
  document.getElementById('userName').innerText=name;
  document.getElementById('roleBadge').innerHTML=superFlag?'<span style="background:#ffcc00;color:#000;padding:3px 8px;border-radius:20px;font-size:11px">SUPER ADMIN</span>':'<span style="background:#0a4d2e;color:#7fdbc0;padding:3px 8px;border-radius:20px;font-size:11px">STAFF</span>';
- if(!superFlag){
-  document.getElementById('tb5').className='tab off locked';
-  document.getElementById('staffLock').className='lockMsg';
-  document.getElementById('staffContent').className='hidden';
- } else {
-  document.getElementById('tb5').className='tab off';
-  document.getElementById('staffLock').className='hidden';
-  document.getElementById('staffContent').className='';
- }
- tab('bookings');
+ if(!superFlag){document.getElementById('tb5').className='tab off locked';document.getElementById('staffLock').className='lockMsg';document.getElementById('staffContent').className='hidden';}else{document.getElementById('tb5').className='tab off';document.getElementById('staffLock').className='hidden';document.getElementById('staffContent').className='';}
+ tab('bookings'); loadBookingsRealTime();
 }
+
+// REAL-TIME BOOKINGS FROM FIREBASE
+function loadBookingsRealTime(){
+  db.ref('bookings').orderByChild('timestamp').on('value', snap=>{
+    let bookings = [];
+    snap.forEach(child=>{ bookings.push({id:child.key,...child.val()}) });
+    bookings.reverse();
+    let newCount = bookings.filter(b=>b.status==='new').length;
+    let countEl = document.getElementById('newCount');
+    if(newCount>0){countEl.innerText=newCount;countEl.className='';}else{countEl.className='hidden';}
+
+    document.getElementById('bookList').innerHTML = bookings.map(j=>`
+      <div class="box ${j.status==='new'?'newFlash':''}" style="border-left-color:${j.status==='new'?'#ffcc00':'#0a8a4a'}">
+      ${j.status==='new'?'<span style="background:red;color:white;padding:2px 6px;border-radius:10px;font-size:10px">NEW 🔔</span>':''}
+      <b>${j.service}</b> - ${j.name || 'Client'} - ${j.phone}<br>
+      📍 ${j.location} - 💰 ${j.price}<br>
+      <a class="btn blue" href="tel:${j.phone}">📞 Call Client</a>
+      <a class="btn green" style="text-decoration:none" target="_blank" href="https://wa.me/${j.phone.replace(/[^0-9]/g,'')}?text=Hello%20from%20Nurses%20Group">💬 WhatsApp</a>
+      ${j.gps?`<a class="btn blue" style="text-decoration:none" target="_blank" href="https://www.google.com/maps?q=${j.gps}">🗺️ GPS</a>`:''}
+      <button class="btn grey" onclick="markDone('${j.id}')">${j.status==='new'?'✅ Mark Done':'Undo'}</button><br>
+      <small>${j.date}</small>
+      </div>
+    `).join('') || '<p class="small">No bookings yet. Waiting for client bookings...</p>';
+  });
+}
+function markDone(id){
+  db.ref('bookings/'+id).once('value').then(s=>{
+    let cur=s.val().status; db.ref('bookings/'+id).update({status:cur==='new'?'done':'new'});
+  });
+}
+function createJobManual(){
+ let j={name:'Manual Job',service:document.getElementById('jService').value,location:document.getElementById('jLoc').value,price:document.getElementById('jPrice').value,phone:document.getElementById('jPhone').value,gps:document.getElementById('jGPS').value,date:new Date().toLocaleString(),timestamp:Date.now(),status:'new'};
+ if(!j.service||!j.phone){alert('Fill');return}
+ db.ref('bookings').push(j);
+ ['jService','jLoc','jPrice','jPhone','jGPS'].forEach(id=>document.getElementById(id).value='');
+}
+
 function tab(t){
  ['Bookings','Nurses','Jobs','Edu','Staff'].forEach(x=>{
   let el=document.getElementById('v'+x); if(el) el.className=x.toLowerCase()===t.toLowerCase()?'':'hidden';
   let btn=document.getElementById('tb'+(['Bookings','Nurses','Jobs','Edu','Staff'].indexOf(x)+1));
   if(btn) btn.className=x.toLowerCase()===t.toLowerCase()?'tab active':'tab off'+(x==='Staff'&&!isSuper?' locked':'');
  });
- if(t==='staff' &&!isSuper){
-  document.getElementById('vStaff').className='';
-  document.getElementById('staffLock').className='lockMsg';
-  document.getElementById('staffContent').className='hidden';
-  return;
- }
- if(t==='bookings')loadBookings();if(t==='nurses')loadNurses();if(t==='jobs')loadJobs();if(t==='staff'&&isSuper)loadStaff();if(t==='edu')loadEdu();
-}
-function loadBookings(){
- let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');
- document.getElementById('bookList').innerHTML=jobs.slice().reverse().map(j=>`<div class="box"><b>${j.service}</b> - ${j.phone}<br>📍 ${j.location} - 💰 ${j.price}<br>
- <a class="btn blue" href="tel:${j.phone}">📞 Call Client</a>
- <a class="btn green" style="text-decoration:none" target="_blank" href="https://wa.me/${j.phone.replace(/[^0-9]/g,'')}?text=Hello%20from%20Nurses%20Group">💬 WhatsApp</a>
- <a class="btn blue" style="text-decoration:none" target="_blank" href="https://www.google.com/maps?q=${j.gps}">🗺️ GPS</a>
- <br><small>${j.date}</small></div>`).join('')||'<p class="small">No bookings yet</p>';
+ if(t==='staff' &&!isSuper){document.getElementById('vStaff').className='';document.getElementById('staffLock').className='lockMsg';document.getElementById('staffContent').className='hidden';return;}
+ if(t==='nurses')loadNurses();if(t==='jobs')loadJobs();if(t==='staff'&&isSuper)loadStaff();if(t==='edu')loadEdu();if(t==='bookings')loadBookingsRealTime();
 }
 function loadNurses(){
  let workers=JSON.parse(localStorage.getItem('care233_workers')||'[]');
- let pending=workers.filter(w=>!w.approved);
- let html=pending.map(w=>{
-  let idx=workers.indexOf(w);
-  return `<div class="box"><b>${w.name}</b> - ${w.skill} - ${w.phone}<br>📍 ${w.loc} - MoMo:${w.momo}<br>
-  ${w.photo?`<img class="doc" src="${w.photo}"><br>`:''}
-  <a class="btn blue" style="text-decoration:none" href="${w.ghanaCard}" target="_blank">🪪 Ghana Card</a>
-  <a class="btn blue" style="text-decoration:none" href="${w.license}" target="_blank">📜 License</a>
-  <a class="btn blue" style="text-decoration:none" href="${w.cv}" target="_blank">📄 CV</a><br><br>
-  <button class="btn green" onclick="approveN(${idx})">✅ Approve</button>
-  <button class="btn red" onclick="rejectN(${idx})">❌ Reject</button>
-  <a class="btn blue" href="tel:${w.phone}">📞 Call Nurse</a></div>`;
- }).join('')||'<p class="small">No pending nurses</p>';
- document.getElementById('nurseList').innerHTML=html;
- document.getElementById('approvedList').innerHTML=workers.filter(w=>w.approved).map(w=>`<div class="box" style="border-left-color:#0a8a4a"><b>${w.name}</b> - ${w.phone} ✅ <a class="btn blue" href="tel:${w.phone}">📞 Call</a></div>`).join('')||'<p class="small">None</p>';
+ document.getElementById('nurseList').innerHTML=workers.filter(w=>!w.approved).map((w,i)=>{let idx=workers.indexOf(w);return `<div class="box"><b>${w.name}</b> - ${w.skill} - ${w.phone}<br>${w.photo?`<img class="doc" src="${w.photo}"><br>`:''}<button class="btn green" onclick="approveN(${idx})">✅ Approve</button><button class="btn red" onclick="rejectN(${idx})">❌ Reject</button></div>`}).join('')||'<p class="small">None</p>';
+ document.getElementById('approvedList').innerHTML=workers.filter(w=>w.approved).map(w=>`<div class="box"><b>${w.name}</b> ✅</div>`).join('')||'<p class="small">None</p>';
 }
 function approveN(i){let w=JSON.parse(localStorage.getItem('care233_workers')||'[]');w[i].approved=true;localStorage.setItem('care233_workers',JSON.stringify(w));loadNurses()}
-function rejectN(i){if(!confirm('Delete?'))return;let w=JSON.parse(localStorage.getItem('care233_workers')||'[]');w.splice(i,1);localStorage.setItem('care233_workers',JSON.stringify(w));loadNurses()}
-function createJob(){
- let j={service:document.getElementById('jService').value,location:document.getElementById('jLoc').value,price:document.getElementById('jPrice').value,phone:document.getElementById('jPhone').value,gps:document.getElementById('jGPS').value,date:new Date().toLocaleString()};
- if(!j.service||!j.phone){alert('Fill service and phone');return}
- let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');jobs.push(j);localStorage.setItem('care233_jobs',JSON.stringify(jobs));
- ['jService','jLoc','jPrice','jPhone','jGPS'].forEach(id=>document.getElementById(id).value='');loadJobs();loadBookings();
-}
-function loadJobs(){let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');document.getElementById('jobList').innerHTML=jobs.slice().reverse().map(j=>`<div class="box"><b>${j.service}</b> - ${j.phone}<br><small>${j.date}</small></div>`).join('')||'<p class="small">No jobs</p>'}
-function addStaff(){
- let name=document.getElementById('stName').value.trim();let phone=document.getElementById('stPhone').value.trim();
- if(!name||!phone){alert('Fill name and phone');return}
- let pass='STAFF'+Math.floor(1000+Math.random()*9000);
- let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
- staffs.push({id:Date.now(),name,phone,password:pass,active:true,created:new Date().toLocaleString()});
- localStorage.setItem('care233_staffs',JSON.stringify(staffs));
- document.getElementById('stMsg').innerHTML=`✅ Added!<br><b>${name}</b><br>Password: <b style="color:#ffcc00;font-size:20px">${pass}</b>`;
- document.getElementById('stName').value='';document.getElementById('stPhone').value='';loadStaff();
-}
-function loadStaff(){
- let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');
- document.getElementById('staffList').innerHTML=staffs.map((s,i)=>`<div class="box"><b>${s.name}</b> - ${s.phone}<br>🔑 <b style="color:#ffcc00">${s.password}</b> - ${s.active?'✅ Active':'❌ Disabled'}<br><small>${s.created}</small><br>
- <button class="btn blue" onclick="changePass(${i})">🔑 Change</button>
- <button class="btn ${s.active?'red':'green'}" onclick="toggleStaff(${i})">${s.active?'Disable':'Enable'}</button>
- <button class="btn red" onclick="delStaff(${i})">Delete</button></div>`).join('')||'<p class="small">No staff yet</p>';
-}
+function rejectN(i){let w=JSON.parse(localStorage.getItem('care233_workers')||'[]');w.splice(i,1);localStorage.setItem('care233_workers',JSON.stringify(w));loadNurses()}
+function loadJobs(){document.getElementById('jobList').innerHTML='<p class="small">Use Real-Time Bookings tab - Manual jobs now go to Firebase!</p>'}
+function addStaff(){let name=document.getElementById('stName').value.trim();let phone=document.getElementById('stPhone').value.trim();if(!name||!phone){alert('Fill');return}let pass='STAFF'+Math.floor(1000+Math.random()*9000);let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');staffs.push({id:Date.now(),name,phone,password:pass,active:true,created:new Date().toLocaleString()});localStorage.setItem('care233_staffs',JSON.stringify(staffs));document.getElementById('stMsg').innerHTML=`✅ Added!<br><b>${name}</b><br>Pass: <b style="color:#ffcc00;font-size:20px">${pass}</b>`;document.getElementById('stName').value='';document.getElementById('stPhone').value='';loadStaff();}
+function loadStaff(){let staffs=JSON.parse(localStorage.getItem('care233_staffs')||'[]');document.getElementById('staffList').innerHTML=staffs.map((s,i)=>`<div class="box"><b>${s.name}</b> - ${s.phone}<br>🔑 <b style="color:#ffcc00">${s.password}</b> - ${s.active?'✅':'❌'}<br><button class="btn blue" onclick="changePass(${i})">🔑</button><button class="btn ${s.active?'red':'green'}" onclick="toggleStaff(${i})">${s.active?'Disable':'Enable'}</button><button class="btn red" onclick="delStaff(${i})">Delete</button></div>`).join('')||'<p class="small">None</p>';}
 function changePass(i){let np='STAFF'+Math.floor(1000+Math.random()*9000);let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s[i].password=np;localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff();alert('New: '+np)}
 function toggleStaff(i){let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s[i].active=!s[i].active;localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff()}
 function delStaff(i){if(!confirm('Delete?'))return;let s=JSON.parse(localStorage.getItem('care233_staffs')||'[]');s.splice(i,1);localStorage.setItem('care233_staffs',JSON.stringify(s));loadStaff()}
 function sendEdu(){let t=document.getElementById('eTitle').value;let m=document.getElementById('eMsg').value;if(!t||!m){alert('Fill');return}let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');edus.push({title:t,msg:m,date:new Date().toLocaleString(),by:isSuper?'CEO':'Staff'});localStorage.setItem('care233_edu',JSON.stringify(edus));document.getElementById('eTitle').value='';document.getElementById('eMsg').value='';loadEdu()}
-function loadEdu(){let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');document.getElementById('eduList').innerHTML=edus.slice().reverse().map(e=>`<div class="box"><b>${e.title}</b> <small>by ${e.by}</small><br>${e.msg}<br><small>${e.date}</small></div>`).join('')}
+function loadEdu(){let edus=JSON.parse(localStorage.getItem('care233_edu')||'[]');document.getElementById('eduList').innerHTML=edus.slice().reverse().map(e=>`<div class="box"><b>${e.title}</b><br>${e.msg}<br><small>${e.date}</small></div>`).join('')}
 function logout(){localStorage.removeItem('care233_current_role');location.reload()}
-let cur=JSON.parse(localStorage.getItem('care233_current_role')||'null');
-if(cur){isSuper=cur.isSuper;openDash(cur.isSuper?cur.name:cur.staff.name,cur.isSuper);}
+let cur=JSON.parse(localStorage.getItem('care233_current_role')||'null'); if(cur){isSuper=cur.isSuper;openDash(cur.isSuper?cur.name:cur.staff.name,cur.isSuper);}
+if("Notification" in window && Notification.permission!=="granted"){Notification.requestPermission();}
 </script>
 </body>
 </html>
