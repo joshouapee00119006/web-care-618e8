@@ -2,100 +2,154 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CARE233 - Home Nursing</title>
+<title>Nurses Group - Book a Nurse</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
-body{background:#0a2e1f;color:white;font-family:Arial;padding:10px;margin:0}
-.top{display:flex;gap:10px;margin-bottom:10px}
-.btnTop{flex:1;padding:14px;border-radius:12px;border:none;font-weight:bold;font-size:16px}
-.btn1{background:#0a4d2e;color:#ffcc00} .btn2{background:#2a2a2a;color:white}
-.card{background:#111;padding:20px;border-radius:20px}
-input,select{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:2px solid #2a8a6a;background:#222;color:white;box-sizing:border-box}
-.gpsBox{display:flex;gap:8px}
-.gpsBtn{padding:14px;background:#ffcc00;color:#000;border:none;border-radius:12px;font-weight:bold;white-space:nowrap}
-.book{width:100%;padding:16px;background:#0a4d2e;color:#ffcc00;border:none;border-radius:12px;font-weight:bold;font-size:18px;margin-top:12px}
-.small{font-size:13px;color:#8fbc8f}
-.link{color:#25D366;text-decoration:none}
+body{background:#050a07;color:white;font-family:Arial;padding:10px;margin:0}
+.card{background:#111;padding:16px;border-radius:20px;max-width:480px;margin:20px auto;border:1px solid #0a4d2e;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+.top{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:15px}
+.icon{width:50px;height:50px;background:#0a4d2e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#ffcc00;font-size:20px;border:2px solid #ffcc00}
+h2{color:#ffcc00;margin:0;text-align:center}
+.small{font-size:12px;color:#8fbc8f;text-align:center;margin:2px}
+label{font-size:13px;color:#7fdbc0;margin-top:10px;display:block;font-weight:bold}
+input,select,textarea{width:100%;padding:14px;margin:6px 0 12px 0;border-radius:12px;border:2px solid #2a8a6a;background:#1e2e24;color:white;box-sizing:border-box;font-size:16px}
+input:focus,select:focus,textarea:focus{border-color:#ffcc00;outline:none}
+.btn{width:100%;padding:16px;border:none;border-radius:12px;font-weight:bold;font-size:18px;cursor:pointer;margin-top:10px}
+.green{background:#0a4d2e;color:#ffcc00;border:2px solid #ffcc00}
+.green:active{background:#0d5a35}
+.success{background:#0a4d2e;border:1px solid #ffcc00;padding:20px;border-radius:15px;text-align:center;display:none}
 </style>
 </head>
 <body>
-<div class="top">
-<button class="btnTop btn1">📋 Book Nurse</button>
-<button class="btnTop btn2" onclick="alert('Share to earn 3%')">💰 Earn 3%</button>
-</div>
 
 <div class="card">
-<h2 style="color:#7fdbc0;margin:0;text-align:center">CARE233 - Home Nursing</h2>
-<p id="gpsStatus" class="small">📍 Click GPS button to lock location</p>
-
-<div class="gpsBox">
-<input id="loc" placeholder="East Legon, Accra *">
-<button class="gpsBtn" onclick="getGPS()">📍 GPS</button>
+<div class="top">
+<div class="icon">NG</div>
+<div><h2>NURSES GROUP</h2><p class="small">Professional Home Nursing in Ghana</p></div>
 </div>
-<input id="gpsCoords" type="hidden">
-<a id="mapLink" class="small link" target="_blank" style="display:none">🗺️ View / Directions on Google Map</a>
 
-<label>Care Type</label>
-<select id="care" onchange="calc()">
-<option value="1400">2 Weeks - GHS 1400</option>
-<option value="2800">1 Month - GHS 2800</option>
-<option value="700">1 Week - GHS 700</option>
-<option value="200">1 Day - GHS 200</option>
+<div id="formArea">
+<h3 style="color:#7fdbc0;text-align:center;margin:10px 0">📋 Book a Professional Nurse</h3>
+
+<label>👤 Your Full Name</label>
+<input id="cName" placeholder="e.g. Sarah Mensah">
+
+<label>📞 Phone Number (WhatsApp)</label>
+<input id="cPhone" placeholder="e.g. 0551234567" type="tel">
+
+<label>💉 Service Needed</label>
+<select id="cService">
+<option value="Home Nursing">Home Nursing</option>
+<option value="Elderly Care">Elderly Care</option>
+<option value="Baby / Nanny Care">Baby / Nanny Care</option>
+<option value="Post-Surgery Care">Post-Surgery Care</option>
+<option value="Injection / Wound Dressing">Injection / Wound Dressing</option>
+<option value="Physiotherapy">Physiotherapy</option>
+<option value="Hospital Accompaniment">Hospital Accompaniment</option>
+<option value="Other">Other</option>
 </select>
 
-<label>Your Phone</label>
-<input id="phone" placeholder="0244...">
+<label>📍 Location / Area</label>
+<input id="cLocation" placeholder="e.g. East Legon, Accra">
 
-<div style="background:#132a20;padding:12px;border-radius:12px;margin-top:10px">
-<div>Care: <b>GHS <span id="carePrice">1400</span></b></div>
-<div style="margin-top:5px">Total: <b>GHS <span id="totalPrice">1400</span></b> | Agent earns: GHS <span id="earn">42.00</span></div>
-<p class="small" style="margin:5px 0 0">* No transport fee. GPS is for nurse directions only.</p>
+<label>🗺️ GPS Location (Optional - for easy finding)</label>
+<input id="cGPS" placeholder="e.g. 5.6358, -0.1613">
+
+<label>📝 Additional Notes</label>
+<textarea id="cNotes" rows="3" placeholder="Tell us about patient condition, time needed..."></textarea>
+
+<button class="btn green" onclick="submitBookingToFirebase()">🔔 BOOK NOW - Staff Will Call You</button>
+
+<p class="small" style="margin-top:15px">⚡ Real-time booking • Staff receives instantly • 24/7 Service<br>📞 Emergency: <a href="tel:+233000000000" style="color:#ffcc00">Call Us</a></p>
 </div>
 
-<button class="book" onclick="book()">📲 BOOK NOW</button>
-<p id="msg" class="small"></p>
+<div id="successArea" class="success">
+<h2 style="color:#ffcc00">✅ BOOKING SENT!</h2>
+<p>Thank you <b id="sName"></b>!</p>
+<p>Your booking for <b id="sService"></b> has been sent LIVE to our Staffs!</p>
+<p style="font-size:18px">📞 Our staff will call you at <b id="sPhone" style="color:#ffcc00"></b> in <b>5 minutes!</b></p>
+<p class="small" id="sTime"></p>
+<button class="btn green" onclick="bookAnother()">+ Book Another</button>
+</div>
+
 </div>
 
 <script>
-function calc(){
- let p=document.getElementById('care').value;
- document.getElementById('carePrice').innerText=p;
- document.getElementById('totalPrice').innerText=p;
- document.getElementById('earn').innerText=(p*0.03).toFixed(2);
-}
-calc();
+// YOUR FIREBASE - web-care-618e8
+const firebaseConfig = {
+  apiKey: "AIzaSyB52-X1D8Cg-wUDWPds_tR7X3cF82dMdRg",
+  authDomain: "web-care-618e8.firebaseapp.com",
+  databaseURL: "https://web-care-618e8-default-rtdb.firebaseio.com",
+  projectId: "web-care-618e8",
+  storageBucket: "web-care-618e8.firebasestorage.app",
+  messagingSenderId: "1062578660694",
+  appId: "1:1062578660694:web:f94dfe12c929df05bce2f7"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-function getGPS(){
- let s=document.getElementById('gpsStatus');
- s.innerText='⏳ Getting GPS...';
- navigator.geolocation.getCurrentPosition(pos=>{
-   let lat=pos.coords.latitude.toFixed(6);
-   let lng=pos.coords.longitude.toFixed(6);
-   document.getElementById('gpsCoords').value=lat+','+lng;
-   document.getElementById('loc').value=document.getElementById('loc').value || 'My Current Location';
-   s.innerText='✅ GPS Locked: '+lat+','+lng;
-   let link=document.getElementById('mapLink');
-   link.href='https://www.google.com/maps?q='+lat+','+lng;
-   link.style.display='block';
- }, err=>{
-   s.innerText='❌ GPS failed: '+err.message+' - Type location manually';
- }, {enableHighAccuracy:true, timeout:10000});
+function submitBookingToFirebase(){
+  let name = document.getElementById('cName').value.trim();
+  let phone = document.getElementById('cPhone').value.trim();
+  let service = document.getElementById('cService').value;
+  let location = document.getElementById('cLocation').value.trim();
+  let gps = document.getElementById('cGPS').value.trim();
+  let notes = document.getElementById('cNotes').value.trim();
+
+  if(!name){alert('Please enter your name');return}
+  if(!phone){alert('Please enter phone number');return}
+  if(!location){alert('Please enter location');return}
+
+  let booking = {
+    name: name,
+    phone: phone,
+    service: service,
+    location: location,
+    gps: gps,
+    notes: notes,
+    price: "To be discussed",
+    date: new Date().toLocaleString(),
+    timestamp: Date.now(),
+    status: 'new'
+  };
+
+  // Disable button
+  let btn = document.querySelector('.btn.green');
+  let oldText = btn.innerHTML;
+  btn.innerHTML = '⏳ Sending...';
+  btn.disabled = true;
+
+  db.ref('bookings').push(booking).then(()=>{
+    // Show success
+    document.getElementById('formArea').style.display='none';
+    document.getElementById('successArea').style.display='block';
+    document.getElementById('sName').innerText = name;
+    document.getElementById('sService').innerText = service;
+    document.getElementById('sPhone').innerText = phone;
+    document.getElementById('sTime').innerText = new Date().toLocaleString();
+    
+    if(navigator.vibrate) navigator.vibrate([200,100,200]);
+
+    btn.innerHTML = oldText;
+    btn.disabled = false;
+  }).catch(e=>{
+    alert('Error: '+e.message+'\n\nPlease check internet and try again');
+    btn.innerHTML = oldText;
+    btn.disabled = false;
+  });
 }
 
-function book(){
- let phone=document.getElementById('phone').value.trim();
- let location=document.getElementById('loc').value.trim();
- let coords=document.getElementById('gpsCoords').value;
- let careSelect=document.getElementById('care');
- let careText=careSelect.options[careSelect.selectedIndex].text;
- let total=document.getElementById('totalPrice').innerText;
- if(!phone||!location){document.getElementById('msg').innerText='Enter phone & location';return}
- let jobs=JSON.parse(localStorage.getItem('care233_jobs')||'[]');
- jobs.push({service:careText, location:location, gps:coords, phone:phone, price:total, desc:'Phone:'+phone+' GPS:'+coords+' Loc:'+location, date:new Date().toLocaleString()});
- localStorage.setItem('care233_jobs',JSON.stringify(jobs));
- let waMsg='CARE233 Booking%0A'+careText+'%0APhone:'+phone+'%0ALocation:'+encodeURIComponent(location)+'%0AGPS:'+encodeURIComponent(coords)+'%0AMap:https://www.google.com/maps?q='+encodeURIComponent(coords)+'%0ATotal:GHS'+total;
- window.open('https://wa.me/233554466448?text='+waMsg,'_blank');
- document.getElementById('msg').innerText='✅ Booked! We will call you. GPS saved for directions.';
+function bookAnother(){
+  document.getElementById('formArea').style.display='block';
+  document.getElementById('successArea').style.display='none';
+  document.getElementById('cName').value='';
+  document.getElementById('cPhone').value='';
+  document.getElementById('cLocation').value='';
+  document.getElementById('cGPS').value='';
+  document.getElementById('cNotes').value='';
 }
 </script>
+
 </body>
 </html>
